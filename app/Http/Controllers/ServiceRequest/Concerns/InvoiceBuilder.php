@@ -82,6 +82,9 @@ class InvoiceBuilder
             ],
             'notification' => [
                 'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+                'data'  => [
+                    // 'lastname' => $account['last_name'],
+                ]
             ],
             'log' => [
                 'type'                      =>  'request',
