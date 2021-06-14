@@ -81,7 +81,7 @@
         <script src="{{ asset('assets/client/js/sweetalert2.min.js') }}"></script>
 
         <!-- geolocation asset starts here -->
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeoGwJDBE4ic-btiuWCfLk37ehqk2LxPs&v=3.exp&libraries=places"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ&v=3.exp&libraries=places"></script>
         <script src="{{asset('assets/frontend/js/geolocation.js')}}"></script>
         <!-- geolocation asset starts here -->
         
