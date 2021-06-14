@@ -56,7 +56,9 @@ class PaystackController extends Controller
             // 'myContact_id'    => 'required',
         ]);
 
-    if($request['payment_for'] === 'invoice'){
+
+
+    if($request['payment_for'] = 'invoice'){
         $data = [
             'logistics_cost' => $request['logistics_cost'],
             'retention_fee' => $request['retention_fee'],
@@ -77,29 +79,34 @@ class PaystackController extends Controller
 
         $request->session()->put('collaboratorPayment', $data);
     }
-    else if($request['payment_for'] === 'service-request'){
-    $Serviced_areas = ServicedAreas::where('town_id', '=', $request['town_id'])->orderBy('id', 'DESC')->first();
+    $selectedContact = Contact::where('id', $request->myContact_id)->first();
+    if($request['payment_for'] == 'service-request'){
+    $Serviced_areas = ServicedAreas::where('town_id', '=', $selectedContact['town_id'])->orderBy('id', 'DESC')->first();
        if ($Serviced_areas === null) {
            return back()->with('error', 'sorry!, this area you selected is not serviced at the moment, please try another area');
        }
 
-       // upload multiple media files
-       foreach($request->media_file as $key => $file)
-           {
-               $originalName[$key] = $file->getClientOriginalName();
+    //    if ($request->media_file)
+    //    {
+            // upload multiple media files
+            foreach($request->media_file as $key => $file)
+            {
+                $originalName[$key] = $file->getClientOriginalName();
 
-               $fileName = sha1($file->getClientOriginalName() . time()) . '.'.$file->getClientOriginalExtension();
-               $filePath = public_path('assets/service-request-media-files');
-               $file->move($filePath, $fileName);
-               $data[$key] = $fileName;
-           }
-               $data['unique_name']   = json_encode($data);
-               $data['original_name'] = json_encode($originalName);
-               // return $data;
+                $fileName = sha1($file->getClientOriginalName() . time()) . '.'.$file->getClientOriginalExtension();
+                $filePath = public_path('assets/service-request-media-files');
+                $file->move($filePath, $fileName);
+                $data[$key] = $fileName;
+            }
+                $data['unique_name']   = json_encode($data);
+                $data['original_name'] = json_encode($originalName);
 
-       // $request->session()->put('order_data', $request);
-       $request->session()->put('order_data', $request->except(['media_file']));
-       $request->session()->put('medias', $data);
+                // $request->session()->put('order_data', $request);
+                $request->session()->put('order_data', $request->except(['media_file']));
+                $request->session()->put('medias', $data);
+    //    }
+
+
     }
 
 
@@ -173,7 +180,7 @@ class PaystackController extends Controller
 
         $paymentRecord = Session::get('collaboratorPayment');
 
-        
+
         $reference = $request->get('reference', '');
 
         if (!$reference) {
@@ -230,8 +237,7 @@ class PaystackController extends Controller
 
                 if($paymentDetails->update()){
                     // NUMBER 2: add more for other payment process
-
-                    if($paymentDetails['payment_for'] = 'invoice')
+                    if($paymentDetails['payment_for'] == 'invoice')
                     {
                         $savePayment = $invoice_controller->saveInvoiceRecord($paymentRecord, $paymentDetails);
                         if($savePayment){
@@ -243,15 +249,22 @@ class PaystackController extends Controller
                         }
                     }
 
-                    else if($paymentDetails['payment_for'] = 'service-request'){
+                    if($paymentDetails['payment_for'] == 'service-request'){
+                        // return $request->session()->get('order_data');
 
-                            $client_controller->saveRequest( $request->session()->get('order_data') );
-
+                            $client_controller->saveRequest( $request->session()->get('order_data'), $request->session()->get('medias') );
+                            return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
                     }
+
+                    if($paymentDetails['payment_for'] == 'e-wallet'){
+                        $client_controller->addToWallet( $paymentDetails );
+                            return redirect()->route('client.wallet', app()->getLocale())->with('success', 'Fund successfully added!');
+                     }
+
                 }
             }else {
                 // NUMBER 3: add more for other payment process
-                if($paymentDetails['payment_for'] = 'service-request' ){
+                if($paymentDetails['payment_for'] == 'service-request' ){
                     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'Verification not successful, try again!');
                 }
 
@@ -259,31 +272,20 @@ class PaystackController extends Controller
 
         }else {
             // NUMBER 4: add more for other payment process
-            if($paymentDetails['payment_for'] = 'service-request' ){
+            if($paymentDetails['payment_for'] == 'service-request' ){
                 return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'Could not initiate payment process because payment was cancelled, try again!');
             }
         }
 
         // NUMBER 5: add more for other payment process
-        if($paymentDetails['payment_for'] = 'service-request' ){
-            return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'there was an error, please try again!');
-        }
+        // if($paymentDetails['payment_for'] = 'service-request' ){
+        //     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'there was an error, please try again!');
+        // }
+        // if($paymentDetails['payment_for'] = 'e-wallet' ){
+        //     return redirect()->route('client.wallet', app()->getLocale() )->with('error', 'there was an error, please try again!');
+        // }
 
     }
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function verify()
-    // {
-    //     //
-    //     // echo $payment;
-    //     // dd(json_decode($payment));
-    //     return view('payment.flutterwave-start');
-    // }
 
 
     /**
