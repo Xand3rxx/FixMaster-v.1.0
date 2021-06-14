@@ -438,10 +438,8 @@ class ClientController extends Controller
                         $query->orderBy('created_at', 'ASC');
             })->get();
 
-            // return $myServiceRequests[0]['service_requests'][0]['service_request_assignees'][0]['user']['roles'][0]['pivot']['role_id'];
-
         return view('client.services.list', [
-            'myServiceRequests' =>  $myServiceRequests,
+            'myServiceRequests' =>  $myServiceRequests[0],
         ]);
     }
 

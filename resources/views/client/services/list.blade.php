@@ -34,8 +34,8 @@
                                 <tbody>
 
 
-                                @if($myServiceRequests->isNotEmpty())
-                                @foreach ($myServiceRequests[0]['service_requests'] as $myServiceRequest)
+                            @if($myServiceRequests['service_requests']->isNotEmpty())
+                                @foreach ($myServiceRequests['service_requests'] as $myServiceRequest)  
                                 <tr>
 
                                 <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>

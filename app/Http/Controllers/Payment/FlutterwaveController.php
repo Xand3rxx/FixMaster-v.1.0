@@ -264,7 +264,7 @@ class FlutterwaveController extends Controller
                     if($paymentDetails['payment_for'] == 'service-request')
                     {
                         $client_controller->saveRequest( $request->session()->get('order_data'), $request->session()->get('medias') );
-                        return redirect()->route('client.services.list', app()->getLocale())->with('success', 'Service request was successful');
+                        return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
                     }
 
                     if($paymentDetails['payment_for'] == 'e-wallet')
