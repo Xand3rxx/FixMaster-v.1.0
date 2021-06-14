@@ -1,18 +1,19 @@
 
 @if(pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'jpg' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'png' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'svg' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'gif' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'jpeg')
+<ul id="lightgallery" class="list-unstyled row lightgallery">
+    <li class="col-6 col-sm-4 col-md-3 col-xl" data-responsive="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 375, {{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 480, {{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 800" data-src="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }}" data-sub-html="<h4>{{ $item['original_name'] }}</h4>">
+        <a href="">
+            @if(empty($item['unique_name']))
+                <img src="{{ asset('assets/images/no-image-available.png') }}" class="img-responsive" width="194" height="131" alt="No image found">
 
-<li class="col-6 col-sm-4 col-md-3 col-xl" data-responsive="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 375, {{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 480, {{ asset('assets/service-request-media-files/'.$item['unique_name']) }} 800" data-src="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }}" data-sub-html="<h4>{{ $item['original_name'] }}</h4>">
-    <a href="">
-        @if(empty($item['unique_name']))
-            <img src="{{ asset('assets/images/no-image-available.png') }}" class="img-responsive" width="194" height="131" alt="No image found">
-
-        @elseif(!file_exists(public_path('assets/service-request-media-files/'.$item['unique_name'])))
-            <img src="{{ asset('assets/images/no-image-available.png') }}" class="img-responsive" width="194" height="131" alt="No image found">
-        @else
-            <img src="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }}" class="img-responsive" width="194" height="131" alt="{{ $item['unique_name'] }}">
-        @endif
-    </a>
-</li>
+            @elseif(!file_exists(public_path('assets/service-request-media-files/'.$item['unique_name'])))
+                <img src="{{ asset('assets/images/no-image-available.png') }}" class="img-responsive" width="194" height="131" alt="No image found">
+            @else
+                <img src="{{ asset('assets/service-request-media-files/'.$item['unique_name']) }}" class="img-responsive" width="194" height="131" alt="{{ $item['unique_name'] }}">
+            @endif
+        </a>
+    </li>
+</ul>
 
 @elseif(pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'doc' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'docx' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'pdf' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'txt' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'xls' || pathInfo($item['unique_name'], PATHINFO_EXTENSION) == 'csv')
     <div class="col-6 col-sm-4 col-md-3 col-xl">

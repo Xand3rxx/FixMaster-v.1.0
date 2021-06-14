@@ -26,7 +26,7 @@
         });
 
         //Initiate light gallery plugin
-        $('#lightgallery').lightGallery();
+        $('.lightgallery').lightGallery();
 
         $(document).on('click', '#contact-me', function(){
             var contactMe = parseInt($(this).attr('data-contact-me'));
