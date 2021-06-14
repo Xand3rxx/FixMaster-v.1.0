@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\CollaboratorsPayment;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\CollaboratorsPayment;
 
 class CollaboratorsPaymentSeeder extends Seeder
 {
@@ -36,6 +37,8 @@ class CollaboratorsPaymentSeeder extends Seeder
         $collab_payment2->labour_markup_cost = 100;
         $collab_payment2->save();
 
+
+        DB::table('users')->update(['email_verified_at' => now()]);
 
     }
 }
