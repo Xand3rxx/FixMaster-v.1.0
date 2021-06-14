@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\PaymentGateway;
 use App\Models\Client;
 use App\Models\ServicedAreas;
+use App\Models\Contact;
 use App\Traits\AddCollaboratorPayment;
 
 use App\Traits\RegisterPaymentTransaction;
@@ -75,32 +76,39 @@ class FlutterwaveController extends Controller
                 'payment_for' => $request['payment_for'],
                 'invoiceUUID' => $request['uuid']
             ];
-    
+
             $request->session()->put('collaboratorPayment', $data);
         }
-        else if($request['payment_for'] === 'service-request'){
-            $Serviced_areas = ServicedAreas::where('town_id', '=', $request['town_id'])->orderBy('id', 'DESC')->first();
+
+        $selectedContact = Contact::where('id', $request->myContact_id)->first();
+        if($request['payment_for'] === 'service-request'){
+             $Serviced_areas = ServicedAreas::where('town_id', '=', $selectedContact['town_id'])->orderBy('id', 'DESC')->first();
                if ($Serviced_areas === null) {
                    return back()->with('error', 'sorry!, this area you selected is not serviced at the moment, please try another area');
                }
-        
-               // upload multiple media files
+
+            //    if ($request->media_file) {
+                // upload multiple media files
                foreach($request->media_file as $key => $file)
-                   {
-                       $originalName[$key] = $file->getClientOriginalName();
-        
-                       $fileName = sha1($file->getClientOriginalName() . time()) . '.'.$file->getClientOriginalExtension();
-                       $filePath = public_path('assets/service-request-media-files');
-                       $file->move($filePath, $fileName);
-                       $data[$key] = $fileName;
-                   }
-                       $data['unique_name']   = json_encode($data);
-                       $data['original_name'] = json_encode($originalName);
-                       // return $data;
-        
-               // $request->session()->put('order_data', $request);
-               $request->session()->put('order_data', $request->except(['media_file']));
-               $request->session()->put('medias', $data);
+               {
+                   $originalName[$key] = $file->getClientOriginalName();
+
+                   $fileName = sha1($file->getClientOriginalName() . time()) . '.'.$file->getClientOriginalExtension();
+                   $filePath = public_path('assets/service-request-media-files');
+                   $file->move($filePath, $fileName);
+                   $data[$key] = $fileName;
+               }
+                   $data['unique_name']   = json_encode($data);
+                   $data['original_name'] = json_encode($originalName);
+                   // return $data;
+
+                // $request->session()->put('order_data', $request);
+                $request->session()->put('order_data', $request->except(['media_file']));
+                $request->session()->put('medias', $data);
+            //    }
+
+
+
             }
 
 
@@ -191,7 +199,7 @@ class FlutterwaveController extends Controller
     {
         $input_data = $request->all();
         $paymentRecord = Session::get('collaboratorPayment');
-        
+
         $trans_id = $request->get('tx_ref', '');
 
         $paymentDetails = Payment::where('reference_id', $trans_id)->orderBy('id', 'DESC')->first();
@@ -238,9 +246,10 @@ class FlutterwaveController extends Controller
                 $client_controller = new ClientController;
                 $invoice_controller = new InvoiceController;
 
-                if($paymentDetails->update()){
+                if($paymentDetails->update())
+                {
                     // NUMBER 2: add more for other payment process
-                    if($paymentDetails['payment_for'] = 'invoice')
+                    if($paymentDetails['payment_for'] == 'invoice')
                     {
                         $savePayment = $invoice_controller->saveInvoiceRecord($paymentRecord, $paymentDetails);
                         if($savePayment){
@@ -251,17 +260,22 @@ class FlutterwaveController extends Controller
                             return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('error', 'Invoice payment was unsuccessful!');
                         }
                     }
-                    else if($paymentDetails['payment_for'] = 'service-request' ){
 
-                            $client_controller->saveRequest( $request->session()->get('order_data') );
-                            // $client_controller->saveRequest( $request->session()->get('medias') );
-
-                            return redirect()->route('client.service.all' , app()->getLocale() )->with('success', 'payment was successful');
+                    if($paymentDetails['payment_for'] == 'service-request')
+                    {
+                        $client_controller->saveRequest( $request->session()->get('order_data'), $request->session()->get('medias') );
+                        return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
                     }
+
+                    if($paymentDetails['payment_for'] == 'e-wallet')
+                    {
+                        $client_controller->addToWallet( $paymentDetails );
+                        return redirect()->route('client.wallet', app()->getLocale())->with('success', 'Fund successfully added!');
+                     }
                 }
             }else {
                 // NUMBER 3: add more for other payment process
-                if($paymentDetails['payment_for'] = 'service-request' ){
+                if($paymentDetails['payment_for'] == 'service-request' ){
                     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'Verification not successful, try again!');
                 }
 
@@ -275,9 +289,9 @@ class FlutterwaveController extends Controller
         }
 
         // NUMBER 5: add more for other payment process
-        if($paymentDetails['payment_for'] = 'service-request' ){
-            return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'there was an error, please try again!');
-        }
+        // if($paymentDetails['payment_for'] = 'service-request' ){
+        //     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'there was an error, please try again!');
+        // }
 
     }
 
