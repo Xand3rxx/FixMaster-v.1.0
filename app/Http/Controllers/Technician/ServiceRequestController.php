@@ -7,6 +7,7 @@ use App\Models\ServiceRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceRequestAssigned;
+use App\Models\ServiceRequestWarranty;
 
 class ServiceRequestController extends Controller
 {
@@ -49,8 +50,25 @@ class ServiceRequestController extends Controller
         ->with('cancelledJobs', $cancelledJobs);
     }
 
+    public function getWarranties(Request $request){
+        $warranties = ServiceRequestWarranty::with('service_request_assignees', 'service_request')
+                ->whereHas('service_request_assignees', function ($query){
+                    $query->where('user_id', Auth::id());
+                })->latest('created_at')->get();
+        return view('technician.requests.warranty_claim')
+        ->with('warranties', $warranties);
+    }
+
+    public function warrantyDetails($language, $uuid)
+    {
+        $respond = ServiceRequest::where('uuid', $uuid)->first();
+        $output = ServiceRequestWarranty::where('service_request_id', $respond->id)->first();
+        return view('technician.requests.warranty', compact('output'));
+    }
+
     public function acceptedJobDetails($language, $uuid){
         $output = ServiceRequest::where('uuid', $uuid)->first();
+        //dd($output->id);
          $activeDetails = ServiceRequestAssigned::where('user_id', Auth::id())
         ->where('service_request_id', $output->id)->first();
 
@@ -59,6 +77,8 @@ class ServiceRequestController extends Controller
                 $phone = $res->contact->phone_number;
             }
         }
+        $town = $activeDetails->service_request->address;
+        dd($town);
         return view('technician.requests.active_details', compact('activeDetails','phone'));
     }
 

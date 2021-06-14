@@ -574,13 +574,14 @@ Route::prefix('/technician')->name('technician.')->group(function () {
     Route::get('/requests/active',  [TechnicianServiceRequestController::class, 'getActiveRequests'])->name('requests.active');
     Route::get('/requests/completed',  [TechnicianServiceRequestController::class, 'getCompletedRequests'])->name('requests.completed');
     Route::get('/requests/cancelled',  [TechnicianServiceRequestController::class, 'getCancelledRequests'])->name('requests.cancelled');
+    Route::get('/requests/warranty-claim', [TechnicianServiceRequestController::class, 'getWarranties'])->name('requests.warranty_claim');
     Route::get('/requests/active_details/{uuid}', [TechnicianServiceRequestController::class, 'acceptedJobDetails'])->name('requests.active_details');
 
 
     Route::get('/payments/history', [TechnicianProfileController::class, 'paymentHistory'])->name('payment.history');
 
     
-    Route::view('/requests/warranty-claim', 'technician.requests.warranty_claim')->name('requests.warranty_claim');
+    
     
     Route::view('/consultations/pending', 'technician.consultations.pending')->name('consultations.pending');
     Route::view('/consultations/ongoing', 'technician.consultations.ongoing')->name('consultations.ongoing');
