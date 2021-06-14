@@ -101,11 +101,9 @@
             <div class="divider-text">Media Files</div>
             @if (count($serviceRequest['serviceRequestMedias']) > 0)
             <div class="row row-xs">
-                <ul id="lightgallery" class="list-unstyled row">
-                    @foreach ($serviceRequest['serviceRequestMedias'] as $item)
-                        @include('admin.requests.includes._media_file')
-                    @endforeach
-                </ul>
+                @foreach ($serviceRequest['serviceRequestMedias'] as $item)
+                    @include('admin.requests.includes._media_file')
+                @endforeach
             </div>
             @else
             <h5 class="mt-4">Files have not been uploaded for this request.</h5>
@@ -119,7 +117,7 @@
     <script>
         $(document).ready(function(){
             //Initiate light gallery plugin
-            $('#lightgallery').lightGallery();
+            $('.lightgallery').lightGallery();
 
             $(document).on('click', '#contact-me', function(){
                 var contactMe = parseInt($(this).attr('data-contact-me'));
