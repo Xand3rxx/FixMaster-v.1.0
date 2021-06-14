@@ -32,8 +32,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
+
                                 @if($myServiceRequests->isNotEmpty())
-                                @foreach ($myServiceRequests['service_requests'] as $myServiceRequest)
+                                @foreach ($myServiceRequests[0]['service_requests'] as $myServiceRequest)
                                 <tr>
 
                                 <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
@@ -78,9 +80,9 @@
 
                                              @endif -->
 
-                                             @if($myServiceRequest->status_id < 3)  
-                                               @if( $myServiceRequest->service_request_assignees->count() > 1 ) 
-                                             <a href="{{ route('client.edit_request', [ 'request'=>$myServiceRequest->uuid, 'locale'=>app()->getLocale() ]) }}" class="dropdown-item text-primary"><i data-feather="edit" class="fea icon-sm"></i>{{count($myServiceRequest->service_request_assignees)}} Edit Request</a>     
+                                             @if($myServiceRequest->status_id < 3)
+                                               @if( $myServiceRequest->service_request_assignees->count() > 1 )
+                                             <a href="{{ route('client.edit_request', [ 'request'=>$myServiceRequest->uuid, 'locale'=>app()->getLocale() ]) }}" class="dropdown-item text-primary"><i data-feather="edit" class="fea icon-sm"></i> Edit Request</a>
                                                @endif
                                              @endif
 
@@ -105,17 +107,17 @@
 
 
                                             @if($myServiceRequest->status_id == 4 && !empty($myServiceRequest['warranty']))
-                                          
+
                                             @if($myServiceRequest['warranty']['expiration_date'] >  Carbon\Carbon::now())
                                                 <div class="dropdown-divider"></div>
-                                                
+
                                                 @if($myServiceRequest['warranty']['initiated'] != 'Yes')
-                
+
                                                 <a href="#warrantyInitiate" id="warranty-initiate"
                                                 data-toggle="modal"
                                                 data-url="{{ route('client.warranty_initiate', [ 'request'=> $myServiceRequest->uuid, 'locale'=>app()->getLocale() ]) }}"
                                                  data-job-reference="{{ $myServiceRequest->unique_id  }}" class="dropdown-item text-success"><i data-feather="award" class="fea icon-sm"></i> Pending Warranty</a>
-                                                
+
                                                  @endif
                                             @endif
                                             @endif
@@ -278,7 +280,7 @@
 
 </div><!-- modal -->
 
-  
+
 
 <div class="modal fade" id="editRequest" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
