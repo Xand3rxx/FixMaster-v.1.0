@@ -41,44 +41,12 @@
                         <div class="d-flex border-bottom p-3 message-details @if($value->is_read == '0') bg-light @endif" data-url="{{ route('client.inbox_message_details', $value->id) }}">
                             <a href="#messageDetailsModal" data-toggle="modal">
                                 <div class="media ml-2">
-                                    @if($value->sender_id == '4' || $value->userSentMessage->designation == '[SUPER_ADMIN_ROLE]' || $value->userSentMessage->designation == '[ADMIN_ROLE]')
-                                    <img src="{{ asset('assets/images/home-fix-logo-coloredd.png') }}" class="avatar avatar-md-sm rounded-pill shadow" alt="">
-                                    @elseif($value->userSentMessage->designation == '[CSE_ROLE]')
-                                        @if(!empty($value->userSentMessage->cse->avatar) && file_exists(public_path().'/assets/cse-technician-images/'.$value->userSentMessage->cse->avatar))
-                                        <img src="{{ asset('assets/cse-technician-images/'.$value->userSentMessage->cse->avatar) }}" class="avatar avatar-md-sm rounded-pill shadow" alt="" />
-                                        @else
-                                            @if($value->userSentMessage->cse->gender == 'Male')
-                                                <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @else
-                                                <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @endif
-                                        @endif
-                                    @elseif($value->userSentMessage->designation == '[TECHNICIAN_ROLE]')
-                                        @if(!empty($value->userSentMessage->technician->avatar) && file_exists(public_path().'/assets/cse-technician-images/'.$value->userSentMessage->technician->avatar))
-                                        <img src="{{ asset('assets/cse-technician-images/'.$value->userSentMessage->technician->avatar) }}" class="avatar avatar-md-sm rounded-pill shadow" alt="" />
-                                        @else
-                                            @if($value->userSentMessage->technician->gender == 'Male')
-                                                <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @else
-                                                <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @endif
-                                        @endif
-                                    @elseif($value->userSentMessage->designation == '[CLIENT_ROLE]')
-                                        @if(!empty($value->userSentMessage->client->avatar) && file_exists(public_path().'/assets/client-avatars/'.$value->userSentMessage->client->avatar))
-                                        <img src="{{ asset('assets/client-avatars/'.$value->userSentMessage->client->avatar) }}" class="avatar avatar-md-sm rounded-pill shadow" alt="" />
-                                        @else
-                                            @if($value->userSentMessage->client->gender == 'Male')
-                                                <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @else
-                                                <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
-                                            @endif
-                                        @endif
-                                    @endif
+                                    <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="avatar avatar-md-sm rounded-pill shadow" />
 
                                     <div class="content ml-3">
                                         <small class="float-right">{{ Carbon\Carbon::parse($value->created_at, 'UTC')->isoFormat('h:mma') }}</small>
 
-                                        <h6 class="text-dark">{{ $value->userSentMessage->fullName->name }}</h6>
+                                        <h6 class="text-dark">Kelvin Adesenya</h6>
                                         <h6 class="tx-11 text-primary">{{ $value->subject }}</h6>
                                         <span class="text-muted mb-0">{!! strip_tags(substr($value->body, 0, 85)) !!}...</span>
                                     </div>
