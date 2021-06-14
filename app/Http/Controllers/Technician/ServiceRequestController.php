@@ -77,8 +77,8 @@ class ServiceRequestController extends Controller
                 $phone = $res->contact->phone_number;
             }
         }
-        $town = $activeDetails->service_request->address;
-        dd($town);
+        // $town = $activeDetails->service_request->address;
+        // dd($town);
         return view('technician.requests.active_details', compact('activeDetails','phone'));
     }
 
