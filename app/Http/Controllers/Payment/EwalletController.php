@@ -110,7 +110,7 @@ class EwalletController extends Controller
 
                     }
                 }
-                return redirect()->route('client.services.all', app()->getLocale())->with('success', 'Service Request was successful!');
+                return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service Request was successful!');
             } else{
                 return back()->with('error', 'sorry!, your service request is not successful');
             }
