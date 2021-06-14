@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Technician;
 
-use App\Http\Controllers\Controller;
-use App\Models\ServiceRequestAssigned;
 use Illuminate\Http\Request;
+use App\Models\ServiceRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceRequestAssigned;
 
 class ServiceRequestController extends Controller
 {
@@ -22,6 +23,19 @@ class ServiceRequestController extends Controller
             ->get();
         return view('technician.requests.active')
             ->with('activeJobs', $activeRequest);
+    }
+
+    public function acceptedJobDetails($language, $uuid){
+        $output = ServiceRequest::where('uuid', $uuid)->first();
+         $activeDetails = ServiceRequestAssigned::where('user_id', Auth::id())
+        ->where('service_request_id', $output->id)->first();
+
+        foreach($activeDetails->service_request->users as $res){
+            if($res->type->role->name === 'Customer Service Executive'){
+                $phone = $res->contact->phone_number;
+            }
+        }
+        return view('technician.requests.active_details', compact('activeDetails','phone'));
     }
 
 
