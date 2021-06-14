@@ -32,6 +32,15 @@ class ServiceRequestPaymentSeeder extends Seeder
                 'user_id'               =>  5,
                 'payment_id'            =>  1,
                 'service_request_id'    =>  2,
+                'amount'                =>  1000,
+                'unique_id'             =>  'REF-79A722D6',
+                'payment_type'          =>  'rfq',
+                'status'                => 'success',
+            ),
+            array(
+                'user_id'               =>  5,
+                'payment_id'            =>  1,
+                'service_request_id'    =>  2,
                 'amount'                =>  2000,
                 'unique_id'             =>  'REF-79A722D6',
                 'payment_type'          =>  'booking-fee',
@@ -48,54 +57,6 @@ class ServiceRequestPaymentSeeder extends Seeder
             ),
             
         );
-
-        // $serviceRequestProgress = array(
-
-        //     array(
-        //         'user_id'               =>  1,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  1,
-        //         'sub_status_id'         =>  1,
-        //         'created_at'            =>  '2021-03-26 02:21:38'
-        //     ),
-        //     array(
-        //         'user_id'               =>  2,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  1,
-        //         'sub_status_id'         =>  2,
-        //         'created_at'            =>  '2021-03-26 02:21:38'
-        //     ),
-        //     array(
-        //         'user_id'               =>  2,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  2,
-        //         'sub_status_id'         =>  8,
-        //         'created_at'            =>  '2021-03-26 08:05:13'
-        //     ),
-        //     array(
-        //         'user_id'               =>  2,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  2,
-        //         'sub_status_id'         =>  11,
-        //         'created_at'            =>  '2021-03-26 10:30:46'
-        //     ),
-        //     array(
-        //         'user_id'               =>  2,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  2,
-        //         'sub_status_id'         =>  12,
-        //         'created_at'            =>  '2021-03-26 10:45:19'
-        //     ),
-        //     array(
-        //         'user_id'               =>  2,
-        //         'service_request_id'    =>  2,
-        //         'status_id'             =>  2,
-        //         'sub_status_id'         =>  1,
-        //         'sub_status_id'         =>  13,
-        //         'created_at'            =>  '2021-03-26 11:33:51'
-        //     ),
-            
-        // );
 
         DB::table('service_request_payments')->insert($serviceRequestPayments);
         // DB::table('service_request_progresses')->insert($serviceRequestProgress);

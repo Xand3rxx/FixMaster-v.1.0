@@ -123,9 +123,6 @@ class CollaboratorsPaymentController extends Controller
 
             }
 
-                // switch($options){
-            //     c
-            // }
             }
         }else{
             return redirect()->back()->with('error', '  Please select an option');
