@@ -1,0 +1,1945 @@
+[{
+    "id": "1",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Isale-Oja/Idi-Mangoro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "2",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Iloro/Onipetesi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "3",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Oniwaya/Papauku",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "4",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Agbotikuyo/Dopemu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "5",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Okekoto",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "6",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Keke",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "7",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Darocha",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "8",
+    "state_id": "24",
+    "lga_id": "498",
+    "name": "Tabon-Tabon/Oko-Oba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "9",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Awodi-Ora",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "10",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Ojo Road",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "11",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Layeni",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "12",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Alaba Oro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "13",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Mosafejo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "14",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Ago Hausa",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "15",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Wilmer",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "16",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Olodi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "17",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Tolu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "18",
+    "state_id": "24",
+    "lga_id": "499",
+    "name": "Temidire I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "19",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Shasha/Akowonjo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "20",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Egbeda/Alimosho",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "21",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Ipaja North",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "22",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Ipaja South",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "23",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Ayobo/Ijon",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "24",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Oke-Odo/Pleasure",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "25",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Abule-Egba/Alagbado",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "26",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Idimu/Isheri",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "27",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Ikotun/Ijegun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "28",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Egbe/Agodo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "29",
+    "state_id": "24",
+    "lga_id": "500",
+    "name": "Igando/Egan",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "30",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Amuwo Odofin Housing Estate",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "31",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Festac I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "32",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Festac II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "33",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Festac III",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "34",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Kirikiri",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "35",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Satellite",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "36",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Agboju",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "37",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Ijegun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "38",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Iyagbe",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "39",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Ibeshe",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "40",
+    "state_id": "24",
+    "lga_id": "501",
+    "name": "Igbologun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "41",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Apapa I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "42",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Apapa II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "43",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Apapa III",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "44",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Apapa IV",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "45",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Afolabi Alasia Street",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "46",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Ijora-Oloye",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "47",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Gaskiya",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "48",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Iganmu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "49",
+    "state_id": "24",
+    "lga_id": "502",
+    "name": "Malu Road",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "50",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Posukoh",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "51",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Awhanjigoh",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "52",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Apa Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "53",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Keta-East Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "54",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Iworo-Gbanko Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "55",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Ajido Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "56",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Ibereko Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "57",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Araromi/Ilogbo Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "58",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Ikoga Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "59",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Ajara Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "60",
+    "state_id": "24",
+    "lga_id": "503",
+    "name": "Iyafin Group",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "61",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ajaganabe",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "62",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Etita Ebode",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "63",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ise/Igbogun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "64",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Lagbade",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "65",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Oke-Balogun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "66",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Popo-Oba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "67",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Oriba/Ladaba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "68",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Abomiti",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "69",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Agbowa",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "70",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Agbowa-Ikosi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "71",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ago-owu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "72",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ejirin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "73",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ibonwon",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "74",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Ilara",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "75",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Itoikin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "76",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Odomola",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "77",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Odoragunsin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "78",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Orugbo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "79",
+    "state_id": "24",
+    "lga_id": "504",
+    "name": "Poka",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "80",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Victoria Island II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "81",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Ilasan Housing Estate/Maiyegun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "82",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Ikota/Ikate Village",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "83",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Igbo-Efon/Ikota Housing Estate",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "84",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Ajah Village",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "85",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Addo Village",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "86",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Victoria I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "87",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Ikoyi I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "88",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Ikoyi II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "89",
+    "state_id": "24",
+    "lga_id": "505",
+    "name": "Obalende",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "90",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Ibeju I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "91",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Ibeju II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "92",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Iwerekun I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "93",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Iwerekun II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "94",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Lekki I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "95",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Lekki II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "96",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Orimedu I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "97",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Orimedu II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "98",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Orimedu III",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "99",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Siriwon/Igbekodo II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "100",
+    "state_id": "24",
+    "lga_id": "506",
+    "name": "Siriwon/Igbekodo I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "101",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Fagba/Akute",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "102",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Iju Isaga",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "103",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "New Ifako/Oyemekun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "104",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Old Ifako/Karaole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "105",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Obawole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "106",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Ogba/Oke-Ira",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "107",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Alakuko/Kollington",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "108",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Ijaiye/Agbado",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "109",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Ijaiye/Ojokoro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "110",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Ijegun/Akinade",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "111",
+    "state_id": "24",
+    "lga_id": "507",
+    "name": "Pamada/Abule-Egba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "112",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Airport/Onipetesi/Inilekere",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "113",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Alausa/Oregun/Olusosun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "114",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Anifowoshe/Ikeja",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "115",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Ipodo/Seriki Aro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "116",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Ojodu/Agidingbi/Omole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "117",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Adekunle/Adeniyi Jones/Ogba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "118",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "GRA/Police Barracks",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "119",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Oke Ira/Aguda",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "120",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Onigbongbon",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "121",
+    "state_id": "24",
+    "lga_id": "508",
+    "name": "Wasimi/Opebi/Allen",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "122",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Isele I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "123",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Isele II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "124",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Isele III",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "125",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Aga/Ijomu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "126",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Ipakodo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "127",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Isiu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "128",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Agura/Iponmi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "129",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Odogunyan",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "130",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Erikorodo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "131",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Agbala",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "132",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Olorunda/Igbala",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "133",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Imota I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "134",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Imota II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "135",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Igbogbo I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "136",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Igbogbo II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "137",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Baiyeku/Oreta",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "138",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Ibeshe",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "139",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Ijede I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "140",
+    "state_id": "24",
+    "lga_id": "509",
+    "name": "Ijede II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "141",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Oworonshoki",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "142",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Ifako",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "143",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Anthony/Mende",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "144",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Ojota/Ogudu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "145",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Ketu/Alapere",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "146",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Ketu/Ikosi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "147",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Isheri/Olowo-ira",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "148",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Agboyi I",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "149",
+    "state_id": "24",
+    "lga_id": "510",
+    "name": "Agboyi II",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "150",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Ajegunle",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "151",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Olowogbowo/Elegbata",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "152",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Oluwole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "153",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Idumota",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "154",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Oju –Oto/Isale Eko",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "155",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Idumagbo/Oko-Awo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "156",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Agarawu/Obadina",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "157",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Iduntafa",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "158",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Ilupesi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "159",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Isale-Agbede",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "160",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Olosun",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "161",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Olushi/Kakawa",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "162",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Popo-Aguda",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "163",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Anikantamo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "164",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Oko- faji",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "165",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Eiyekole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "166",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Onikan/Okesuna",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "167",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Sandgrouse",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "168",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Epetedo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "169",
+    "state_id": "24",
+    "lga_id": "511",
+    "name": "Ilubirin/Lafiaji",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "170",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Otto/Iddo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "171",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Apapa road and environs",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "172",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Olaleye village",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "173",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Makoko/Ebute-Metta",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "174",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Oyingbo Market/Ebute-Metta",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "175",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Glover/Ebute Metta",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "176",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Oko-Baba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "177",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Oyadiran/Estate/Abule-Oja",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "178",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Alagomeji",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "179",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Iwaya",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "180",
+    "state_id": "24",
+    "lga_id": "512",
+    "name": "Yaba/Igbobi-Sabi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "181",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Alakara",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "182",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Idi-oro/Odi-olowo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "183",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Babalosa",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "184",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Ojuwoye",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "185",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Ilupeju",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "186",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Olateju",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "187",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Kayode/Fadeyi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "188",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Ilupeju/Industrial",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "189",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Mushin/Atewolara",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "190",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Papa Ajao",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "191",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Ilasamaja",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "192",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Babalosa/Idi-Araba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "193",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Itire",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "194",
+    "state_id": "24",
+    "lga_id": "513",
+    "name": "Idi-Araba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "195",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Ojo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "196",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Okoko",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "197",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Ajangbadi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "198",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Iba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "199",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Sabo/Alaba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "200",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Constituency 2",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "201",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Ijanikin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "202",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Otto/Ilogbo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "203",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Irewe",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "204",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Taffi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "205",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Etegbin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "206",
+    "state_id": "24",
+    "lga_id": "514",
+    "name": "Idoluwo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "207",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Oshodi-Bolade",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "208",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Orile-Oshodi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "209",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Mafoluku",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "210",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Shogunle",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "211",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Alasia/Shogunle",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "212",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Constituency 2",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "213",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Isolo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "214",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Ajao Estate",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "215",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Ilasamaja",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "216",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Okota",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "217",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Ishagatedo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "218",
+    "state_id": "24",
+    "lga_id": "515",
+    "name": "Oke-Afa/Ejigbo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "219",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Onipanu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "220",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Palm grove/Ijebutedo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "221",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Alade",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "222",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Bajulaiye",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "223",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Igbobi/Fadeyi",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "224",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Folagoro/Bajulaiye/Igbari",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "225",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Mafoloku/Pedro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "226",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Bariga",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "227",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Ilaje/Akoka",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "228",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Gbagada Phase I/Obanikoro",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "229",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Gbagada Phase II/Apelehin",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "230",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Abule Okuta/Ilaje/Bariga",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "231",
+    "state_id": "24",
+    "lga_id": "516",
+    "name": "Onipanu",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "232",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Akinhanmi/Cole",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "233",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Yaba/Ojuelegba",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "234",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Gbaja/Stadium",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "235",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Shitta/Ogunlana",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "236",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Adeniran Ogunsanya",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "237",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Iponrin Housing Estate/Eric Moore",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "238",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Orile",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "239",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Coker",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "240",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Aguda",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "241",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Ijeshatedo",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "242",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Itire",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "243",
+    "state_id": "24",
+    "lga_id": "517",
+    "name": "Ikate",
+    "created_at": null,
+    "updated_at": null
+}
+]

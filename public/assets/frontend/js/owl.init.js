@@ -1,0 +1,65 @@
+//Owl Carousel
+$('#customer-testi').owlCarousel({
+  loop:true,
+  nav: true,
+  // dots: true,
+  autoplay:true,
+  autoplayTimeout:3000,
+  autoplayHoverPause:true,
+  // stagePadding: 50,
+  // rtl:true,
+  margin: 10,
+  responsive:{
+      0:{
+          items:1
+      },
+      600:{
+          items:1
+      },
+      1000:{
+          items:1
+      }
+  }
+});
+
+$('#client-four').owlCarousel({
+  loop:true,
+  nav: false,
+  dots: true,
+  autoplay:true,
+  autoplayTimeout:3000,
+  autoplayHoverPause:true,
+  responsive:{
+      0:{
+          items:1
+      },
+      600:{
+          items:2
+      },
+      1000:{
+          items:4
+      }
+  }
+});
+
+$('#owl-fade').owlCarousel({
+  loop:true,
+  nav: false,
+  dots: true,
+  autoplay:true,
+  autoplayTimeout:3000,
+  autoplayHoverPause:true,
+  animateOut: 'fadeOut',
+  items: 1,
+})
+
+
+$('#single-owl').owlCarousel({
+  loop:true,
+  nav: false,
+  dots: true,
+  autoplay:true,
+  autoplayTimeout:5000,
+  autoplayHoverPause:true,
+  items: 1,
+})

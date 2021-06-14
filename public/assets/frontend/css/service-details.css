@@ -1,0 +1,254 @@
+rating-container {
+    margin: 0 auto;
+    margin-bottom: 3em;
+    padding: 4px;
+  }
+  
+  .inner {
+    padding: 1em;
+    background-color: white;
+    overflow: hidden;
+    position: relative;
+    -webkit-border-radius: 4px; 
+    -moz-border-radius: 4px; 
+    border-radius: 4px; 
+    margin-left: -10px;
+  
+  }
+  
+  .rating {
+    float: left;
+    width: 45%;
+    margin-right: 5%;
+    text-align: center;
+  }
+  
+  .rating-num {
+    color: #333333;
+    font-size: 72px;
+    font-weight: 100;
+    line-height: 1em; 
+    margin-top: 25px !important;
+  }
+  
+  .rating-stars {
+    font-size: 20px;
+    color: #E3E3E3;
+    margin-bottom: .5em;
+  }
+  .rating-stars .active {
+    color: #737373;
+  }
+  
+  .rating-users {
+    font-size: 14px;
+  }
+  
+  .histo {
+    float: left;
+    width: 50%;
+    font-size: 13px;
+  }
+  
+  .histo-star {
+    float: left;
+    padding: 3px;
+  
+  }
+  
+  .histo-rate {
+    width: 100%;
+    display: block;
+    clear: both;
+  }
+  
+  .bar-block {
+    margin-left: 5px;
+    color: black;
+    display: block;
+    float: left;
+    width: 75%;
+    position: relative;
+  }
+  
+  .bar {
+    padding: 4px;
+    display: block;
+    border-radius: 3px;
+  }
+  
+  #bar-five {
+    width: 0;
+    background-color: #9FC05A;
+  }
+  
+  #bar-four {
+    width: 0;
+    background-color: #ADD633;
+  }
+  
+  #bar-three {
+    width: 0;
+    background-color: #FFD834;
+  }
+  
+  #bar-two {
+    width: 0;
+    background-color: #FFB234;
+  }
+  
+  #bar-one {
+    width: 0;
+    background-color: #FF8B5A;
+  }
+  
+  * {
+      font-family: sans-serif;
+  }
+  li {
+      list-style: none;
+  }
+  .ratings-summary {
+      float: left;
+      text-align: center;
+  }
+  
+  .ratings-summary-numbers .ratings-summary-overall {
+      display: inline-block;
+      font-size: 32px;
+      color: #212121;
+      margin-top: 4px;
+  }
+  .ratings-summary-numbers .ratings-summary-star {
+      font-size: 28px;
+      padding: 0 0 0 4px;
+      display: inline-block;
+      color: #212121;
+  }
+  .ratings-summary-total-figures {
+      font-size: 14px;
+      color: #878787;
+      text-align: center;
+  }
+  .rating-category {
+      width: 4%;
+      float: left;
+      clear: both;
+  }
+  .rating-bars {
+      width: 50%;
+      float: left;
+  }
+  .rating-holder .rating-category .rating-digit-holder {
+      font-size: 12px;
+      font-weight: 500;
+      color: #212121;
+      padding: 2px 0;
+  }
+  .rating-holder .rating-category .rating-star-holder {
+      font-size: 12px;
+      color: #212121;
+      padding: 0 0 0 2px;
+  }
+  .rating-bar-bg,
+  .rating-bar-bg .bar-position {
+      height: 10px;
+      border-radius: 100px;
+  }
+  
+  .rating-bar-bg {
+      position: relative;
+      background: #f0f0f0;
+      margin-top: 7px;
+      margin-left: 7px;
+  }
+  
+  .rating-bar-bg .green {
+      background-color: #2cec67;
+  }
+  .rating-bar-bg .yellow {
+      background-color: #ffe289;
+  }
+  .rating-bar-bg .red {
+      background-color: #fc5959;
+  }
+  .rating-bar-bg .bar-position {
+      left: 0;
+      position: absolute;
+      width: 0;
+  }
+  .rating-total-numbers {
+      font-size: 12px;
+      line-height: 20px;
+  }
+  
+  .owl-nav{
+      text-align: center !important;
+  }
+  
+  .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev, .owl-carousel button.owl-dot {
+      font-size: 40px;
+      color: #E97D1F;
+  }
+
+
+  @media (max-width: 425px){
+      .star-width {
+          flex: 0 0 100%;
+          max-width: 100%;
+      }
+      .star-main-rating{
+        margin-left: 130px !important;
+      }
+      .rating-bars {
+          width: 70%;
+      }
+  }
+
+  /* @media (max-width: 768px){
+      .star-width {
+          flex: 0 0 100%;
+          max-width: 100%;
+      }
+      .star-main-rating{
+        margin-left: 130px !important;
+      }
+  } */
+
+  /* @media (max-width: 992px){
+    .star-width {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 500px !important;
+
+    }
+}
+@media (min-width: 992px){
+  .star-main-rating{
+    margin-left: 130px !important;
+  }
+    .rating-bars {
+        width: 70%;
+    }
+} */
+
+@media all and (max-width: 998px) and (min-width: 426px) {
+  .star-width {
+      flex: 0 0 100%;
+      max-width: 100%;
+  }
+  .star-main-rating{
+    margin-left: 130px !important;
+  }
+  .rating-bars {
+      width: 70%;
+  }
+}
+
+@media (min-width: 999px){
+  .star-width {
+      flex: 0 0 100%;
+      max-width: 100%;
+      margin: -150px 0px 0px 120px;
+  }
+}

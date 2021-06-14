@@ -1,0 +1,81 @@
+[{
+    "id": "1",
+    "state_id": "24",
+    "lga_id": "498",
+    "town_id": "1",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "2",
+    "state_id": "24",
+    "lga_id": "498",
+    "town_id": "2",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "3",
+    "state_id": "24",
+    "lga_id": "498",
+    "town_id": "3",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "237",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "237",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "238",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "238",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "239",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "239",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "240",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "240",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "241",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "241",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "242",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "242",
+    "created_at": null,
+    "updated_at": null
+},
+{
+    "id": "243",
+    "state_id": "24",
+    "lga_id": "517",
+    "town_id": "243",
+    "created_at": null,
+    "updated_at": null
+}
+]
