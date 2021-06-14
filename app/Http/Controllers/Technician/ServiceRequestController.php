@@ -13,7 +13,7 @@ class ServiceRequestController extends Controller
 
 
 
-    public function getActiveRequest(Request $request){
+    public function getActiveRequests(Request $request){
 
         $activeRequest = ServiceRequestAssigned::whereHas('service_request', function ($query) {
             $query->where('status_id', 2);
@@ -23,6 +23,30 @@ class ServiceRequestController extends Controller
             ->get();
         return view('technician.requests.active')
             ->with('activeJobs', $activeRequest);
+    }
+
+    public function getCompletedRequests(Request $request){
+
+        $completedJobs = ServiceRequestAssigned::whereHas('service_request', function ($query) {
+            $query->where('status_id', 4);
+        })
+            ->where('user_id', Auth::id())
+            ->where('assistive_role', 'Technician')
+            ->get();
+        return view('technician.requests.completed')
+            ->with('completedJobs', $completedJobs);
+    }
+
+    public function getCancelledRequests(Request $request){
+
+        $cancelledJobs = ServiceRequestAssigned::whereHas('service_request', function ($query) {
+            $query->where('status_id', 3);
+        })
+        ->where('user_id', Auth::id())
+        ->where('assistive_role', 'Technician')
+        ->get();
+        return view('technician.requests.cancelled')
+        ->with('cancelledJobs', $cancelledJobs);
     }
 
     public function acceptedJobDetails($language, $uuid){

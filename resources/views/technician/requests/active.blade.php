@@ -67,7 +67,7 @@
                             <td class="tx-medium">{{ $res->account->first_name.' '.$res->account->last_name }}</td>
                             @endif
                         @endforeach
-                        {{-- <td class="tx-medium">kenneth</td> --}}
+                        
                         <td class="tx-medium">
                           <a href="{{ route('technician.requests.active_details', [$data->service_request->uuid, 'locale' => app()->getLocale()]) }}" class="btn btn-primary btn-sm">Details</a>
                         </td>
