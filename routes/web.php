@@ -62,6 +62,7 @@ use App\Http\Controllers\Admin\CollaboratorsPaymentController;
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
+use App\Http\Controllers\Client\MessageController as ClientMessageController;
 
 
 
@@ -433,6 +434,10 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     Route::post('available-tool-quantity', [CseController::class, 'getAvailableToolQuantity'])->name('available.tools');
     Route::post('get-sub-service-list', [CseController::class, 'getSubServices'])->name('needed.sub_service');
+
+    //Client messaging routes
+    Route::resource('messages', ClientMessageController::class);
+
 });
 
 

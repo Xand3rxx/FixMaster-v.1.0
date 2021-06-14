@@ -73,7 +73,7 @@
                             </div><!--end col-->
                             @endif
                             <div class="col-6 mt-4 pt-2">
-                            <a href="#" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('') ? 'active' : '' }}">
+                            <a href="{{ route('client.messages.index', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.messages.index') ? 'active' : '' }}">
                                     <span class="pro-icons h3 text-muted"><i class="uil uil-envelope-download text-danger" data-toggle="tooltip" title="You have 0 unread messages"></i></span>
                                     <h6 class="title text-dark h6 my-0">Messages</h6>
                                 </a>
