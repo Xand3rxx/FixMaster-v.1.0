@@ -17,6 +17,7 @@ Route::get('/', function () {
     return redirect(app()->getLocale());
 });
 
+
 //Clear configurations:
 Route::get('/config-clear', function () {
     Artisan::call('config:clear');
