@@ -168,8 +168,11 @@ trait Invoices
     public static function completedServiceInvoice(\App\Models\ServiceRequest $service_request, string $hours_spent)
     {
         $rfq = Rfq::where('service_request_id', $service_request['id'])->first();
-        
-        return self::createcompletedServiceInvoice($service_request, $rfq, $hours_spent);
+        $invoice_created = self::createcompletedServiceInvoice($service_request, $rfq, $hours_spent);
+        if($invoice_created->rfq_id == null){
+            // Send Notification of No RFQ
+        }
+        return $invoice_created;
     }
 
     protected static function createcompletedServiceInvoice($service_request, $rfq, $hours_spent)
