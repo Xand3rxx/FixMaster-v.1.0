@@ -1,15 +1,12 @@
 <?php
 
+use App\Http\Controllers\EstateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Messaging\Template;
 use App\Http\Controllers\Messaging\MessageController;
 use App\Http\Controllers\Messaging\Message;
 use App\Http\Controllers\CSE\RequestController;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +124,6 @@ Route::get('messaging/roles', function() {
    return $requestController->getUsersByReferenceID($request);
  });
 
-Route::get('/',      [\App\Http\Controllers\EstateController::class, 'showEstates'])->name('list_estate');
+Route::get('/', [EstateController::class, 'showEstates'])->name('list_estate');
 
 
