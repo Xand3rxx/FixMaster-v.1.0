@@ -213,9 +213,8 @@
       </div>
     </div>
 </div>
-
+{{-- {{ dd(config('app.geolocation_api_key')) }} --}}
 @push('scripts')
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ&v=3.exp&libraries=places"></script>
 <script src="{{ asset('assets/js/geolocation.js') }}"></script>
 <script src="{{ asset('assets/dashboard/assets/js/184a93a1-ca37-44a3-839f-c75344933ed1.js') }}"></script>
 @endpush

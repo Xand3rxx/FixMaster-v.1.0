@@ -129,6 +129,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'geolocation_api_key' => env('GEOLOCATION_API_KEY', 'AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
