@@ -219,33 +219,7 @@
 </div>
 @endsection
 @push('scripts')
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ&v=3.exp&libraries=places"></script>
-
-
-<script>
-
-$(document).ready(function() {
-        "use strict";
-        let autocomplete;
-        initialize();
-
-
-
-        function initialize() {
-            // Create the autocomplete object, restricting the search to geographical location types.
-            autocomplete = new google.maps.places.Autocomplete((document.querySelector('.user_address')), {
-                types: ['geocode']
-            });
-            autocomplete = new google.maps.places.Autocomplete((document.querySelector('.user_address2')), {
-                types: ['geocode']
-            });
-            // Chain request to html element on the page
-            google.maps.event.addDomListener(document.querySelector('.user_address'), 'focus');
-            google.maps.event.addDomListener(document.querySelector('.user_address2'), 'focus');
-        }
-    });
-
-</script>
+<script src="{{ asset('assets/js/geolocation.js') }}"></script>
 
 <script>
 

@@ -110,7 +110,7 @@
     <script src="{{asset('assets/frontend/js/scrollspy.min.js')}}"></script>
 
           <!-- geolocation asset starts here -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ&v=3.exp&libraries=places"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places"></script>
     <script src="{{asset('assets/js/geolocation.js')}}"></script>
     <!-- geolocation asset starts here -->
 

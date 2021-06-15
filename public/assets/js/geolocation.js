@@ -29,7 +29,7 @@
         var place = autocomplete.getPlace();
 
         // var key = "AIzaSyDeDLVAiaU13p2O0d3jfcPjscsbVsCQUzc";
-        var key = "AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ";
+        var key = config('app.geolocation_api_key');
         $.get('https://maps.googleapis.com/maps/api/geocode/json', {
             address: place.formatted_address,
             key: key
