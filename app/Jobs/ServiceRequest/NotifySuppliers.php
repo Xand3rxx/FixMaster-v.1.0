@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Supplier;
 use Illuminate\Bus\Queueable;
 use App\Models\ServiceRequest;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,7 +40,7 @@ class NotifySuppliers implements ShouldQueue, ShouldBeUniqueUntilProcessing
      *
      * @return void
      */
-    public function handle()
+    public function handle(Mailer $mailer)
     {
         // Get all suppliers with deleted_at of null status
         $suppliers = User::all()->reject(function ($user) {
@@ -48,7 +49,7 @@ class NotifySuppliers implements ShouldQueue, ShouldBeUniqueUntilProcessing
         // Loop through all suppliers and send each of them email
         foreach ($suppliers as $key => $supplier) {
             # send this supplier the notification... 
-
+            
         }
     }
 }

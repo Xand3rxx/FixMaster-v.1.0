@@ -77,14 +77,26 @@ class JobAcceptanceController extends Controller
         (bool) $assigned = false;
         DB::transaction(function () use ($sub_status, &$assigned) {
             // 1. Service Request Assigned Table create record: user_id, service_request_id, job_acceptance_time, status == active
-            ServiceRequestAssigned::assignUserOnServiceRequest($this->user->id, $this->service_request->id, ServiceRequestAssigned::JOB_ACCEPTED[0], now(), ServiceRequestAssigned::STATUS[0], null,null,null,ServiceRequestAssigned::ASSISTIVE_ROLE[2]);
+            ServiceRequestAssigned::assignUserOnServiceRequest($this->user->id, $this->service_request->id, ServiceRequestAssigned::JOB_ACCEPTED[0], now(), ServiceRequestAssigned::STATUS[0], null, null, null, ServiceRequestAssigned::ASSISTIVE_ROLE[2]);
             // 2. Store Service request progress
             ServiceRequestProgress::storeProgress($this->user->id, $this->service_request->id, $sub_status->status_id, $sub_status->id);
             // 3. Update Service Request to Ongoing
             $this->service_request->update(['status_id' => $sub_status->status_id]);
-            // CSE_JOB_COMPLETED_NOTIFICATION ADMIN_CSE_JOB_ACCEPTANCE_NOTIFICATION
-            // $messager = new MessageController();
-            // $messager->sendNewMessage(\App\Models\MessageTemplate::TYPES[1], )
+            // ADMIN_CSE_JOB_ACCEPTANCE_NOTIFICATION
+            $this->user->loadMissing('account');
+            $this->service_request->loadMissing('client', 'address');
+
+            $params = [
+                'email' => $this->user->email,
+                'cse_name' => $this->user->account->last_name . ' ' . $this->user->account->first_name,
+                'job_ref' => $this->service_request->unique_id,
+                'customer_name' => $this->service_request->client->account->last_name . ' ' . $this->service_request->client->account->first_name,
+                'customer_email' => $this->service_request->client->email,
+                'customer_phone' => $this->service_request->address->phone_number,
+                'address' => $this->service_request->address->address,
+                'url' => route('cse.requests.show', ['locale' => app()->getLocale(), 'request' => $this->service_request->uuid])
+            ];
+            \App\Traits\UserNotification::send($params, 'ADMIN_CSE_JOB_ACCEPTANCE_NOTIFICATION');
             // update registered to be true
             $assigned = true;
         });

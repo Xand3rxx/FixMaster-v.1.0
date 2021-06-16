@@ -93,12 +93,29 @@ class ActionsRepeated
         // Each Key should match table names, value match accepted parameter in each table name stated
         $sub_status = SubStatus::where('uuid', 'e59c3305-45ce-4d8e-b5ab-a5f4e9d40aca')->firstOrFail();
         $user = \App\Models\User::where('uuid', $valid['qa_user_uuid'])->with('account')->firstOrFail();
+        $service_request->loadMissing('service', 'status');
         return [
             'service_request_assigned' => [
+                'user'                      => $user,
                 'user_id'                   => $user->id,
                 'service_request_id'        => $service_request->id,
                 'assistive_role'            => ServiceRequestAssigned::ASSISTIVE_ROLE[1],
-                'status'                    => null
+                'status'                    => null,
+                'notification' => [
+                    'feature' => 'CSE_ASSIGNED_QA_TO_A_JOB',
+                    'params'    => [
+                        'cse_name'  => $request->user()->account->last_name .' '.$request->user()->account->first_name,
+                        'cse_email' =>  $request->user()->email,
+                        'cse_phone' => $request->user()->contact->phone_number,
+                        'service_category' => $service_request->service->category->name,
+                        'job_status'    =>  $service_request->status->name,
+                        'qa_name'   => $user['account']['last_name'] .' '.$user['account']['first_name'],
+                        'lastname' => $user['account']['last_name'],
+                        'firstname' => $user['account']['first_name'],
+                        'email' => $user['email'],
+                        'job_ref' =>  $service_request->unique_id
+                    ]
+                ],
             ],
             'service_request_progresses' => [
                 'user_id'              => $request->user()->id,
@@ -134,11 +151,20 @@ class ActionsRepeated
         $valid['technicians'] = [];
 
         foreach ($valid['add_technician_user_uuid'] as $key => $technician) {
-            $user = \App\Models\User::where('uuid', $technician)->firstOrFail();
+            $user = \App\Models\User::where('uuid', $technician)->with('account')->firstOrFail();
             array_push($valid['technicians'], [
                 'user_id'                   => $user->id,
                 'service_request_id'        => $service_request->id,
-                'status'                    => null
+                'status'                    => null,
+                'notification' => [
+                    'feature' => 'CSE_ASSIGNED_TECHNICIAN_TO_A_JOB',
+                    'params'    => [
+                        'lastname' => $user['account']['last_name'],
+                        'firstname' => $user['account']['first_name'],
+                        'email' => $user['email'],
+                        'job_ref' =>  $service_request->unique_id
+                    ]
+                ],
             ]);
         }
 
@@ -149,9 +175,6 @@ class ActionsRepeated
                 'service_request_id'   => $service_request->id,
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
-            ],
-            'notification' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
             ],
             'log' => [
                 'type'                      =>  'request',

@@ -40,13 +40,23 @@ class AssignTechnician
         ]);
         // Each Key should match table names, value match accepted parameter in each table name stated
         $sub_status = SubStatus::where('uuid', '1faffcc3-7404-4fad-87a7-97161d3b8546')->firstOrFail();
-        $user = \App\Models\User::where('uuid', $valid['technician_user_uuid'])->firstOrFail();
+        $user = \App\Models\User::where('uuid', $valid['technician_user_uuid'])->with('account')->firstOrFail();
 
         return [
             'service_request_assigned' => [
+                'user'                      => $user,
                 'user_id'                   => $user->id,
                 'service_request_id'        => $service_request->id,
-                'status'                    => null
+                'status'                    => null,
+                'notification' => [
+                    'feature' => 'CSE_ASSIGNED_TECHNICIAN_TO_A_JOB',
+                    'params'    => [
+                        'lastname' => $user['account']['last_name'],
+                        'firstname' => $user['account']['first_name'],
+                        'email' => $user['email'],
+                        'job_ref' =>  $service_request->unique_id
+                    ]
+                ],
             ],
             'service_request_progresses' => [
                 'user_id'              => $request->user()->id,
@@ -54,9 +64,7 @@ class AssignTechnician
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notification' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-            ],
+
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\ServiceRequest\Concerns;
 
-
+use App\Jobs\ServiceRequest\NotifySuppliers;
 use App\Traits\Loggable;
 use App\Models\ActivityLog;
 use App\Models\ServiceRequest;
@@ -44,6 +44,8 @@ trait StoreInDatabase
 
                 if (!empty($table['service_request_assigned'])) {
                     ServiceRequestAssigned::create($table['service_request_assigned']);
+                    // Notify the User
+                    \App\Traits\UserNotification::send($table['service_request_assigned']['notification']['params'], $table['service_request_assigned']['notification']['feature']);
                 }
 
                 if (!empty($table['trfs'])) {
@@ -75,6 +77,7 @@ trait StoreInDatabase
                             'size'                  => $table['rfqs']['rfq_batches']['size'][$key]
                         ]);
                     }
+                    // $this->dispatch(new NotifySuppliers($table['rfqs']['service_request']));
                 }
 
                 if (!empty($table['invoice_building'])) {
@@ -110,11 +113,18 @@ trait StoreInDatabase
                 if (!empty($table['add_technicians'])) {
                     foreach ($table['add_technicians'] as $key => $technician) {
                         ServiceRequestAssigned::create($technician);
+                        // Notify the User
+                        \App\Traits\UserNotification::send($technician['notification']['params'], $technician['notification']['feature']);
                     }
                 }
 
                 if (!empty($table['log'])) {
                     ActivityLog::create($table['log']);
+                }
+
+                if(!empty($table['notification'])) {
+                    // Notify the User
+                    \App\Traits\UserNotification::send($table['notification']['params'], $table['notification']['feature']);
                 }
             }
 

@@ -149,8 +149,8 @@ class CustomerServiceExecutiveController extends Controller
         // $warranties = \App\Models\ServiceRequestAssigned::with('service_request_warranty', 'user.account', 'service_request')
         //     ->where(['status' => 'Active'])
         //     ->get();
-            $warranties = \App\Models\ServiceRequestWarranty::with('user.account', 'service_request', 'warranty', 'service_request_warranty_issued')->orderBy('has_been_attended_to', 'ASC')->latest()->get();
-   
+        $warranties = \App\Models\ServiceRequestWarranty::with('user.account', 'service_request', 'warranty', 'service_request_warranty_issued')->orderBy('has_been_attended_to', 'ASC')->latest()->get();
+
 
         return view('cse.warranties.index', [
             'issuedWarranties' =>  $warranties
@@ -170,34 +170,33 @@ class CustomerServiceExecutiveController extends Controller
         $service_request = \App\Models\ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices'])->firstOrFail();
 
         $request_progress = \App\Models\ServiceRequestProgress::where('service_request_id', $service_request->id)->with('user', 'substatus')->latest('created_at')->get();
-       
+
         // find the technician role CACHE THIS DURING PRODUCTION
 
         $technicainsRole = \App\Models\Role::where('slug', 'technician-artisans')->first();
         $rfq        = \App\Models\Rfq::where('service_request_id', $service_request->id)->first();
-        $rfqWarranty        = \App\Models\Rfq::where(['issued_by'=> Auth::user()->id, 'service_request_id' => $service_request->id, 'type'=> 'Warranty'])->latest()->first();
-        $rfqSupplierDispatch =   $rfqWarranty ? \App\Models\RfqSupplierDispatch::where(['rfq_id'=> $rfqWarranty->id, 'cse_status'=> 'Pending' ])->get(): null;
+        $rfqWarranty        = \App\Models\Rfq::where(['issued_by' => Auth::user()->id, 'service_request_id' => $service_request->id, 'type' => 'Warranty'])->latest()->first();
+        $rfqSupplierDispatch =   $rfqWarranty ? \App\Models\RfqSupplierDispatch::where(['rfq_id' => $rfqWarranty->id, 'cse_status' => 'Pending'])->get() : null;
 
-   
 
-        $scheduleDate =!empty($service_request->service_request_warranty->service_request_warranty_issued) ? 
-        $service_request->service_request_warranty->service_request_warranty_issued->scheduled_datetime: '';
-        $issued_id = !empty($service_request->service_request_warranty->service_request_warranty_issued) ? 
-        $service_request->service_request_warranty->service_request_warranty_issued->id: '';
-        $technicianExist = !empty($service_request->service_request_warranty->service_request_warranty_issued) ? 
-        $service_request->service_request_warranty->service_request_warranty_issued->technician_id : [];
-        $getCausalTechnician =  $issued_id? \App\Models\ServiceRequestWarrantyReport::where(['service_request_warranties_issued_id' => $issued_id ])->get(): [];
+
+        $scheduleDate = !empty($service_request->service_request_warranty->service_request_warranty_issued) ?
+            $service_request->service_request_warranty->service_request_warranty_issued->scheduled_datetime : '';
+        $issued_id = !empty($service_request->service_request_warranty->service_request_warranty_issued) ?
+            $service_request->service_request_warranty->service_request_warranty_issued->id : '';
+        $technicianExist = !empty($service_request->service_request_warranty->service_request_warranty_issued) ?
+            $service_request->service_request_warranty->service_request_warranty_issued->technician_id : [];
+        $getCausalTechnician =  $issued_id ? \App\Models\ServiceRequestWarrantyReport::where(['service_request_warranties_issued_id' => $issued_id])->get() : [];
         $causalTechnician  = [];
         $causalSuppliers  = [];
-        if(!empty($getCausalTechnician)){
-        foreach($getCausalTechnician as $val) {
-          if($val->causal_agent_id != 0)
-            if( \CustomHelpers::getUserDetail($val->causal_agent_id)->roles[0]->url == 'technician')
-            $causalTechnician [] = $val->causal_agent_id;
-            elseif( \CustomHelpers::getUserDetail($val->causal_agent_id)->roles[0]->url == 'supplier')
-            $causalSuppliers [] = $val->causal_agent_id;
-          
-        }
+        if (!empty($getCausalTechnician)) {
+            foreach ($getCausalTechnician as $val) {
+                if ($val->causal_agent_id != 0)
+                    if (\CustomHelpers::getUserDetail($val->causal_agent_id)->roles[0]->url == 'technician')
+                        $causalTechnician[] = $val->causal_agent_id;
+                    elseif (\CustomHelpers::getUserDetail($val->causal_agent_id)->roles[0]->url == 'supplier')
+                        $causalSuppliers[] = $val->causal_agent_id;
+            }
         }
 
 
@@ -208,26 +207,27 @@ class CustomerServiceExecutiveController extends Controller
             'request_progress' => $request_progress,
             'shcedule_datetime' =>  $scheduleDate,
             'technician_list'  =>  \App\Models\Technician::all(),
-            'suppliers'        =>  \App\Models\Rfq::where('service_request_id', $service_request->id)->with('rfqSupplies', 'rfqSuppliesInvoices','rfqBatches', 'rfqSupplierDispatches', 'serviceRequest')->first(),
+            'suppliers'        =>  \App\Models\Rfq::where('service_request_id', $service_request->id)->with('rfqSupplies', 'rfqSuppliesInvoices', 'rfqBatches', 'rfqSupplierDispatches', 'serviceRequest')->first(),
             'requestReports'  => \App\Models\ServiceRequestReport::where('service_request_id', $service_request->id)->latest('created_at')->get(),
-            'RfqDispatchNotification' => $rfqWarranty? \App\Models\RfqDispatchNotification::where(['service_request_id' => $service_request->id, 'rfq_id'=>  $rfq->id ])->get(): [],
+            'RfqDispatchNotification' => $rfqWarranty ? \App\Models\RfqDispatchNotification::where(['service_request_id' => $service_request->id, 'rfq_id' =>  $rfq->id])->get() : [],
             'causalAgent'  =>  $issued_id != '' ? \App\Models\ServiceRequestWarrantyReport::where([
-                'service_request_warranties_issued_id' => $issued_id ])
-                ->get(): [],
+                'service_request_warranties_issued_id' => $issued_id
+            ])
+                ->get() : [],
             'technicianExist' =>  $technicianExist,
-             'rfqSupplierDispatch' => $rfqSupplierDispatch ,
-            'causalTechnician' =>  count($causalTechnician) > 0 AND count($causalSuppliers) == 0 ? $causalTechnician: '0',
-            'rfqDetails'    => $rfqWarranty? \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $rfqWarranty->id])->where('accepted', '<>', 'No')
-                            ->with('rfq', 'rfqBatches', 'supplier', 'supplierInvoiceBatches', 'supplierDispatch')->get(): null,
+            'rfqSupplierDispatch' => $rfqSupplierDispatch,
+            'causalTechnician' =>  count($causalTechnician) > 0 and count($causalSuppliers) == 0 ? $causalTechnician : '0',
+            'rfqDetails'    => $rfqWarranty ? \App\Models\RfqSupplierInvoice::where(['rfq_id' => $rfqWarranty->id])->where('accepted', '<>', 'No')
+                ->with('rfq', 'rfqBatches', 'supplier', 'supplierInvoiceBatches', 'supplierDispatch')->get() : null,
             'rfqWarranty' => $rfqWarranty,
-            'rfqs'        =>  \App\Models\Rfq::where('service_request_id', $service_request->id)->with('rfqSupplies', 'rfqSuppliesInvoices','rfqBatches', 'rfqSupplierDispatches', 'serviceRequest')->get(),
+            'rfqs'        =>  \App\Models\Rfq::where('service_request_id', $service_request->id)->with('rfqSupplies', 'rfqSuppliesInvoices', 'rfqBatches', 'rfqSupplierDispatches', 'serviceRequest')->get(),
 
         ];
 
         //dd( $variables['rfqDetails'] );
-      
- 
-       
+
+
+
         if ($service_request->status_id == 2) {
             $service_request_progresses = \App\Models\ServiceRequestProgress::where('user_id', auth()->user()->id)->latest('created_at')->first();
             // Determine Ongoing Status List
@@ -259,15 +259,14 @@ class CustomerServiceExecutiveController extends Controller
             (array) $filters = $request->only('sub_service_list');
 
             return view('cse.requests.includes._sub_service_dynamic_field', [
-                'results'   =>  $filters ? \App\Models\SubService::select('name','uuid')->whereIn('uuid', $filters['sub_service_list'][0])->orderBy('name', 'ASC')->get() : []
+                'results'   =>  $filters ? \App\Models\SubService::select('name', 'uuid')->whereIn('uuid', $filters['sub_service_list'][0])->orderBy('name', 'ASC')->get() : []
             ]);
         }
-
     }
 
     public function see()
     {
-   
-        return view('emails.message',['mail_message' => '<p>nnnnnnnnnnnnnn</p>']);
+
+        return view('emails.message', ['mail_message' => '<p>nnnnnnnnnnnnnn</p>']);
     }
 }

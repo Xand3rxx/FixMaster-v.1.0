@@ -137,10 +137,11 @@ class ServiceRequest extends Model
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
 
-    public function service_request()
-    {
-        return $this->hasOne(ServiceRequest::class, 'uuid', 'service_request_id');
-    }
+    // This is very wrong
+    // public function service_request()
+    // {
+    //     return $this->hasOne(ServiceRequest::class, 'uuid', 'service_request_id');
+    // }
 
     public function address()
     {
