@@ -445,7 +445,7 @@ class ServiceController extends Controller
             $type = 'Errors';
             $severity = 'Error';
             $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.Auth::user()->email.' was trying to delete '.$service->name.' sub service.';
+            $message = 'An error occurred while '.Auth::user()->email.' was trying to delete '.$subService->name.' sub service.';
             $this->log($type, $severity, $actionUrl, $message);
 
             return back()->with('error', 'An error occurred while trying to delete '.$subService->name);

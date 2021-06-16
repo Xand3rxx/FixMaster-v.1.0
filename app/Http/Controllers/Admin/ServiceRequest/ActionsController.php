@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\ServiceRequest;
 
-use Illuminate\Support\Facades\Route;
-use App\Traits\Utility;
-use App\Traits\Loggable;
 use Illuminate\Http\Request;
 use App\Models\ServiceRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceRequestProgress;
 
-class ServiceRequestController extends Controller
+class ActionsController extends Controller
 {
-    use Utility, Loggable;
     /**
      * Display a listing of the resource.
      *
@@ -21,32 +17,7 @@ class ServiceRequestController extends Controller
      */
     public function index()
     {
-
-        return view('admin.requests.pending.index', [
-            'requests'  =>  ServiceRequest::with('client', 'price')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Pending'])->latest('created_at')->get()
-        ]);
-    }
-
-
-    /**
-     * Display the selected pending service request detail.
-     *
-     * @param  int  $uuid
-     * @return \Illuminate\Http\Response
-     */
-    public function ongoingRequestDetails($language, $uuid)
-    {
-
-        return \App\Models\Role::where('slug', 'cse-user')->with('users')
-        ->whereHas('users', function($query){
-            $query->where('job_availability', 'Yes');
-        })
-        ->firstOrFail();
-
-
-        return view('admin.requests.pending.show', [
-            'cses'    =>  \App\Models\Role::where('slug', 'cse-user')->with('users')->firstOrFail(),
-        ]);
+        //
     }
 
     /**
@@ -71,22 +42,14 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * Display the selected pending service request detail.
+     * Display the specified resource.
      *
-     * @param  int  $uuid
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($language, $uuid)
+    public function show($id)
     {
-
-        // return \App\Models\Cse::where('job_availability', 'Yes')->with('user', 'user.ratings')->get();
-
-        // $service_request = ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'service_request_cancellation', 'invoice', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest'])->firstOrFail();
-
-        return view('admin.requests.pending.show', [
-            'serviceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'serviceRequestMedias'])->firstOrFail(),
-            'cses'    =>  \App\Models\Cse::where('job_availability', 'Yes')->with('user', 'user.ratings')->get(),
-        ]);
+        //
     }
 
     /**
@@ -123,8 +86,13 @@ class ServiceRequestController extends Controller
         //
     }
 
-
-    public function markCompletedRequest(Request $request, $language, $id){
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function markCompletedRequest($language, $id, Request $request, ){
 
         $requestExists =  ServiceRequest::where('uuid', $id)->firstOrFail();
 
@@ -145,6 +113,4 @@ class ServiceRequestController extends Controller
             return back()->with('error', 'An error occurred while trying to mark '.$requestExists->unique_id.' service request as completed.');
         }
     }
-
-
 }
