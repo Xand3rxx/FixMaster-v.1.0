@@ -14,13 +14,13 @@ class ServiceRequestPayment extends Model
         'user_id', 'payment_id', 'service_request_id', 'amount', 'unique_id', 'payment_type', 'status'
     ];
 
-    // protected static function booted()
-    // {
-    //     static::creating(function ($service_request_payment) {
-    //         $service_request_payment->uuid = (string) Str::uuid(); 
-    //     });
-    // }
-
+    protected static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->uuid = Str::uuid()->toString();
+        });
+    }
 
     public function service_request()
      {

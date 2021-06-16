@@ -40,7 +40,7 @@
               <h6 class="mg-b-5">Your Most Recent Requests</h6>
             <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of pending<strong>Payments</strong> to be paid by <span>FixMaster</span> as of <strong>{{ date('l jS F Y') }}</strong>.</p>
             </div>
-
+  {{-- {{dd($serve->count())}} --}}
           </div><!-- card-header -->
           <div class="card-body pd-y-30">
             <div class="d-sm-flex">
@@ -65,7 +65,7 @@
                         <select class="custom-select" id="sort_by_range">
                             <option value="None">Select...</option>
                             <option value="Date">Date</option>
-                            <option value="service_request">Service Request</option>
+                            <option value="service_request">Job ID</option>
                             <option value="type">Service Type</option>
 
                         </select>
@@ -93,7 +93,7 @@
 
                 <div class="col-md-4 sort-by-month d-none" id="sort-by-month">
                     <div class="form-group position-relative">
-                        <label>Select Service Request <span class="text-danger">*</span></label>
+                        <label>Select Job ID <span class="text-danger">*</span></label>
                         <select class="form-control custom-select" id="sort_by_month">
                             <option value="">Select...</option>
                            @if($serve->count() > 1)
