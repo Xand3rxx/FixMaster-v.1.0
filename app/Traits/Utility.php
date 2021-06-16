@@ -364,13 +364,15 @@ trait Utility
 
     $admin = User::where('id', 1)->with('account')->first();
     $requestExists = ServiceRequest::where('uuid', $id)->with('service_request_assignees')->firstOrFail();
-    $ifWarrantyExists =  \App\Models\ServiceRequestWarranty::where(['service_request_id'=> $requestExists->id])
+    $ifWarrantyExists =  \App\Models\ServiceRequestWarranty::where(['service_request_id'=> $requestExists->id, 'client_id'=> Auth::user()->id])
      ->first();
      $cse = [];
 
-    
-      //$requestExists->cses[0]->account->user->email
-    $newDateTime = Carbon::now()->addDay((int)$ifWarrantyExists->warranty->duration);
+     if(!$ifWarrantyExists){
+       return false;
+     }
+     
+     $newDateTime = Carbon::now()->addDay((int)$ifWarrantyExists->warranty->duration);
     //ask for how warranties are assigned to client
 
        $updateServiceRequestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'=> $requestExists->client_id, 'service_request_id'=> $requestExists->id])
@@ -392,6 +394,7 @@ trait Utility
           'status_id'                     => '4',
           'sub_status_id'                 =>  Auth::user()->type == 'admin'? '36':'35'
       ]);
+      
 
       if($requestExists->service_request_assignees){
         foreach($requestExists->service_request_assignees as $item){
@@ -409,56 +412,52 @@ trait Utility
 
    
 
-
-         if( $updateRequest AND $recordServiceProgress AND $updateServiceRequestWarranty){
+        if($updateRequest AND $recordServiceProgress AND $updateServiceRequestWarranty){
 
            //send mails to 1.admin, 2.client, 3.cse for mark as completed;
 
-             //email for client
+             //email for admin
             $mail_data_admin = collect([
               'email' =>  $admin->email,
-              'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
+              'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
               'firstname' =>  $admin->account->first_name,
               'lastname' =>  $admin->account->last_name,
-              'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-              'customer_email' => Auth::user()->email,
-              'job_ref' =>  $requestExists->unique_id
+              'job_ref' =>  $requestExists->unique_id,
+              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
             ]);
             $mail1 = $this->mailAction($mail_data_admin);
       
-            $mail2 ="";
-            if($mail1)
+            if($mail1 == '0')
             {
 
-              $mail_data_client = collect([
-              'email' =>  Auth::user()->email,
-              'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
-              'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-              'job_ref' =>  $requestExists->unique_id
-            ]);
+             $mail_data_client = collect([
+                'email' =>  Auth::user()->email,
+                'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
+                'firstname' =>   Auth::user()->account->first_name,
+                'lastname' =>  Auth::user()->account->last_name,
+                'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+              ]);
             $mail2 = $this->mailAction($mail_data_client);
             }
           
         
-            if($mail2)
+            if($mail2 == '0')
             {
             foreach ($cse as $value) {
             $mail_data_cse = collect([
               'email' =>  $value['email'],
-              'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
+              'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
               'firstname' =>   $value['first_name'],
               'lastname' =>   $value['last_name'],
-              'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-              'customer_email' => Auth::user()->email,
-              'job_ref' =>  $requestExists->unique_id
+              'job_ref' =>  $requestExists->unique_id,
+              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
             ]);
             $mail3 = $this->mailAction($mail_data_cse);
 
             }
 
             }
-            
-          return $requestExists ;
+            return '1';
          }else{
            return false;
          }
