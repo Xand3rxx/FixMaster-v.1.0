@@ -65,7 +65,6 @@ use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
 
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes ONLY AUTHENTICATED USERS HAVE ACCESS TO THIS ROUTE
@@ -376,7 +375,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::put('/requests/update/{id}',        [ClientController::class, 'update'])->name('client.update_request');
 
     // Client Warranty Invoice Decision
-    Route::put('/update-warranty/{invoice:uuid}', [InvoiceController::class, 'updateInvoice'])->name('decision');
+    Route::put('/update-warranty/{invoice:uuid}', [InvoiceController::class, 'updateInvoice'])->name('warranty_decision');
 
     Route::post('servicesRequest',              [ClientController::class, 'serviceRequest'])->name('services.serviceRequest');
     // add my new contact to DB
