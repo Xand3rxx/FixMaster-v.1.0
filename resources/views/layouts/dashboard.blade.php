@@ -89,7 +89,7 @@
         .position-top{
             position:fixed;
             left:0;
-            width:60%;
+            width:100%;
         z-index: 30000;        
         background: #8392a5;;
         border-color: #8392a5;;
@@ -97,9 +97,8 @@
         color:#fff;
             display: flex;
             justify-content: space-evenly;
-            top:0px
+            top:40px
         }
-
 
     </style>
   

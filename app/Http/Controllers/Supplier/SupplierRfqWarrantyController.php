@@ -32,7 +32,7 @@ class SupplierRfqWarrantyController extends Controller
     public function index(){
 
         return view('supplier.rfq.warranty.index', [
-            'rfqs'   =>  Rfq::orderBy('created_at', 'DESC')->where('type', '=', 'warranty')->get(),
+            'rfqs'   =>   Rfq::orderBy('created_at', 'DESC')->where('type', '=', 'Warranty')->with('rfqSupplierInvoice')->get(),
         ])->with('i');
     }
 
@@ -47,7 +47,7 @@ class SupplierRfqWarrantyController extends Controller
     public function rfqDetails($language, $uuid){
 
         return view('supplier.rfq.warranty._details', [
-            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('rfqSupplier','rfqBatches')->firstOrFail(),
+            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->where('type', '=', 'Warranty')->with('rfqSupplier','rfqBatches')->firstOrFail(),
         ]);
     }
 
@@ -72,11 +72,13 @@ class SupplierRfqWarrantyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function sendInvoice($language, $uuid){
-
+ 
+    
         return view('supplier.rfq.warranty.send_supplier_invoice', [
-            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->where('type', '=', 'warranty')->firstOrFail(),
+            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->where('type', '=', 'Warranty')->with('rfqSupplier','rfqSupplierInvoice')->firstOrFail(),
         ]);
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -86,16 +88,18 @@ class SupplierRfqWarrantyController extends Controller
      */
     public function store(Request $request){
 
+ 
 
         //Send Quote for a specific RFQ
         //Validate user input fields
         $this->validateRequest();
+     //dd($request);
+        // $supplierInvoiceExists = RfqSupplierInvoice::where('rfq_id', $request->rfq_id)->where('supplier_id', Auth::id())->count();
 
-        $supplierInvoiceExists = RfqSupplierInvoice::where('rfq_id', $request->rfq_id)->where('supplier_id', Auth::id())->count();
-
-        if($supplierInvoiceExists > 0){
-            return redirect()->route('supplier.rfq', app()->getLocale())->with('error', 'Sorry, you already sent an invoice for this RFQ');
-        }
+    
+        // if($supplierInvoiceExists > 0){
+        //     return redirect()->route('supplier.rfq', app()->getLocale())->with('error', 'Sorry, you already sent an invoice for this RFQ');
+        // }
 
         $rfqUniqueId = Rfq::where('id', $request->rfq_id)->firstOrFail()->unique_id;
 
@@ -106,6 +110,7 @@ class SupplierRfqWarrantyController extends Controller
 
         DB::transaction(function () use ($request, &$supplierinvoice, &$supplierInvoiceBatch) {
 
+     
             $newRecord = RfqSupplierInvoice::create([
                 'rfq_id'        =>  $request->rfq_id,
                 'supplier_id'   =>  Auth::id(),
@@ -151,10 +156,10 @@ class SupplierRfqWarrantyController extends Controller
             $type = 'Others';
             $severity = 'Informational';
             $actionUrl = Route::currentRouteAction();
-            $message = Auth::user()->email.' sent an invoice for '.$rfqUniqueId.' RFQ';
+            $message = Auth::user()->email.' sent a warranty invoice for '.$rfqUniqueId.' RFQ';
             $this->log($type, $severity, $actionUrl, $message);
 
-            return redirect()->route('supplier.rfq_sent_invoices', app()->getLocale())->with('success', 'Your invoice for '.$rfqUniqueId.' RFQ has been sent.');
+            return redirect()->route('supplier.warranty_sent_invoices', app()->getLocale())->with('success', 'Your warranty invoice for '.$rfqUniqueId.' RFQ has been sent.');
 
         }else{
 
@@ -162,10 +167,10 @@ class SupplierRfqWarrantyController extends Controller
             $type = 'Errors';
             $severity = 'Error';
             $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.Auth::user()->email.' was trying to sent an invoice for '.$rfqUniqueId.' RFQ';
+            $message = 'An error occurred while '.Auth::user()->email.' was trying to send a warranty invoice for '.$rfqUniqueId.' RFQ';
             $this->log($type, $severity, $actionUrl, $message);
 
-            return back()->with('error', 'An error occurred while trying to send your invoice for '.$rfqUniqueId.' RFQ.');
+            return back()->with('error', 'An error occurred while trying to send a warranty invoice for '.$rfqUniqueId.' RFQ.');
         }
     }
 
@@ -174,19 +179,19 @@ class SupplierRfqWarrantyController extends Controller
      */
     private function validateRequest(){
         return request()->validate([
-            'rfq_id'            =>   'required|numeric',
-            'rfq_batch_id'    =>   'required|array',
-            'quantity'        =>   'required|array',
-            'unit_price'      =>   'required|array',
-            'delivery_fee'      =>   'required|numeric',
             'delivery_time'     =>   'required',
         ]);
     }
 
     public function sentInvoices(){
+     $rfqids = [];
+        $rfqs =  \App\Models\Rfq::orderBy('created_at', 'DESC')->where(['type' => 'Warranty'])->get();    
+        foreach ($rfqs as $item){
+            $rfqids [] =  $item->id;
+        }
 
-        return view('supplier.rfq.sent_invoices', [
-            'rfqs'  =>  Auth::user()->supplierSentInvoices()->get(),
+        return view('supplier.rfq.warranty.sent_invoices', [
+            'rfqs'  =>  Auth::user()->supplierSentInvoices()->whereIn('rfq_id', $rfqids)->get(),
         ]);
        
     }
@@ -228,7 +233,7 @@ class SupplierRfqWarrantyController extends Controller
         ]);
     }
 
-    public function warrantyReplacementNotify($language, $id){
-     
-    }
+ 
+
+
 }
