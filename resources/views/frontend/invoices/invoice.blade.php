@@ -449,7 +449,11 @@
                                         <div class="mb-4">
                                             <span>Selected warranty will be applied on the final invoice</span>
                                         </div>
+<<<<<<< Updated upstream
                                         <form method="POST" action="{{ route('client.warranty_decision', ['locale' => app()->getLocale(), 'invoice' => $invoice['uuid']]) }}">
+=======
+                                        <form method="POST" action="{{ route('client.decisions', ['locale' => app()->getLocale(), 'invoice' => $invoice['uuid']]) }}">
+>>>>>>> Stashed changes
                                             @csrf
                                             @method('PUT')
 {{--                                            <div class="form-group">--}}

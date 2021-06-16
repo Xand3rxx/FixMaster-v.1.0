@@ -280,6 +280,7 @@ class MessageController extends Controller
                 'updated_at'        => Carbon::now(),
                 'mail_status' => 'Not Sent',
             ];
+<<<<<<< Updated upstream
 
             Message::insert($mail_objects);
         }
@@ -293,6 +294,19 @@ class MessageController extends Controller
 
 
 
+=======
+          
+        Message::insert($mail_objects);
+     
+         }
+            
+
+        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
+
+         return $mail = $this->dispatch(new PushEmails($message_array));
+
+    
+>>>>>>> Stashed changes
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
         // }
@@ -304,11 +318,22 @@ class MessageController extends Controller
 
     private function replacePlaceHolders($variables, $messageTemp)
     {
+        // foreach ($variables as $key => $value) {
+        //     $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
+        // }
+
+        // return $messageTemp;
+      
         foreach ($variables as $key => $value) {
-            $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
+        if($key == 'url'){
+            $messageTemp = str_replace('{'.$key.'}', '<a href="'.$value.'" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);  
+        }else{
+            $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
         }
+    }
 
         return $messageTemp;
+<<<<<<< Updated upstream
         //     foreach ($variables as $key => $value) {
         //     if($key == '{url}'){
         //         $messageTemp = str_replace('{'.$key.'}', '<button style="background-color:red">'.$value.'<button>', $messageTemp);  
@@ -318,6 +343,8 @@ class MessageController extends Controller
         // }
 
         //     return $messageTemp;
+=======
+>>>>>>> Stashed changes
     }
 
     private function getUser($userId)
