@@ -280,7 +280,6 @@ class MessageController extends Controller
                 'updated_at'        => Carbon::now(),
                 'mail_status' => 'Not Sent',
             ];
-<<<<<<< Updated upstream
 
             Message::insert($mail_objects);
         }
@@ -293,20 +292,6 @@ class MessageController extends Controller
         return $mail;
 
 
-
-=======
-          
-        Message::insert($mail_objects);
-     
-         }
-            
-
-        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
-
-         return $mail = $this->dispatch(new PushEmails($message_array));
-
-    
->>>>>>> Stashed changes
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
         // }
@@ -333,18 +318,6 @@ class MessageController extends Controller
     }
 
         return $messageTemp;
-<<<<<<< Updated upstream
-        //     foreach ($variables as $key => $value) {
-        //     if($key == '{url}'){
-        //         $messageTemp = str_replace('{'.$key.'}', '<button style="background-color:red">'.$value.'<button>', $messageTemp);  
-        //     }else{
-        //         $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
-        //     }
-        // }
-
-        //     return $messageTemp;
-=======
->>>>>>> Stashed changes
     }
 
     private function getUser($userId)
