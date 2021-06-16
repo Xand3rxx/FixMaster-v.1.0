@@ -450,7 +450,7 @@ trait Utility
               'firstname' =>   $value['first_name'],
               'lastname' =>   $value['last_name'],
               'job_ref' =>  $requestExists->unique_id,
-              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+              'url'   => url(app()->getLocale().'/client/requests/'),
             ]);
             $mail3 = $this->mailAction($mail_data_cse);
 
@@ -464,6 +464,7 @@ trait Utility
 
    
   }
+
 
   public function addDiscountToFirstTimeUserTrait($user){
 
