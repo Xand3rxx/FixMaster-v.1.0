@@ -60,7 +60,7 @@ Route::post('supplier', [SupplierFormController::class, '__invoke'])->name('fron
 Route::get('/invoice/{invoice:uuid}', [InvoiceController::class, 'invoice'])->name('invoice');
 //Route::get('/invoice/', [InvoiceController::class, 'invoice'])->name('invoice');
 
-Route::post('/client-decision', [ClientDecisionController::class, '__invoke'])->name('client.decision');
+Route::post('/client-decision', [ClientDecisionController::class, '__invoke'])->name('client.decisions');
 Route::post('/client-decline', [ClientDecisionController::class, 'clientDecline'])->name('client.decline');
 Route::post('/client-accept', [ClientDecisionController::class, 'clientAccept'])->name('client.accept');
 Route::post('/client-return', [ClientDecisionController::class, 'clientReturn'])->name('client.return');
