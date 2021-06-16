@@ -89,7 +89,7 @@
         .position-top{
             position:fixed;
             left:0;
-            width:60%;
+            width:100%;
         z-index: 30000;        
         background: #8392a5;;
         border-color: #8392a5;;
@@ -97,9 +97,8 @@
         color:#fff;
             display: flex;
             justify-content: space-evenly;
-            top:0px
+            top:40px
         }
-
 
     </style>
   
@@ -201,7 +200,7 @@
     <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
     <script src="{{ asset('assets/frontend/js/custom.js') }}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeDLVAiaU13p2O0d3jfcPjscsbVsCQUzc&v=3.exp&libraries=places">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places">
     </script>
     <script src="{{ asset('assets/dashboard/assets/js/48a9782e-3e2b-4055-a9bb-8a926a937e2c.js') }}"></script>
     <script src="{{ asset('assets/dashboard/assets/js/lightgallery-all.min.js') }}"></script>

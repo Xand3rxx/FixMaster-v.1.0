@@ -393,10 +393,31 @@ class InvoiceController extends Controller
                 'status' => 'success'
             ]);
 
+            ServiceRequestPayment::create([
+                'user_id' => $invoice['client_id'],
+                'payment_id' => $paymentDetails['id'],
+                'service_request_id' => $invoice['service_request_id'],
+                'amount' => $actual_material_cost,
+                'unique_id' => static::generate('invoices', 'REF-'),
+                'payment_type' => 'rfq',
+                'status' => 'success'
+            ]);
+
             $invoice->update([
                 'status' => '2',
                 'phase' => '2'
             ]);
+
+            $messenger = new \App\Http\Controllers\Messaging\MessageController();
+            $template_feature = 'CUSTOMER_PAYMENT_SUCCESSFUL_NOTIFICATION';
+            $mail_data = collect([
+                'firstname' => $invoice['client']->account->first_name,
+                'lastname' => $invoice['client']->account->last_name,
+                'job_ref' => $invoice['serviceRequest']->unique_id,
+                'invoice_ref' => $invoice['unique_id'],
+            ]);
+//            dd($invoice_created['client']['email']);
+            $messenger->sendNewMessage(null, 'dev@fix-master.com', $invoice['client']['email'], $mail_data, $template_feature);
 
             $status = true;
 

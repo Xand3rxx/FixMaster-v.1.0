@@ -100,11 +100,9 @@
             <div class="divider-text">Media Files</div>
             @if (count($service_request['serviceRequestMedias']) > 0)
             <div class="row row-xs">
-                <ul id="lightgallery" class="list-unstyled row">
-                    @foreach ($service_request['serviceRequestMedias'] as $item)
-                        @include('cse.requests.includes._media_file')
-                    @endforeach
-                </ul>
+                @foreach ($service_request['serviceRequestMedias'] as $item)
+                    @include('cse.requests.includes._media_file')
+                @endforeach
             </div>
             @else
             <h5 class="mt-4">Files have not been uploaded for this request.</h5>

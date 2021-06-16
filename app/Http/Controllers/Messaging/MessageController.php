@@ -131,9 +131,9 @@ class MessageController extends Controller
                 'updated_at'        => Carbon::now(),
                 'mail_status' => 'Not Sent',
             ];
-            $this->sendNewMessage( $subject, $senderDetails->email, $user->email, $mail_content, "");
+            $this->sendNewMessage($subject, $senderDetails->email, $user->email, $mail_content, "");
         }
-         Message::insert($mail_objects);
+        Message::insert($mail_objects);
         return response()->json([
             "message" => "Messages sent successfully!"
         ], 201);
@@ -153,7 +153,7 @@ class MessageController extends Controller
         $receiverDetails = [];
 
         $senderDetails = $this->getUser($sender);
-        foreach($recipients as $recipient){
+        foreach ($recipients as $recipient) {
             array_push($receivers, $recipient['value']);
         }
 
@@ -194,7 +194,7 @@ class MessageController extends Controller
         $mail_data = $request->input('mail_data');
         $from = $request->input('sender');
         $feature = $request->input('feature');
-        
+
 
         $this->sendNewMessage($subject, $from, $to, $mail_data, $feature);
     }
@@ -240,36 +240,36 @@ class MessageController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function sendNewMessage($subject="", $from="", $to, $mail_data,$feature=""){
-    
-       $message = $mail_data;
-       $sms = "";
-       $message_array = [];
-       $template = null;
-       $sender = null;
-       $recipient = null;
+    public function sendNewMessage($subject = "", $from = "", $to, $mail_data, $feature = "")
+    {
 
-       
-        if(!empty($feature)){
+        $message = $mail_data;
+        $sms = "";
+        $message_array = [];
+        $template = null;
+        $sender = null;
+        $recipient = null;
+
+
+        if (!empty($feature)) {
             $template = MessageTemplate::where('feature', $feature)->first();
-            
-            if(empty($template)){
-            return response()->json(["message" => "Message Template not found!"], 404);
-    
+
+            if (empty($template)) {
+                return response()->json(["message" => "Message Template not found!"], 404);
             }
             $message = $this->replacePlaceHolders($mail_data, $template->content);
             //$sms = $this->replacePlaceHolders($mail_data, $template->sms);
             $subject = $template->title;
         }
 
-    if($from!="")
-       $sender = DB::table('users')->where('users.email', $from)->first();  
-    else
-       $from = "dev@fix-master.com";
+        if ($from != "")
+            $sender = DB::table('users')->where('users.email', $from)->first();
+        else
+            $from = "dev@fix-master.com";
 
-       $recipient = DB::table('users')->where('users.email', $to )->first();
+        $recipient = DB::table('users')->where('users.email', $to)->first();
 
-         if(!is_null($sender) && $from!="" && is_object($recipient)){
+        if (!is_null($sender) && $from != "" && is_object($recipient)) {
             $mail_objects[] = [
                 'title' => $subject,
                 'content' => $message,
@@ -280,45 +280,44 @@ class MessageController extends Controller
                 'updated_at'        => Carbon::now(),
                 'mail_status' => 'Not Sent',
             ];
-          
-        Message::insert($mail_objects);
-     
-         }
-            
 
-        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
-  
-         $mail = $this->dispatch(new PushEmails($message_array));
-   
-         return $mail;
-      
+            Message::insert($mail_objects);
+        }
 
-    
+
+        $message_array = ['to' => $to, 'from' => $from, 'subject' => $subject, 'content' => $message];
+
+        $mail = $this->dispatch(new PushEmails($message_array));
+
+        return $mail;
+
+
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
         // }
-           
-        
+
+
     }
 
 
 
     private function replacePlaceHolders($variables, $messageTemp)
     {
+        // foreach ($variables as $key => $value) {
+        //     $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
+        // }
+
+        // return $messageTemp;
+      
         foreach ($variables as $key => $value) {
-            $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
+        if($key == 'url'){
+            $messageTemp = str_replace('{'.$key.'}', '<a href="'.$value.'" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);  
+        }else{
+            $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
         }
+    }
 
         return $messageTemp;
-    //     foreach ($variables as $key => $value) {
-    //     if($key == '{url}'){
-    //         $messageTemp = str_replace('{'.$key.'}', '<button style="background-color:red">'.$value.'<button>', $messageTemp);  
-    //     }else{
-    //         $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
-    //     }
-    // }
-
-    //     return $messageTemp;
     }
 
     private function getUser($userId)

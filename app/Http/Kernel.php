@@ -63,7 +63,7 @@ class Kernel extends HttpKernel
         'setlocale' => \App\Http\Middleware\SetLocale::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'monitor.cseservice.request.changes' => \App\Http\Middleware\CheckCseRating::class,
         'monitor.clientservice.request.changes' => \App\Http\Middleware\CheckClientRating::class,
     ];

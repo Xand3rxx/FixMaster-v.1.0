@@ -7,6 +7,7 @@
               
                 <div class="divider-text">Select Cses  </div>
               <div class="form-row">
+         
               @if(!empty($users))
               @foreach($users as $cse)
             
@@ -38,7 +39,7 @@
               <div class="custom-control custom-radio mt-2">
                   <div class="custom-control custom-radio">
                   
-                  <input type="hidden" class="custom-control-input" id="" name="cse_old" value="{{ $requestDetail->cses[0]->id}}">
+                  <input type="hidden" class="custom-control-input" id="" name="cse_old" value="{{ $requestDetail->id}}">
                   <input type="hidden" class="custom-control-input" id="" name="service_request_id" value="{{$serviceRequest->service_request_id}}">
                   <input type="hidden" class="custom-control-input" id="" name="warranty_claim_id" value="{{$serviceRequest->id}}">
 

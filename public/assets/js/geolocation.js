@@ -28,7 +28,8 @@
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
 
-        var key = "AIzaSyDeDLVAiaU13p2O0d3jfcPjscsbVsCQUzc";
+        // var key = "AIzaSyDeDLVAiaU13p2O0d3jfcPjscsbVsCQUzc";
+        var key = config('app.geolocation_api_key');
         $.get('https://maps.googleapis.com/maps/api/geocode/json', {
             address: place.formatted_address,
             key: key
