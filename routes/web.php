@@ -63,6 +63,7 @@ use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServic
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
+use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
 /*
@@ -450,8 +451,8 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
     Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     Route::get('/sub-service-dynamic-feilds',  [CseController::class, 'subServiceDynamicFields'])->name('sub_service_dynamic_fields');
-
     Route::get('/tools-request/details/{tool_request:uuid}',           [RequestController::class, 'toolRequestDetails'])->name('tool_request_details');
+    Route::get('/warranty/supplier/details/image/{image:id}',            [WarrantClaimController::class, 'rfqDetailsImage'])->name('rfq_waranty_details_image');
 
 });
 
@@ -484,8 +485,16 @@ Route::prefix('/supplier')->name('supplier.')->group(function () {
     Route::post('/warranty/replacement/notify/{dispatch:id}',                          [SupplierRfqController::class, 'warrantyReplacementNotify'])->name('warranty_replacement_notify');
     Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
     Route::get('/requests/warranty/claims/quote',                               [SupplierRfqWarrantyController::class, 'index'])->name('rfq.warranty');
-    Route::post('/rfqs/warranty/claims/store',                               [SupplierRfqWarrantyController::class, 'store'])->name('rfq_store_ supplier_warranty_claim');
+ 
+    Route::post('/rfqs/warranty/claims/store',                               [SupplierRfqWarrantyController::class, 'store'])->name('rfq_store_supplier_warranty_claim');
     Route::get('/warranty-claim/requests-for-quote/send-invoice/{rfq:uuid}',       [SupplierRfqWarrantyController::class, 'sendInvoice'])->name('rfq_warranty_send_supplier_invoice');
+    Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
+    Route::post('/warranty/replacement/notify/{dispatch:id}',                          [SupplierRfqController::class, 'warrantyReplacementNotify'])->name('warranty_replacement_notify');
+    Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
+    Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
+    Route::get('/warranty/invoices/sent',                      [SupplierRfqWarrantyController::class, 'sentInvoices'])->name('warranty_sent_invoices');
+    Route::post('/warranty/dispatch/store/',                   [WarrantyDispatchController::class, 'store'])->name('warranty_store_dispatch');
+    Route::get('/warranty/dispatch',                          [WarrantyDispatchController::class, 'index'])->name('warranty_dispatches');
 
     Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
 });

@@ -46,28 +46,32 @@
               </thead>
               {{-- Status: 0 => Awaiting total amount, 1 => Awaiting Client's payment, 2 => Payment received --}}
               <tbody>
+       
                 @foreach ($rfqs as $rfq)
-             
                 <tr>
                   <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
                   <td class="tx-medium">{{ $rfq->serviceRequest->unique_id }}</td>
                   <td class="tx-medium">{{ $rfq->unique_id }}</td>
                   <td class="tx-medium">{{ Str::title($rfq['issuer']['account']['first_name'] ." ". $rfq['issuer']['account']['last_name']) }}</td>
-                  @if($rfq->status == 'Pending')
+                  @if($rfq->status == 'Awaiting' && is_null($rfq->rfqSupplierInvoice))
                     <td class="text-medium text-success">Open</td>
+              
                   @else
                     <td class="text-medium text-danger">Closed</td>
                   @endif
+
+                
+
                   {{-- <td class="tx-medium text-center">₦{{ number_format($rfq->total_amount) ?? 'Null'}}</td> --}}
                   <td class="text-medium">{{ Carbon\Carbon::parse($rfq->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                   <td class=" text-center">
                     <div class="dropdown-file">
                       <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                       <div class="dropdown-menu dropdown-menu-right">
-                      @if(!$rfq->status == 'Pending')
+                      @if(!$rfq->status == 'Awaiting')
                         <a href="#rfqDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View {{ $rfq->unique_id}} details" data-batch-number="{{ $rfq->unique_id}}" data-url="{{ route('supplier.rfq_warranty_details', ['rfq'=>$rfq->uuid, 'locale'=>app()->getLocale()]) }}" id="rfq-details"><i class="far fa-clipboard"></i> Details</a>
                         @endif
-                        @if($rfq->status == 'Pending')
+                        @if($rfq->status == 'Awaiting' && is_null($rfq->rfqSupplierInvoice))
                           <a href="{{ route('supplier.rfq_warranty_send_supplier_invoice', ['rfq'=>$rfq->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-success" title="Send {{ $rfq->unique_id}} invoice"><i class="fas fa-file-medical"></i> Send Invoice</a>
                         @endif
                       </div>

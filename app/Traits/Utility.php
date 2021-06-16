@@ -423,7 +423,7 @@ trait Utility
               'firstname' =>  $admin->account->first_name,
               'lastname' =>  $admin->account->last_name,
               'job_ref' =>  $requestExists->unique_id,
-              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+              'url'   => url(app()->getLocale().'/admin/requests/'),
             ]);
             $mail1 = $this->mailAction($mail_data_admin);
       
@@ -435,7 +435,7 @@ trait Utility
                 'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
                 'firstname' =>   Auth::user()->account->first_name,
                 'lastname' =>  Auth::user()->account->last_name,
-                'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+                'url'   => url(app()->getLocale().'/client/requests/'),
               ]);
             $mail2 = $this->mailAction($mail_data_client);
             }
@@ -450,7 +450,7 @@ trait Utility
               'firstname' =>   $value['first_name'],
               'lastname' =>   $value['last_name'],
               'job_ref' =>  $requestExists->unique_id,
-              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+              'url'   => url(app()->getLocale().'/cse/requests/'),
             ]);
             $mail3 = $this->mailAction($mail_data_cse);
 
@@ -464,6 +464,7 @@ trait Utility
 
    
   }
+
 
   public function addDiscountToFirstTimeUserTrait($user){
 

@@ -3,7 +3,11 @@
          
                         <section>
                         <small class="text-danger">This portion will display only if the CSE initially executed a RFQ, the Client paid for the components and the Supplier has made the delivery.</small>
-
+ 
+      
+          
+                @if(collect($rfqDetails)->count() > 0)
+                @if($rfqDetails[0]->accepted  !=  'Yes')
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="status">Invoice Status</label>
@@ -21,6 +25,8 @@
                                 <input type="hidden" value="{{$rfqWarranty?$rfqWarranty->id: 0}}" name="rfqWarranty_id">
 
                             </div>
+                            @endif
+                            @endif
                       
 
  @foreach($rfqDetails as $rfqDetail)
@@ -140,7 +146,7 @@
                             <td class="tx-medium">{{ !empty($item->unit_of_measurement) ? $item->unit_of_measurement : 'UNAVAILABLE' }}</td>
                             <td class="text-center">
                               @if(!empty($item->image))
-                              <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item->component_name }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('supplier.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
+                              <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item->component_name }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('cse.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
                               @else
                                     -
                               @endif
