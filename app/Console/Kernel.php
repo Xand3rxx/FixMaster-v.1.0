@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        Commands\DiscountUpdate::class
+        Commands\DiscountUpdate::class,
+        Commands\UpdateRetentionFee::class
     ];
 
     /**
@@ -26,8 +27,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('discount:update')
-        ->everyMinute();
+        $schedule->command('discount:update')->everyMinute();
+        $schedule->command('retentionFee:update')->everyMinute();
     }
 
     /**

@@ -245,6 +245,9 @@ class ServiceRequest extends Model
         return $this->hasMany(ServiceRequestAssignCse::class, 'service_request_id')->with('user.account');
     }
 
+    public function supplier()
+    {
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('RfqSupplierInvoice');
     public function payment()
     {
         return $this->hasOne(Payment::class, 'unique_id', 'unique_id');
