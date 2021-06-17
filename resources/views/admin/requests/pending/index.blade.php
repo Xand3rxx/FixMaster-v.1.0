@@ -126,7 +126,7 @@ tr.bd-warning {
                                         <div class="dropdown-file">
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="{{ route('admin.requests.show', ['request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
+                                            <a href="{{ route('admin.requests-pending.show', ['requests_pending'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
                                                 <a href="#" class="dropdown-item text-danger"><i class="fas fa-times"></i> Cancel Request</a>
                                             </div>
                                         </div>

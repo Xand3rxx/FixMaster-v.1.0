@@ -20,7 +20,6 @@ use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
-use App\Http\Controllers\Client\PaystackController;
 use App\Http\Controllers\Admin\ActivityLogController;
 
 use App\Http\Controllers\Admin\AdminRatingController;
@@ -49,9 +48,8 @@ use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
 use App\Http\Controllers\Admin\Report\SupplierReportController;
-use App\Http\Controllers\Admin\ServiceRequestController as RequestServiceController;
+use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
-use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\Admin\Prospective\CSEController as ProspectiveCSEController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
 use App\Http\Controllers\Admin\Prospective\TechnicianArtisanController as ProspectiveTechnicianArtisanController;
@@ -63,6 +61,10 @@ use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServic
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
@@ -287,8 +289,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/requests-for-quote/details/image/{image:id}',     [RfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     //Service Reques Routes
-    Route::resource('requests', RequestServiceController::class);
-    Route::get('/requests/completed-request/{request:id}',          [RequestServiceController::class, 'markCompletedRequest'])->name('completed_request');
+    Route::resource('requests-pending', AdminPendingRequestController::class);
+    Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
 
     //CSE Reporting Routes
     Route::get('/reports/client-service-executive',      [CustomerServiceExecutiveReportController::class, 'index'])->name('cse_reports');

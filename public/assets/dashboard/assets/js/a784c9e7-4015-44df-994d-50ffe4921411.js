@@ -109,8 +109,11 @@ $(document).ready(function() {
   });
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
   function individualAmount(count)
   {
     var unitPrice = parseFloat(($('#unit-price-'+count).val().replace(/,/g , '')));
@@ -134,7 +137,11 @@ $(document).ready(function() {
     var totalEachAmount = 0;
     var totalAmount = 0;
 
+<<<<<<< HEAD
     $('.each-amount').each(function (index){
+=======
+    $('.each-amount').each(function (){
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
         var total  = parseInt($(this).val());
         if(isNaN(total) == false){
           totalEachAmount += total;
@@ -143,8 +150,11 @@ $(document).ready(function() {
           // return totalEachAmount;
         }
     });
+<<<<<<< HEAD
 
     
+=======
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
   }
 
   function numberWithCommas(x) {
@@ -153,8 +163,15 @@ $(document).ready(function() {
 
 
   if($('#delivery_fee').val()){
+<<<<<<< HEAD
     deliveryFee()
   }
  
 
 
+=======
+    getTotalAmount();
+  }
+ 
+
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
