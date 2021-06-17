@@ -61,7 +61,10 @@ use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServic
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
+<<<<<<< HEAD
+=======
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
+>>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
@@ -98,6 +101,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
 
+   
+   
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::resource('administrator', AdministratorController::class);
@@ -315,6 +320,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/payments/disbursed', [CollaboratorsPaymentController::class, 'getdisbursedPayments'])->name('payments.disbursed');
     Route::post('payments.get_checkbox', [CollaboratorsPaymentController::class, 'getCheckbox'])->name('payments.get_checkbox');
     Route::post('/payment_sorting', [CollaboratorsPaymentController::class, 'sortPayments'])->name('payment_sorting');
+    Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
 });
 
 //All routes regarding clients should be in here
