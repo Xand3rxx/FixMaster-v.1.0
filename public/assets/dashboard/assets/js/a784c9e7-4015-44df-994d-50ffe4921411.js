@@ -109,6 +109,8 @@ $(document).ready(function() {
   });
 
 
+
+
   function individualAmount(count)
   {
     var unitPrice = parseFloat(($('#unit-price-'+count).val().replace(/,/g , '')));
@@ -132,7 +134,7 @@ $(document).ready(function() {
     var totalEachAmount = 0;
     var totalAmount = 0;
 
-    $('.each-amount').each(function (){
+    $('.each-amount').each(function (index){
         var total  = parseInt($(this).val());
         if(isNaN(total) == false){
           totalEachAmount += total;
@@ -141,6 +143,8 @@ $(document).ready(function() {
           // return totalEachAmount;
         }
     });
+
+    
   }
 
   function numberWithCommas(x) {
@@ -149,7 +153,8 @@ $(document).ready(function() {
 
 
   if($('#delivery_fee').val()){
-    getTotalAmount();
+    deliveryFee()
   }
  
+
 
