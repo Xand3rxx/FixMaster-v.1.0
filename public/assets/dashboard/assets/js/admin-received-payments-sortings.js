@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-   //get sorting status
-   $status = $('#status').val();
     $('#sort_by_range').on('change', function (){
             let option = $("#sort_by_range").find("option:selected").val();
 
@@ -28,12 +26,12 @@ $(document).ready(function() {
                 $(".sort_by_year").prop('selectedIndex', 0);
             }
 
-            if(option === 'type'){
-                $('.sort-by-year').removeClass('d-none');
-                $('.sort-by-month, .specific-date, .date-range').addClass('d-none');
+            if(option === 'Date Range'){
+                $('.date-range').removeClass('d-none');
+                $('.specific-date, .sort-by-year').addClass('d-none');
+
                 //Set other related sorting fields so default
-                //$('#specific_date, #date_from, #date_to').val("YYYY-MM-DD");
-                $(".sort_by_month").prop('selectedIndex', 0);
+                $('#specific_date').val("YYYY-MM-DD");
             }
 
     });
@@ -75,7 +73,7 @@ $(document).ready(function() {
 
       //Get specific Activity Log date
       $date = $('#specific_date').val();
-      
+
       sortTableData($userId, $sortLevel, $type, $date);
 
     });
@@ -97,6 +95,31 @@ $(document).ready(function() {
 
     });
 
+    //SORT ACTIVITY LOG BY DATE RANGE
+    $('#date_to').change(function (){
+        //Get the User ID
+        $userId = $('#user_id').val();
+        //Assign sorting level
+        $sortLevel = 'Level Five';
+        //Get the Activity Log Type
+        $type = $("#activity_log_type").find("option:selected").val();
+        //Get year to sort activity log
+        $year = $('#sort_by_year').find("option:selected").val();
+        //Get date from to sort activity log
+        $dateFrom = $('#date_from').val();
+        //Get date to, to sort activity log
+        $dateTo = $('#date_to').val();
+
+        if($.trim($dateFrom).length == 0){
+          var message = 'Kindly select a date to sort From.';
+          var type = 'error';
+          displayMessage(message, type);
+
+        }else{
+          sortTableData($userId, $sortLevel, $type, $date='', $year='', $month='', $dateFrom, $dateTo);
+        }
+      });
+
     //SORT ACTIVITY LOG BY SPECIFIC MONTH IN A YEAR
     $('#sort_by_month').change(function (){
       //Get the User ID
@@ -111,46 +134,18 @@ $(document).ready(function() {
       $month = $('#sort_by_month').find("option:selected").val();
       //Set month to default
       // $("#sort_by_month").prop('selectedIndex', 0);
+console.log($month);
 
         sortTableData($userId, $sortLevel, $type, $date='', $year='', $month);
-      
+
     });
-
-    // $('#date_from').change(function (){
-    //   $('#date_to').attr('min', $('#date_from').val());
-    // });
-
-    //SORT ACTIVITY LOG BY DATE RANGE
-    // $('#date_to').change(function (){
-    //   //Get the User ID
-    //   $userId = $('#user_id').val();
-    //   //Assign sorting level
-    //   $sortLevel = 'Level Five';
-    //   //Get the Activity Log Type
-    //   $type = $("#activity_log_type").find("option:selected").val();
-    //   //Get year to sort activity log
-    //   $year = $('#sort_by_year').find("option:selected").val();
-    //   //Get date from to sort activity log
-    //   $dateFrom = $('#date_from').val();
-    //   //Get date to, to sort activity log
-    //   $dateTo = $('#date_to').val();
-
-    //   if($.trim($dateFrom).length == 0){
-    //     var message = 'Kindly select a date to sort From.';
-    //     var type = 'error';
-    //     displayMessage(message, type);
-
-    //   }else{
-    //     sortTableData($userId, $sortLevel, $type, $date='', $year='', $month='', $dateFrom, $dateTo);
-    //   }
-    // });
 
   });
 
   function sortTableData($userId, $sortLevel, $type='', $date, $year='', $month='', $dateFrom, $dateTo){
     //Get sorting route
     $route = $('#route').val();
-       
+
     $.ajaxSetup({
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -160,13 +155,12 @@ $(document).ready(function() {
     $.ajax({
         url: $route,
         method: 'POST',
-        data: {"user": $userId, "sort_level": $sortLevel, "type": $type, "date": $date, "year":$year, "month": $month, "date_from": $dateFrom, "date_to": $dateTo, "status": $status},
+        data: {"user": $userId, "sort_level": $sortLevel, "type": $type, "date": $date, "year":$year, "month": $month, "date_from": $dateFrom, "date_to": $dateTo},
         beforeSend : function(){
             $("#sort_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');
         },
         success: function (data){
             if(data){
-              //console.log(data);
               //Replace table with new sorted records
               $('#sort_table').html('');
               $('#sort_table').html(data);
@@ -197,18 +191,5 @@ $(document).ready(function() {
               }
         });
 
-
-        $(".selectAllBoxes").click(function(event){
-
-            if(this.checked){
-                $(".checkBoxes").each(function(){
-                    this.checked = true;
-                })
-            }else{
-              $(".checkBoxes").each(function(){
-                    this.checked = false;
-                })
-            }
-        })
   }
 

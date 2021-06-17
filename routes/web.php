@@ -5,9 +5,11 @@ use App\Http\Controllers\EstateController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\EarningController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\Messaging\Template;
 use App\Http\Controllers\Admin\RfqController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\SimulationController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PriceController;
 use App\Http\Controllers\CSE\ProfileController;
 use App\Http\Controllers\CSE\RequestController;
@@ -16,25 +18,32 @@ use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\EWalletController;
 use App\Http\Controllers\Admin\GatewayController;
 use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
-
+//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
+use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
+use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
+use App\Http\Controllers\CSE\CseWarrantyClaimController;
+
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
+use App\Http\Controllers\Admin\CollaboratorsPaymentController;
+use App\Http\Controllers\Admin\Report\SupplierReportController;
+use App\Http\Controllers\Admin\ServiceRequestPaymentController;
 use App\Http\Controllers\Admin\ServiceRequestSettingController;
-
 use App\Http\Controllers\Admin\User\QualityAssuranceController;
+use App\Http\Controllers\ServiceRequest\WarrantClaimController;
 use App\Http\Controllers\Admin\User\TechnicianArtisanController;
+use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
 use App\Http\Controllers\ServiceRequest\ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
@@ -47,24 +56,12 @@ use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
-use App\Http\Controllers\Admin\Report\SupplierReportController;
-use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
-use App\Http\Controllers\Admin\Prospective\CSEController as ProspectiveCSEController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
-use App\Http\Controllers\Admin\Prospective\TechnicianArtisanController as ProspectiveTechnicianArtisanController;
-use App\Http\Controllers\ServiceRequest\WarrantClaimController;
-use App\Http\Controllers\Messaging\Template;
-use App\Http\Controllers\Admin\CollaboratorsPaymentController;
-
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
-use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
-use App\Http\Controllers\CSE\CseWarrantyClaimController;
+//use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
@@ -91,8 +88,8 @@ use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
-
+    //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
+    Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::get('/ratings/cse-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
@@ -315,11 +312,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/supplier',             [SupplierReportController::class, 'index'])->name('supplier_reports');
     Route::post('/reports/supplier/item-delivered-sorting', [SupplierReportController::class, 'itemDeliveredSorting'])->name('supplier_report_first_sorting');
 
-    //Admin Payments get_checkbox
+    //Admin Payments
     Route::get('/payments/pending', [CollaboratorsPaymentController::class, 'getPendingPayments'])->name('payments.pending');
     Route::get('/payments/disbursed', [CollaboratorsPaymentController::class, 'getdisbursedPayments'])->name('payments.disbursed');
     Route::post('payments.get_checkbox', [CollaboratorsPaymentController::class, 'getCheckbox'])->name('payments.get_checkbox');
     Route::post('/payment_sorting', [CollaboratorsPaymentController::class, 'sortPayments'])->name('payment_sorting');
+    Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
+    Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
     Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
 });
 

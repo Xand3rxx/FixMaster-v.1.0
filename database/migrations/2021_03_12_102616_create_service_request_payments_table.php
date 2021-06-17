@@ -19,6 +19,7 @@ class CreateServiceRequestPaymentsTable extends Migration
             $table->collation = 'utf8mb4_unicode_ci';
 
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('user_id');
             $table->foreignId('payment_id');
             $table->foreignId('service_request_id');
