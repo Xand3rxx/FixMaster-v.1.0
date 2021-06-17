@@ -11,7 +11,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-style1 mg-b-10">
             <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.requests.index', app()->getLocale()) }}">Requests</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending Requests</a></li>
               <li class="breadcrumb-item active" aria-current="page">Pending Request Details</li>
             </ol>
           </nav>
@@ -48,11 +48,6 @@
                         <a class="btn btn-sm btn-primary btn-icon" title="Call Client"
                     @if($serviceRequest['contactme_status'] == 1) href="tel:{{ $serviceRequest['client']['account']['contact']['phone_number'] }}" @else href="#" @endif id="contact-me" data-contact-me="{{ $serviceRequest['contactme_status'] }}"><i class="fas fa-phone"></i> </a>
 
-                        @if (empty($serviceRequest['preferred_time']))
-                            <a href="#" data-service="{{ $serviceRequest['uuid'] }}"
-                                class="notify-client-schedule-date btn btn-sm btn-success btn-icon"
-                                title="Notify Client to schedule date"><i class="fas fa-bell"></i> </a>
-                        @endif
                     </h4>
 
                     <p class="tx-13 tx-color-03 mg-b-0">Scheduled Date:
@@ -66,6 +61,9 @@
                 <nav class="nav">
                     <a href="#description" class="nav-link active" data-toggle="tab"><span>Job Description</a>
                     <a href="#notifyCSE" class="nav-link" data-toggle="tab"><span>Assign CSE</a>
+                     @if(collect($serviceRequest['adminAssignedCses'])->isNotEmpty())   
+                        <a href="#assignedCSEs" class="nav-link" data-toggle="tab"><span>Notified CSE's</a>
+                    @endif
                 </nav>
             </div><!-- contact-content-header -->
 
@@ -97,6 +95,7 @@
                                         <img src="{{ asset('assets/user-avatars/' . $cse['user']['account']['avatar']) }}"
                                             class="wd-30 rounded-circle mg-r-15" alt="Profile avatar">
                                     @endif
+                                </div>
 
                                 <div class="col-md-6 col-sm-6">
                                 <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ !empty($cse['user']['account']['first_name']) ? $cse['user']['account']['first_name'] .' '. $cse['user']['account']['last_name'] : 'UNAVAILABLE'}}</h6>
@@ -109,7 +108,7 @@
                                         <i class="icon ion-md-star lh-0 tx-gray-300"></i>
                                     @endfor
 
-                                    <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($serviceRequest['client']['contact']['address_latitude'], $serviceRequest['client']['contact']['address_longitude'], $cse['user']['contact']['address_latitude'], $cse['user']['contact']['address_longitude']) }}km</span>
+                                    <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($serviceRequest['client']['contact']['address_latitude'], $serviceRequest['client']['contact']['address_longitude'], $cse['user']['contact']['address_latitude'], $cse['user']['contact']['address_longitude']) }}km</span> from client's residence.
                                 </span>
                                 </div>
                                 <div class="col-md-6 col-sm-6">
@@ -118,22 +117,49 @@
                                         <a class="btn btn-sm btn-primary btn-icon" title="Call CSE" href="tel:{{ $cse['user']['contact']['phone_number'] }}"><i class="fas fa-phone"></i> </a>
                                     </div>
                                     <div class="form-group col-1 col-md-1 col-sm-1">
-                                        <div class="custom-control custom-radio mt-2">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="{{ $loop->iteration }}" name="cse_user_uuid" value="{{ $cse['user']['uuid'] }}">
-                                                <label class="custom-control-label" for="{{ $loop->iteration }}"></label>
+                                            <div class="custom-control">
+                                                <form action="{{ route('admin.requests-pending.store', app()->getLocale()) }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" class="custom-control-input" id="{{ $loop->iteration }}" name="cse_user_uuid" value="{{ $cse['user']['uuid'] }}">
+                                                    <input type="hidden" class="custom-control-input" id="{{ $loop->iteration }}" name="service_request_uuid" value="{{ $serviceRequest['uuid'] }}">
+                                                    <button class="btn btn-sm btn-success btn-icon" title="Assign CSE"><i class="fas fa-user-check"></i> </button>
+                                                </form>
                                             </div>
-                                        </div>
                                     </div>
 
                                 </div>
-                                </div>
+                                {{-- </div> --}}
                             </div>
                             </li>
                             @endforeach
                         </ul>
                     </div>
 
+                    @if(collect($serviceRequest['adminAssignedCses'])->isNotEmpty())   
+                    <div id="assignedCSEs" class="tab-pane pd-20 pd-xl-25">
+                        <h5 class="mt-4">Notified Client Service Executives</h5>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-hover mg-b-0">
+                                <thead class="">
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Name</th>
+                                        <th>Date Assigned</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($serviceRequest['adminAssignedCses'] as $assignedCse)
+                                    <tr>
+                                        <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                                        <td class="tx-medium">{{ Str::title($assignedCse['user']['account']['first_name'] ." ". $assignedCse['user']['account']['last_name']) }}</td>
+                                        <td class="tx-medium">{{ \Carbon\Carbon::parse($assignedCse['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div><!-- table-responsive -->
+                    </div>
+                    @endif
                 </div>
             </div>
 

@@ -175,10 +175,10 @@ class CustomerServiceExecutiveController extends Controller
 
         $technicainsRole = \App\Models\Role::where('slug', 'technician-artisans')->first();
         $rfq        = \App\Models\Rfq::where('service_request_id', $service_request->id)->first();
-        $rfqWarranty        = \App\Models\Rfq::where(['issued_by'=> Auth::user()->id, 'service_request_id' => $service_request->id, 'type'=> 'Warranty'])->latest()->first();
+        $rfqWarranty        = \App\Models\Rfq::where(['issued_by'=> Auth::user()->id, 'service_request_id' => $service_request->id, 'type'=> 'Warranty'])->where('status', '<>', 'Rejected')->latest()->first();
         $rfqSupplierDispatch =   $rfqWarranty ? \App\Models\RfqSupplierDispatch::where(['rfq_id'=> $rfqWarranty->id, 'cse_status'=> 'Pending' ])->get(): null;
 
-   
+
 
         $scheduleDate =!empty($service_request->service_request_warranty->service_request_warranty_issued) ? 
         $service_request->service_request_warranty->service_request_warranty_issued->scheduled_datetime: '';
@@ -210,9 +210,9 @@ class CustomerServiceExecutiveController extends Controller
             'technician_list'  =>  \App\Models\Technician::all(),
             'suppliers'        =>  \App\Models\Rfq::where('service_request_id', $service_request->id)->with('rfqSupplies', 'rfqSuppliesInvoices','rfqBatches', 'rfqSupplierDispatches', 'serviceRequest')->first(),
             'requestReports'  => \App\Models\ServiceRequestReport::where('service_request_id', $service_request->id)->latest('created_at')->get(),
-            'RfqDispatchNotification' => $rfqWarranty? \App\Models\RfqDispatchNotification::where(['service_request_id' => $service_request->id, 'rfq_id'=>  $rfq->id ])->get(): [],
+            'RfqDispatchNotification' => $rfqWarranty? \App\Models\RfqDispatchNotification::where(['service_request_id' => $service_request->id, 'rfq_id'=>$rfq->id ])->get(): [],
             'causalAgent'  =>  $issued_id != '' ? \App\Models\ServiceRequestWarrantyReport::where([
-                'service_request_warranties_issued_id' => $issued_id ])
+                'service_request_warranties_issued_id' => $issued_id])->where('causal_agent_id', '!=', NULL)
                 ->get(): [],
             'technicianExist' =>  $technicianExist,
              'rfqSupplierDispatch' => $rfqSupplierDispatch ,
@@ -224,7 +224,9 @@ class CustomerServiceExecutiveController extends Controller
 
         ];
 
-        //dd( $variables['rfqDetails'] );
+  
+
+       // dd($service_request->id, $rfq->id, $rfqWarranty,$variables['RfqDispatchNotification'] );
       
  
        

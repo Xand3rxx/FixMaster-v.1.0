@@ -1,10 +1,9 @@
 
 
-  <div class="divider-text">Update Request  </div>
+  <div class="divider-text">Create Request  </div>
 
   @foreach ($suppliers->rfqBatches as $item)
-                                 
-  <p class="invalid-feedback">All fields are required</p>
+
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         <label for="manufacturer_name">Manufacturer Name</label>
@@ -89,9 +88,9 @@
                                     </div>
                                     <input type="hidden" class="each-amount" id="unit-amount-{{$item->id}}">
                    
-                                    <div class="form-group col-md-1 mt-1">
+                                    <!-- <div class="form-group col-md-1 mt-1">
                                         <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5 mt-4 add-rfq" type="button"><i class="fas fa-plus" class="wd-10 mg-r-5"></i></button>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 @endforeach
                                 <span class="add-rfq-row"></span>

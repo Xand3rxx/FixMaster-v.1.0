@@ -1,5 +1,10 @@
+
+      <h3>Indicate Causal Agent</h3>
+    <section>
+    <div class="form-row mt-4">
+            <div class="form-group col-md-12">
 <div class="divider-text">Technicians  </div>
-   @if(!empty($service_request['service_request_assignees']))
+@if(!empty($service_request['service_request_assignees']))
    <ul class="list-group wd-md-100p">
    @foreach ($service_request['service_request_assignees'] as $item)
             @if($item['user']['roles'][0]['slug'] == 'technician-artisans')
@@ -40,12 +45,10 @@
          
             @endif
 
-
-
             <div class="divider-text">Suppliers </div>
 
-            <ul class="list-group wd-md-100p">
-            @if(!empty($suppliers->rfqSuppliesInvoices))
+<ul class="list-group wd-md-100p">
+@if(!empty($suppliers->rfqSuppliesInvoices))
            
             @foreach($suppliers->rfqSuppliesInvoices as $item)
     
@@ -87,12 +90,13 @@
                 @endif    
                 @endforeach
                 @endif
-            </ul>
+</ul>
 
-            <div class="divider-text">Causal Reason </div>
+
+<div class="divider-text">Causal Reason </div>
             <ul class="list-group wd-md-100p">
             <li class="list-group-item d-flex align-items-center">
-                                                <img src="{{ asset('assets/user-avatars/default-male-avatar.png') }}" class="wd-30 rounded-circle mg-r-15" alt="Technician Avatar">
+     
 
                                                 <div class="form-group col-11 col-md-11 col-sm-11">
                                                     <label for="causal_reason">Other Reasons </label>
@@ -100,3 +104,8 @@
                                                 </div>
                                          </li>
                                          </ul>
+
+            </div>
+            </div>
+
+                         </section>
