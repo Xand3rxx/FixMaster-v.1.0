@@ -29,6 +29,7 @@ class CreateCollaboratorsPaymentsTable extends Migration
             $table->float('amount_to_be_paid')->nullable();
             $table->float('amount_after_retention')->nullable();
             $table->float('retention_fee')->nullable();
+            $table->enum('retention_cronjob_update', ['Update', 'Pending'])->default('Pending');
             $table->float('labour_markup_cost')->nullable();
             $table->float('material_markup_cost')->nullable();
             $table->float('royalty_fee')->nullable();

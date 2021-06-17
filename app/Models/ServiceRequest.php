@@ -245,6 +245,10 @@ class ServiceRequest extends Model
         return $this->hasMany(ServiceRequestAssignCse::class, 'service_request_id')->with('user.account');
     }
 
+    public function supplier()
+    {
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('RfqSupplierInvoice');
+    }
 
     /**
      * Scope a query to only include all pending requests

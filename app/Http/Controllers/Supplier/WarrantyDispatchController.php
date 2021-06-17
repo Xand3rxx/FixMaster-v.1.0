@@ -79,11 +79,8 @@ class WarrantyDispatchController extends Controller
     {
         //Validate if RFQ ID exists
         $rfq = \App\Models\Rfq::where('id', $request->rfq_id)->firstOrFail();
-<<<<<<< HEAD
         $cse =  \App\Models\User::where('id',   $rfq->issued_by)->with('account')->first();
 
-=======
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
 
         //Label and dispacth materials for a RFQ issued
         //Validate user input fields
@@ -103,11 +100,7 @@ class WarrantyDispatchController extends Controller
         (bool) $createDispatch  = false;
 
         // Set DB to rollback DB transacations if error occurs
-<<<<<<< HEAD
         DB::transaction(function () use ($request,$rfq, $cse, &$createDispatch) {
-=======
-        DB::transaction(function () use ($request, &$createDispatch) {
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
              RfqSupplierDispatch::create([
                 'rfq_id'                =>  $request->rfq_id,
                 'rfq_supplier_invoice'  =>  $request->rfq_supplier_invoice,
@@ -122,7 +115,6 @@ class WarrantyDispatchController extends Controller
             //Record service request progress of `A supplier sent an invoice`
             \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, \App\Models\Rfq::where('id', $request->rfq_id)->firstOrFail()->service_request_id, 2, \App\Models\SubStatus::where('uuid', 'ef8c69e8-5634-4bd0-a7e6-b73a89ae034f')->firstOrFail()->id);
 
-<<<<<<< HEAD
                 $updateOldSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=>$rfq->service_request_id ,  'supplier_id' => Auth::user()->id ])->update([
                     'notification' => 'Off',
                    'dispatch' => 'Yes',
@@ -141,23 +133,12 @@ class WarrantyDispatchController extends Controller
             $mail1 = $this->mailAction($mail_cse);
 
 
-=======
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
             //Set variables as true to be validated outside the DB transaction
             $createDispatch =  true;
         });
 
-<<<<<<< HEAD
  
      
-=======
-       if($rfq){
-        $updateOldSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=>$rfq->service_request_id ,  'supplier_id' => Auth::user()->id ])->update([
-            'notification' => 'Off',
-           'dispatch' => 'Yes',
-       ]);
-        }
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
        
         if($createDispatch){
 
