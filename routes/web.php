@@ -22,17 +22,14 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
-//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
-use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
-
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
@@ -56,7 +53,10 @@ use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
+<<<<<<< HEAD
 //use App\Http\Controllers\Admin\Report\SupplierReportController;
+=======
+>>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
 use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
 use App\Http\Controllers\Admin\Prospective\CSEController as ProspectiveCSEController;

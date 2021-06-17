@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\ServiceRequest;
 
-use Auth;
+use Image;
+use App\Models\Rfq;
+use App\Traits\Utility;
+use App\Models\RfqBatch;
+use App\Models\Supplier;
 use App\Traits\Loggable;
+use App\Traits\ImageUpload;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RfqSupplierInvoice;
 use App\Traits\findRecordWithUUID;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\CollaboratorsPayment;
+use App\Models\ServiceRequestReport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use App\Traits\Utility;
-use App\Traits\ImageUpload;
-use Image;
+use App\Models\ServiceRequestAssigned;
+use App\Models\RfqDispatchNotification;
+use App\Models\ServiceRequestWarrantyImage;
+use App\Models\ServiceRequestWarrantyIssued;
+use App\Models\ServiceRequestWarrantyReport;
 
 
 class WarrantClaimController extends Controller
@@ -351,6 +362,7 @@ class WarrantClaimController extends Controller
 
     
 
+<<<<<<< HEAD
     // $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
     // ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
     // ->whereIn('user_id', '=', $request->initial_supplier)
@@ -364,6 +376,21 @@ class WarrantClaimController extends Controller
     //         'retention_cronjob_update' => 'Update'
     //     ]);
     // }
+=======
+    $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
+    ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
+    ->whereIn('user_id', '=', $request->initial_supplier)
+    ->first();
+    dd($request,$retentionFee);
+    if(collect($retentionFee)->count() > 0){
+        $update   =  \App\Models\CollaboratorsPayment::where(['service_request_id'=> $value->service_request_id, 'user_id'=>$value->id, 'service_type'=> 'Regular', 'retention_cronjob_update'=>'Pending'])
+        ->update([
+            'amount_after_retention'=> (int)$retentionFee->amount_after_retention + (int)$retentionFee->retention_fee,
+            'retention_fee'=> 0,
+            'retention_cronjob_update' => 'Update'
+        ]);
+    }
+>>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
 
          $users = \App\Models\Supplier::whereIn('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
         
@@ -620,4 +647,3 @@ class WarrantClaimController extends Controller
     
 
 }
-
