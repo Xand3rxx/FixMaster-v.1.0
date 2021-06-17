@@ -401,7 +401,7 @@ class WarrantClaimController extends Controller
                 
             }  
         }
-        $$createRfq = true;
+        $createRfq = true;
     }); 
         return '1';
             
@@ -420,8 +420,26 @@ class WarrantClaimController extends Controller
             
             $updateRfqStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id])
             ->update([
-                'status'=> 'Awaiting'
+                'status'=> 'Rejected'
             ]);
+
+            $creatteSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=> $request->service_request_id])
+            ->delete();
+
+
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DECLINED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
+            $approveInvoice = true;
+         }); 
 
      
         return  $updateInvoiceStatus;
@@ -444,6 +462,8 @@ class WarrantClaimController extends Controller
         protected function acceptMaterial($request)
         {
 
+            $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
+            $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
          
             if($request->accept_materials == 'Yes'){
             $rfqId  =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])->first();

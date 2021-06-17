@@ -127,12 +127,12 @@
         </ul>
       </li> --}}
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.payments.disbursed', 'admin.received_payments','admin.payments.pending') ? 'active show' : '' }}">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.payments.disbursed', 'admin.payments.received','admin.payments.pending') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="credit-card"></i> <span>Payments</span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.payments.disbursed') ? 'active' : '' }}"><a href="{{ route('admin.payments.disbursed',  app()->getLocale()) }}">Disbursed</a></li>
-          <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Received</a></li>
-          {{-- <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Verify</a></li> --}}
+          <li class="{{ Route::currentRouteNamed('admin.payments.received') ? 'active' : '' }}"><a href="{{ route('admin.payments.received',  app()->getLocale()) }}">Received</a></li>
+          <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Verify</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.pending') ? 'active' : '' }}"><a href="{{ route('admin.payments.pending',  app()->getLocale()) }}">Pending Payments</a></li>
         </ul>
       </li>

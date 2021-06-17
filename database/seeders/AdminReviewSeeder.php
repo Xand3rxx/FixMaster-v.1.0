@@ -22,7 +22,7 @@ class AdminReviewSeeder extends Seeder
 
         $review1 = new Review();
         $review1->client_id = 7;
-        $review1->service_id = 9;
+        $review1->service_id = 2;
         $review1->reviews ="The service is top class. I recommend them if you want to beef up your home, office or company security with top class surveillance systems, electric gates etc. They are the solution to your security problems.";
         $review1->save();
     }
