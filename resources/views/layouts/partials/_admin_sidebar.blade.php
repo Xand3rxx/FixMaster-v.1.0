@@ -116,7 +116,7 @@
         </ul>
       </li>
 
-      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template', 'admin.new_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
 
       {{-- <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.template') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a>

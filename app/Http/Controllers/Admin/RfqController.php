@@ -29,16 +29,15 @@ class RfqController extends Controller
     }
 
     public function index(){
-
         return view('admin.rfq.index', [
-            'rfqs'   =>  Rfq::orderBy('created_at', 'DESC')->get(),
+            'rfqs'   =>  Rfq::with('serviceRequest')->orderBy('created_at', 'DESC')->get(),
         ]);
     }
 
     public function rfqDetails($language, $uuid){
 
         return view('admin.rfq._details', [
-            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
+            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('serviceRequest', 'rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
         ]);
     }
 
