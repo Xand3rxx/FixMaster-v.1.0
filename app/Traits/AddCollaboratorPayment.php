@@ -5,6 +5,7 @@ namespace App\Traits;
 
 
 use App\Models\CollaboratorsPayment;
+use Illuminate\Support\Str;
 
 trait AddCollaboratorPayment
 {
@@ -16,6 +17,7 @@ trait AddCollaboratorPayment
     protected static function createCollaboratorPayment($service_request_id, $user_id, $service_type, $flat_rate, $actual_labour_cost, $actual_material_cost, $amount_to_be_paid, $amount_after_retention, $retention_fee, $labour_markup_cost, $material_markup_cost, $royalty_fee, $logistics_cost, $tax_fee)
     {
         return CollaboratorsPayment::create([
+           'uuid' =>  Str::uuid('uuid'),
            'service_request_id' => $service_request_id,
            'user_id' => $user_id,
            'service_type' => $service_type,
