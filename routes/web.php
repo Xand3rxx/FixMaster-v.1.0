@@ -98,6 +98,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
 
+   
+   
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::resource('administrator', AdministratorController::class);
@@ -317,6 +319,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/payment_sorting', [CollaboratorsPaymentController::class, 'sortPayments'])->name('payment_sorting');
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
+    Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
 });
 
 //All routes regarding clients should be in here
