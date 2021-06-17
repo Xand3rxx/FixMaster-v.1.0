@@ -19,17 +19,17 @@ class AdminRatingController extends Controller
     public function getServiceRatings(Request $request)
     {
 
-            $cards = Rating::select([
-                'service_request_id',
-                DB::raw('COUNT(id) as id'),
-                DB::raw('AVG(star) as starAvg')
-            ])->with('clientAccount', 'service_request')
-            ->where('service_id', '!=', null)
-            ->where('service_diagnosis_by', null)
-            ->where('ratee_id', '!=', null)
-                ->groupBy('service_request_id')->get();
+        $cards = Rating::select([
+            'service_request_id',
+            DB::raw('COUNT(id) as id'),
+            DB::raw('AVG(star) as starAvg')
+        ])->with('client', 'account', 'service_request')
+        ->where('service_id', '!=', null)
+        ->where('service_diagnosis_by', null)
+        ->where('rater_id', '!=', null)
+        ->groupBy('service_request_id')->get();
 
-        return view('admin.ratings.service_rating', compact('cards'));
+    return view('admin.ratings.service_rating', compact('cards'));
     }
 
     public function getRatings(Request $request){

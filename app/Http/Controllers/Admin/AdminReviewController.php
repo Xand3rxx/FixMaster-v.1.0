@@ -11,9 +11,9 @@ class AdminReviewController extends Controller
 {
     public function getServiceReviews(Request $request)
     {
-        $serviceReviews = Review::all();
-        //where('service_request_id', '!=', null)->where('ratee_id', null)->get();
-        return view('admin.ratings.service_reviews', compact('serviceReviews'));
+        return view('admin.ratings.service_reviews', [
+            'serviceReviews' => Review::all()
+        ]);
     }
 
     public function activate($language, Request $request, $uuid){

@@ -7,7 +7,6 @@
        <select class="form-control" name="bulk" required style="padding:0px;">
          <option value="">Select Action</option>
          <option value="Paid">Mark as Paid</option>
-         {{-- <option value="">Delete</option> --}}
        </select>
        <input type="submit" name="submit" class="btn btn-success" value="Apply">
     </div>
