@@ -759,7 +759,7 @@ class ClientController extends Controller
                 $walTrans['payment_id']       = $lastPayment->id;
                 $walTrans['amount']           = $request->amountToRefund;
                 $walTrans['payment_type']     = 'refund';
-                $walTrans['unique_id']        = $lastPayment->unique_id;
+                $walTrans['unique_id']        = $client->unique_id;
                 $walTrans['transaction_type'] = 'credit';
                 // if the user has not used this wallet for any transaction
                 if (!WalletTransaction::where('unique_id', '=', $client['unique_id'])->exists()) {

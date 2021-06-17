@@ -315,6 +315,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/payments/disbursed', [CollaboratorsPaymentController::class, 'getdisbursedPayments'])->name('payments.disbursed');
     Route::post('payments.get_checkbox', [CollaboratorsPaymentController::class, 'getCheckbox'])->name('payments.get_checkbox');
     Route::post('/payment_sorting', [CollaboratorsPaymentController::class, 'sortPayments'])->name('payment_sorting');
+
+    //Service Request Actions routes
+    Route::post('requests/action/cancel/{cancel_request:uuid}', [AdminServiceRequestActionsController::class, 'cancelRequest'])->name('requests.cancel_request');
+    
 });
 
 //All routes regarding clients should be in here

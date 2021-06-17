@@ -104,7 +104,7 @@ class PendingRequestController extends Controller
 
             $this->log('Errors', 'Error', $actionUrl, 'An error occurred while trying to assign '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '.$serviceRequest->unique_id.' request.');
 
-            return back()->with('error', 'An error occurred while trying to to assign '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
+            return back()->with('error', 'An error occurred while trying to assign '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
         }
 
     }
