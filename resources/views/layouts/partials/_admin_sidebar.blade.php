@@ -174,7 +174,7 @@
         </ul>
       </li>
 
-     {{-- <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active show' : '' }}">
+     <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span><span class="badge badge-primary">{{ $pendingRequests }}</suspan></span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
@@ -182,7 +182,7 @@
           <li class=""><a href="#">Completed</a></li>
           <li class=""><a href="#">Cancelled</a></li>
         </ul>
-      </li>--}}
+      </li>
 
       <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.rfq', 'admin.supplier_invoices') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="file-text"></i> <span>RFQ's @if($newQuotes > 0)<span class="badge badge-primary">{{ $newQuotes }}</span> @endif</a>
