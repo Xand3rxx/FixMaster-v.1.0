@@ -116,7 +116,7 @@
         </ul>
       </li>
 
-      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template', 'admin.new_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
 
       {{-- <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.template') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a>
@@ -127,11 +127,11 @@
         </ul>
       </li> --}}
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.payments.disbursed', 'admin.received_payments','admin.payments.pending') ? 'active show' : '' }}">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.payments.disbursed', 'admin.payments.received','admin.payments.pending') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="credit-card"></i> <span>Payments</span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.payments.disbursed') ? 'active' : '' }}"><a href="{{ route('admin.payments.disbursed',  app()->getLocale()) }}">Disbursed</a></li>
-          <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Received</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.payments.received') ? 'active' : '' }}"><a href="{{ route('admin.payments.received',  app()->getLocale()) }}">Received</a></li>
           <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Verify</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.pending') ? 'active' : '' }}"><a href="{{ route('admin.payments.pending',  app()->getLocale()) }}">Pending Payments</a></li>
         </ul>
@@ -174,10 +174,10 @@
         </ul>
       </li>
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests.index', 'admin.requests.show') ? 'active show' : '' }}">
+     <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span><span class="badge badge-primary">{{ $pendingRequests }}</suspan></span></a>
         <ul>
-          <li class="{{ Route::currentRouteNamed('admin.requests.index', 'admin.requests.show') ? 'active' : '' }}"><a href="{{ route('admin.requests.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
+          <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
           <li class=""><a href="#">Ongoing</a></li>
           <li class=""><a href="#">Completed</a></li>
           <li class=""><a href="#">Cancelled</a></li>

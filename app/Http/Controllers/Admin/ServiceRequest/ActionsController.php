@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\ServiceRequest;
 
-use Illuminate\Support\Facades\Route;
 use App\Traits\Utility;
 use App\Traits\Loggable;
+use App\Models\SubStatus;
 use Illuminate\Http\Request;
+use App\Traits\CancelRequest;
 use App\Models\ServiceRequest;
+use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Models\ServiceRequestProgress;
 
-class ServiceRequestController extends Controller
+class ActionsController extends Controller
 {
-    use Utility, Loggable;
+    use Utility, Loggable, CancelRequest;
+
     /**
      * Display a listing of the resource.
      *
@@ -21,32 +25,7 @@ class ServiceRequestController extends Controller
      */
     public function index()
     {
-
-        return view('admin.requests.pending.index', [
-            'requests'  =>  ServiceRequest::with('client', 'price')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Pending'])->latest('created_at')->get()
-        ]);
-    }
-
-
-    /**
-     * Display the selected pending service request detail.
-     *
-     * @param  int  $uuid
-     * @return \Illuminate\Http\Response
-     */
-    public function ongoingRequestDetails($language, $uuid)
-    {
-
-        return \App\Models\Role::where('slug', 'cse-user')->with('users')
-        ->whereHas('users', function($query){
-            $query->where('job_availability', 'Yes');
-        })
-        ->firstOrFail();
-
-
-        return view('admin.requests.pending.show', [
-            'cses'    =>  \App\Models\Role::where('slug', 'cse-user')->with('users')->firstOrFail(),
-        ]);
+        //
     }
 
     /**
@@ -71,22 +50,14 @@ class ServiceRequestController extends Controller
     }
 
     /**
-     * Display the selected pending service request detail.
+     * Display the specified resource.
      *
-     * @param  int  $uuid
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($language, $uuid)
+    public function show($id)
     {
-
-        // return \App\Models\Cse::where('job_availability', 'Yes')->with('user', 'user.ratings')->get();
-
-        // $service_request = ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'service_request_cancellation', 'invoice', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest'])->firstOrFail();
-
-        return view('admin.requests.pending.show', [
-            'serviceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'serviceRequestMedias'])->firstOrFail(),
-            'cses'    =>  \App\Models\Cse::where('job_availability', 'Yes')->with('user', 'user.ratings')->get(),
-        ]);
+        //
     }
 
     /**
@@ -123,19 +94,44 @@ class ServiceRequestController extends Controller
         //
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelRequest($language, $uuid, Request $request){
 
-    public function markCompletedRequest(Request $request, $language, $id){
+        //Validate the incoming request.
+        $request->validate([
+            'reason'    =>  'bail|required|string',
+        ]);
+
+        //Check if uuid exists on `users` table.
+        $serviceRequest = ServiceRequest::where('uuid',  $uuid)->with('client', 'price', 'payment', 'status')->firstOrFail();
+
+        return (($this->initiateCancellation($request, $serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been cancelled.') : back()->with('error', 'An error occurred while trying to to assign cancel '. $serviceRequest->unique_id.' request.'));
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function markCompletedRequest($language, $id, Request $request, ){
 
         $requestExists =  ServiceRequest::where('uuid', $id)->firstOrFail();
 
-         $updateMarkasCompleted = $this->markCompletedRequestTrait(Auth::id(), $id);
+        $updateMarkasCompleted = $this->markCompletedRequestTrait($request->user()->id, $id);
 
         if($updateMarkasCompleted ){
 
             $this->log('request', 'Informational', Route::currentRouteAction(), auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ') marked '.$requestExists->unique_id.' service request as completed.');
 
             //Record service request progress of `Admin marked job as completed`
-            ServiceRequestProgress::storeProgress(auth()->user()->id, $requestExists->id, 4, \App\Models\SubStatus::where('uuid', 'ce316687-62d8-45a9-a1b9-f75da104fc18')->firstOrFail()->id);
+            ServiceRequestProgress::storeProgress(auth()->user()->id, $requestExists->id, 4, SubStatus::where('uuid', 'ce316687-62d8-45a9-a1b9-f75da104fc18')->firstOrFail()->id);
 
             return redirect()->route('admin.requests.index', app()->getLocale())->with('success', $requestExists->unique_id.' was marked as completed successfully.');
 
@@ -146,5 +142,5 @@ class ServiceRequestController extends Controller
         }
     }
 
-
+    
 }

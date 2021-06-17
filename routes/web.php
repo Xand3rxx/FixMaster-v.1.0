@@ -5,9 +5,11 @@ use App\Http\Controllers\EstateController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\EarningController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\Messaging\Template;
 use App\Http\Controllers\Admin\RfqController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\SimulationController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PriceController;
 use App\Http\Controllers\CSE\ProfileController;
 use App\Http\Controllers\CSE\RequestController;
@@ -16,26 +18,29 @@ use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\EWalletController;
 use App\Http\Controllers\Admin\GatewayController;
 use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
-use App\Http\Controllers\Client\PaystackController;
 use App\Http\Controllers\Admin\ActivityLogController;
-
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
+use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
 use App\Http\Controllers\AdminLocationRequestController;
+use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
+use App\Http\Controllers\Admin\CollaboratorsPaymentController;
+use App\Http\Controllers\Admin\Report\SupplierReportController;
+use App\Http\Controllers\Admin\ServiceRequestPaymentController;
 use App\Http\Controllers\Admin\ServiceRequestSettingController;
-
 use App\Http\Controllers\Admin\User\QualityAssuranceController;
+use App\Http\Controllers\ServiceRequest\WarrantClaimController;
 use App\Http\Controllers\Admin\User\TechnicianArtisanController;
+use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
 use App\Http\Controllers\ServiceRequest\ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
@@ -48,21 +53,15 @@ use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
-use App\Http\Controllers\Admin\Report\SupplierReportController;
-use App\Http\Controllers\Admin\ServiceRequestController as RequestServiceController;
+use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
-use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\Admin\Prospective\CSEController as ProspectiveCSEController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
-use App\Http\Controllers\Admin\Prospective\TechnicianArtisanController as ProspectiveTechnicianArtisanController;
-use App\Http\Controllers\ServiceRequest\WarrantClaimController;
-use App\Http\Controllers\Messaging\Template;
-use App\Http\Controllers\Admin\CollaboratorsPaymentController;
-
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
-use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
-use App\Http\Controllers\CSE\CseWarrantyClaimController;
+//use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
+use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
+use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
 /*
@@ -88,8 +87,8 @@ use App\Http\Controllers\Client\MessageController as ClientMessageController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
-
+    //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
+    Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::get('/ratings/cse-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
@@ -98,6 +97,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
 
+   
+   
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::resource('administrator', AdministratorController::class);
@@ -284,8 +285,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/requests-for-quote/details/image/{image:id}',     [RfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     //Service Reques Routes
-    Route::resource('requests', RequestServiceController::class);
-    Route::get('/requests/completed-request/{request:id}',          [RequestServiceController::class, 'markCompletedRequest'])->name('completed_request');
+    Route::resource('requests-pending', AdminPendingRequestController::class);
+    Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
 
     //CSE Reporting Routes
     Route::get('/reports/client-service-executive',      [CustomerServiceExecutiveReportController::class, 'index'])->name('cse_reports');
@@ -310,11 +311,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/supplier',             [SupplierReportController::class, 'index'])->name('supplier_reports');
     Route::post('/reports/supplier/item-delivered-sorting', [SupplierReportController::class, 'itemDeliveredSorting'])->name('supplier_report_first_sorting');
 
-    //Admin Payments get_checkbox
+    //Admin Payments
     Route::get('/payments/pending', [CollaboratorsPaymentController::class, 'getPendingPayments'])->name('payments.pending');
     Route::get('/payments/disbursed', [CollaboratorsPaymentController::class, 'getdisbursedPayments'])->name('payments.disbursed');
     Route::post('payments.get_checkbox', [CollaboratorsPaymentController::class, 'getCheckbox'])->name('payments.get_checkbox');
     Route::post('/payment_sorting', [CollaboratorsPaymentController::class, 'sortPayments'])->name('payment_sorting');
+
+    //Service Request Actions routes
+    Route::post('requests/action/cancel/{cancel_request:uuid}', [AdminServiceRequestActionsController::class, 'cancelRequest'])->name('requests.cancel_request');
+    
+    Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
+    Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
+    Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
 });
 
 //All routes regarding clients should be in here
@@ -450,8 +458,8 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
     Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     Route::get('/sub-service-dynamic-feilds',  [CseController::class, 'subServiceDynamicFields'])->name('sub_service_dynamic_fields');
-
     Route::get('/tools-request/details/{tool_request:uuid}',           [RequestController::class, 'toolRequestDetails'])->name('tool_request_details');
+    Route::get('/warranty/supplier/details/image/{image:id}',            [WarrantClaimController::class, 'rfqDetailsImage'])->name('rfq_waranty_details_image');
 
 });
 
@@ -484,8 +492,16 @@ Route::prefix('/supplier')->name('supplier.')->group(function () {
     Route::post('/warranty/replacement/notify/{dispatch:id}',                          [SupplierRfqController::class, 'warrantyReplacementNotify'])->name('warranty_replacement_notify');
     Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
     Route::get('/requests/warranty/claims/quote',                               [SupplierRfqWarrantyController::class, 'index'])->name('rfq.warranty');
-    Route::post('/rfqs/warranty/claims/store',                               [SupplierRfqWarrantyController::class, 'store'])->name('rfq_store_ supplier_warranty_claim');
+ 
+    Route::post('/rfqs/warranty/claims/store',                               [SupplierRfqWarrantyController::class, 'store'])->name('rfq_store_supplier_warranty_claim');
     Route::get('/warranty-claim/requests-for-quote/send-invoice/{rfq:uuid}',       [SupplierRfqWarrantyController::class, 'sendInvoice'])->name('rfq_warranty_send_supplier_invoice');
+    Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
+    Route::post('/warranty/replacement/notify/{dispatch:id}',                          [SupplierRfqController::class, 'warrantyReplacementNotify'])->name('warranty_replacement_notify');
+    Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
+    Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
+    Route::get('/warranty/invoices/sent',                      [SupplierRfqWarrantyController::class, 'sentInvoices'])->name('warranty_sent_invoices');
+    Route::post('/warranty/dispatch/store/',                   [WarrantyDispatchController::class, 'store'])->name('warranty_store_dispatch');
+    Route::get('/warranty/dispatch',                          [WarrantyDispatchController::class, 'index'])->name('warranty_dispatches');
 
     Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
 });
@@ -505,16 +521,22 @@ Route::prefix('/technician')->name('technician.')->group(function () {
     Route::post('/disbursed_payments_sorting', [TechnicianProfileController::class, 'sortDisbursedPayments'])->name('disbursed_payments_sorting');
     Route::view('/messages/inbox', 'technician.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent', 'technician.messages.outbox')->name('messages.outbox');
-    Route::get('/requests/active',  [TechnicianServiceRequestController::class, 'getActiveRequest'])->name('requests.active');
+    Route::get('/requests/active',  [TechnicianServiceRequestController::class, 'getActiveRequests'])->name('requests.active');
+    Route::get('/requests/completed',  [TechnicianServiceRequestController::class, 'getCompletedRequests'])->name('requests.completed');
+    Route::get('/requests/cancelled',  [TechnicianServiceRequestController::class, 'getCancelledRequests'])->name('requests.cancelled');
+    Route::get('/requests/warranty-claim', [TechnicianServiceRequestController::class, 'getWarranties'])->name('requests.warranty_claim');
+    Route::get('/requests/active_details/{uuid}', [TechnicianServiceRequestController::class, 'acceptedJobDetails'])->name('requests.active_details');
+
 
     Route::get('/payments/history', [TechnicianProfileController::class, 'paymentHistory'])->name('payment.history');
 
-    Route::view('/requests/completed', 'technician.requests.completed')->name('requests.completed');
-    Route::view('/requests/warranty-claim', 'technician.requests.warranty_claim')->name('requests.warranty_claim');
+    
+    
+    
     Route::view('/consultations/pending', 'technician.consultations.pending')->name('consultations.pending');
     Route::view('/consultations/ongoing', 'technician.consultations.ongoing')->name('consultations.ongoing');
     Route::view('/consultations/completed', 'technician.consultations.completed')->name('consultations.completed');
-    Route::view('/requests/cancelled', 'technician.requests.cancelled')->name('requests.cancelled');
+    
 });
 
 Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function () {

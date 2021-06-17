@@ -759,7 +759,7 @@ class ClientController extends Controller
                 $walTrans['payment_id']       = $lastPayment->id;
                 $walTrans['amount']           = $request->amountToRefund;
                 $walTrans['payment_type']     = 'refund';
-                $walTrans['unique_id']        = $lastPayment->unique_id;
+                $walTrans['unique_id']        = $client->unique_id;
                 $walTrans['transaction_type'] = 'credit';
                 // if the user has not used this wallet for any transaction
                 if (!WalletTransaction::where('unique_id', '=', $client['unique_id'])->exists()) {
@@ -830,10 +830,32 @@ class ClientController extends Controller
             'reason'       =>   'required',
         ]);
 
+        $mail1 = '';  $mail2= ''; $mail3='';
         $admin = User::where('id', 1)->with('account')->first();
-        $requestExists = ServiceRequest::where('uuid', $id)->with('client')->first();
-        $cses  = \App\Models\Cse::with('user', 'user.account', 'user.contact', 'user.roles')->get();
-        $mail1 = '';  $mail2= '';
+        $requestExists = ServiceRequest::where('uuid', $id)->with('client', 'service_request_assignees')->first();
+        $rfq        = \App\Models\Rfq::where('service_request_id',  $requestExists->id)->first();
+        $rfqInvoice        = \App\Models\RfqSupplierInvoice::where('rfq_id', '=',$rfq->id)->where('accepted', '=', 'Yes')->first();
+        $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
+        $cse = []; $initateWarranty='';
+
+        if($requestExists->service_request_assignees){
+            foreach($requestExists->service_request_assignees as $item){
+              if($item->user->roles[0]->url == 'cse'){
+                $cse[] = [
+                  'email'=>$item->user->email,
+                   'first_name'=>$item->user->account->first_name,
+                   'last_name'=>$item->user->account->last_name
+                ];
+               
+              }
+              
+            }
+          
+          }
+      
+        (bool)  $initiate = false;
+
+        DB::transaction(function () use ($request,  $initateWarranty, $cse,$requestExists, $admin, $supplier, &$initiate) {
 
         $initateWarranty = ServiceRequestWarranty::where('service_request_id',  $requestExists->id)->update([
             'status'            => 'used',
@@ -849,44 +871,61 @@ class ClientController extends Controller
             'email' =>  $admin->email,
             'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
             'firstname' =>  $admin->account->first_name,
-            'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-            'customer_email' => Auth::user()->email,
+            'lastname' =>  $admin->account->last_name,
             'job_ref' =>  $requestExists->unique_id
           ]);
           $mail1 =$this->mailAction($mail_data_admin);
 
-        }
+        
 
 
-        if($mail1) {
+        if($mail1 == '0') {
           $mail_data_client = collect([
             'email' =>  Auth::user()->email,
-            'template_feature' => 'CUSTOMER_WARRANTY_CLAIM_NOTIFICATION',
-            'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
+            'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
+            'firstname' => Auth::user()->account->first_name,
+            'lastname' => Auth::user()->account->last_name,
             'job_ref' =>  $requestExists->unique_id
           ]);
           $mail2 = $this->mailAction($mail_data_client);
         }
 
-        if($mail2) {
-          foreach($cses as $cse){
+        
 
-            $mail_data_cse = collect([
-                'email' =>   $cse['user']['email'],
-                'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
-                'firstname' => $cse['user']['account']['first_name'] ,
-                'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-                'customer_email' => Auth::user()->email,
-                'job_ref' =>  $requestExists->unique_id
-              ]);
-              $mail1 = $this->mailAction($mail_data_cse);
+        if($mail2 == '0') {
+              foreach ($cse as $value) {
+                $mail_data_cse = collect([
+                  'email' =>  $value['email'],
+                  'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
+                  'firstname' =>   $value['first_name'],
+                  'lastname' =>   $value['last_name'],
+                  'job_ref' =>  $requestExists->unique_id,
+                    // 'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
+                // 'customer_email' => Auth::user()->email,
+                ]);
+              $mail3 = $this->mailAction($mail_data_cse);
           };
 
         }
 
+        if($mail3 == '0') {
+        $mail_data_admin = collect([
+            'email' =>  $supplier->email,
+            'template_feature' => 'SUPPLIER_WARRANTY_CLAIM_NOTIFICATION',
+            'firstname' =>  $supplier->account->first_name,
+            'lastname' =>  $supplier->account->last_name,
+            'job_ref' =>  $requestExists->unique_id
+          ]);
+          $mail1 =$this->mailAction($mail_data_admin);
 
+        }
+   
 
-        if($initateWarranty){
+        $initiate = true;
+    }
+    });
+
+        if($initiate){
 
             return redirect()->route('client.service.all', app()->getLocale())->with('success', $requestExists->unique_id.' warranty was successfully initiated.Please check your mail for notification');
 

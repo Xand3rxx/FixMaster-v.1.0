@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\ServiceRequest;
 
-use Auth;
+use Image;
+use App\Models\Rfq;
+use App\Traits\Utility;
+use App\Models\RfqBatch;
+use App\Models\Supplier;
 use App\Traits\Loggable;
+use App\Traits\ImageUpload;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RfqSupplierInvoice;
 use App\Traits\findRecordWithUUID;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\CollaboratorsPayment;
+use App\Models\ServiceRequestReport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use App\Traits\Utility;
-use App\Traits\ImageUpload;
-use Image;
+use App\Models\ServiceRequestAssigned;
+use App\Models\RfqDispatchNotification;
+use App\Models\ServiceRequestWarrantyImage;
+use App\Models\ServiceRequestWarrantyIssued;
+use App\Models\ServiceRequestWarrantyReport;
 
 
 class WarrantClaimController extends Controller
@@ -35,15 +46,21 @@ class WarrantClaimController extends Controller
         );
 
        
-        // if($request->intiate_rfq == 'yes'){
-        //     $this->validate($request, [
-        //         'image'                     => 'required|array|min:1',
-        //         'component_name'            => 'required|array|min:1',
-        //         'model_number'              => 'required|array',
-        //     ]);
-        //   }
+        
+
+         if($request->intiate_rfq == 'yes' && $request->new_supplier_id ){
+           
+            $this->validate($request, [
+                "new_manufacturer_name"    => "required|array",
+                "new_manufacturer_name.*"    => "required|string|min:2",
+                "new_component_name"    => "required|array",
+                "new_component_name.*"    => "required|string|min:2",
+                "new_quantity"    => "required|array",
+                "new_quantity.*"    => "required|integer",
+            ]);
+          }
     
-  //dd($request);
+
         $service_request_warranty_id = $request['service_request_warranty_id'];
         $serviceRequest = \App\Models\ServiceRequestWarrantyIssued::where('service_request_warranty_id', $request['service_request_warranty_id'])->first();
         $preferredTime = $saveTechnician= $uploadReportImage= $serviceRequestReport = $causalWarrantReport=$saveRfq = $deliveryStatus = $acceptMaterial=  $saveRfqSupplierInoviceStatus='';
@@ -77,7 +94,7 @@ class WarrantClaimController extends Controller
        {
         $saveRfq = $this->saveRfq($request);
        }
-       if($request->assigned_supplier_id)
+       if($request->approve_invoice)
        {
         $saveRfqSupplierInoviceStatus = $this->saveRfqSupplierInoviceStatus($request);
    
@@ -110,7 +127,7 @@ class WarrantClaimController extends Controller
             $type = 'Errors';
             $severity = 'Error';
             $actionUrl = Route::currentRouteAction();
-            $message = 'An Error Occured while '. Auth::user()->email. ' was trying to update warranty claim ';
+            $message = 'An Error Occured while '. Auth::user()->email. 'was trying to update warranty claim ';
             $this->log($type, $severity, $actionUrl, $message);
             return back()->with('error', 'An error occurred while trying to update warranty claim ');
         }
@@ -217,7 +234,7 @@ class WarrantClaimController extends Controller
         
             $image = $file;
             $imageName = (string) Str::uuid() .'.'.$file->getClientOriginalExtension();
-            $imageDirectory = public_path('assets/warranty-claim-images').'/';
+            $imageDirectory = public_path('assets/rfq-images').'/';
             $width = 350; $height = 259;
             Image::make($image->getRealPath())->resize($width, $height)->save($imageDirectory.$imageName);
 
@@ -231,33 +248,42 @@ class WarrantClaimController extends Controller
         $imageDirectory = public_path('assets/warranty-claim-images').'/';
         $width = 350; $height = 259;
 
-        // dd($request->manufacturer_name);
         //send rfqbatch
-        for ($i=0; $i < count($request->manufacturer_name) ; $i++) { 
-            $component_name [] = [
-              'manufacturer_name' => $request->manufacturer_name[$i],
-              'model_number'  => $request->model_number[$i],
-              'component_name'  => $request->component_name[$i],
-                'quantity'  => $request->quantity[$i],
-                'size' => $request->size[$i],
-                'unit_of_measurement' => $request->unit_of_measurement[$i],
-                'image' =>  $request->file('image')? $this->uploadImage($request->file('image')[$i]): 'UNAVAILABLE',
-            ];
-          }
-
+     
+         //old supplier flow
           if(!$request->new_supplier_id)
           {
           
             if($request->supplier_id)
             {
-                $rfq = \App\Models\Rfq::create([
-                    'issued_by' => auth()->user()->id,
-                    'type' =>   'Warranty',
-                    'service_request_id'=> $request->service_request_id, 
-                ]);
+                for ($i=0; $i < count($request->manufacturer_name) ; $i++) { 
+                    $component_name [] = [
+                      'manufacturer_name' => $request->manufacturer_name[$i],
+                      'model_number'  => $request->model_number[$i],
+                      'component_name'  => $request->component_name[$i],
+                        'quantity'  => $request->quantity[$i],
+                        'size' => $request->size[$i],
+                        'unit_of_measurement' => $request->unit_of_measurement[$i],
+                        'image' =>  $request->file('image')? $this->uploadImage($request->file('image')[$i]): 'UNAVAILABLE',
+                    ];
+                  }
 
+           
+            
+                (bool) $updateRfq = false;
 
-                // save each of the component name on the rfqbatch table
+                DB::transaction(function () use ($request, $component_name, &$updateRfq) {
+
+              
+                    $rfq = \App\Models\Rfq::create([
+                        'issued_by' => auth()->user()->id,
+                        'type' =>   'Warranty',
+                        'service_request_id'=> $request->service_request_id, 
+                        'status'=>  'Awaiting',
+                        'accepted' => 'No'
+                    ]);
+                 
+                // // save each of the component name on the rfqbatch table
                 foreach ($component_name as $key => $value) {
                     \App\Models\RfqBatch::create([
                 'rfq_id'           =>  $rfq->id,
@@ -285,14 +311,15 @@ class WarrantClaimController extends Controller
                         ]);
         
                         if($creatteSupplierRfqDispatch){
-                          $user =   \App\Models\User::where('id', $supply)->with('account', 'roles')->first();
-                            $mail_data_supplier = collect([
-                                'email' =>   $user->email,
-                                'template_feature' => 'CSE_SENT_SUPPLIER_MESSAGE_NOTIFICATION',
-                                'firstname' => $user->account->first_name.' '.$user->account->last_name,
-                                'job_ref' =>  $request->service_request_unique_id,
-                                'subject' => 'testing'
-                            ]);
+                            $user =   \App\Models\Supplier::where('user_id', $supply)->with('user')->first();
+                              $mail_data_supplier = collect([
+                                  'email' =>  $user->user->email,
+                                  'template_feature' => 'SUPPLIER_NEW_RFQ_NOTIFICATION',
+                                  'customer_name' => $user->business_name,
+                                  'job_ref' =>  $rfq->unique_id,
+                                   'url'   =>   url(app()->getLocale().'/client/requests/'),
+                                 
+                              ]);
                             $mail1 = $this->mailAction($mail_data_supplier);
                          
                             }
@@ -300,8 +327,12 @@ class WarrantClaimController extends Controller
 
 
                 }
+
+                $updateRfq = true;
+            }); 
             }
-            return $mail1;
+            
+            return '1';
 
           }
 
@@ -316,8 +347,40 @@ class WarrantClaimController extends Controller
 
   protected function newSupplier($request, $component_name){
 
+    for ($i=0; $i < count($request->new_manufacturer_name) ; $i++) { 
+        $component_name [] = [
+          'manufacturer_name' => $request->new_manufacturer_name[$i]??'None',
+          'model_number'  => $request->new_model_number[$i]??'None',
+          'component_name'  => $request->new_component_name[$i]??'None',
+            'quantity'  => $request->new_quantity[$i]??'0',
+            'size' => $request->new_size[$i]??'0',
+            'unit_of_measurement' => $request->new_unit_of_measurement[$i]??'None',
+            'image' =>  $request->file('new_image')? $this->uploadImage($request->file('new_image')[$i]): 'UNAVAILABLE',
+        ];
+      }
 
-         $users = \App\Models\Supplier::where('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
+
+    
+
+    $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
+    ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
+    ->whereIn('user_id', '=', $request->initial_supplier)
+    ->first();
+    dd($request,$retentionFee);
+    if(collect($retentionFee)->count() > 0){
+        $update   =  \App\Models\CollaboratorsPayment::where(['service_request_id'=> $value->service_request_id, 'user_id'=>$value->id, 'service_type'=> 'Regular', 'retention_cronjob_update'=>'Pending'])
+        ->update([
+            'amount_after_retention'=> (int)$retentionFee->amount_after_retention + (int)$retentionFee->retention_fee,
+            'retention_fee'=> 0,
+            'retention_cronjob_update' => 'Update'
+        ]);
+    }
+
+         $users = \App\Models\Supplier::whereIn('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
+        
+         (bool) $createRfq = false;
+
+         DB::transaction(function () use ($users, $request, $component_name, &$createRfq) {
 
          $updateOldSupplierRfqDispatch = \App\Models\RfqDispatchNotification::create([
             'rfq_id' => $request->rfq_id,
@@ -337,51 +400,112 @@ class WarrantClaimController extends Controller
         foreach ($component_name as $key => $value) {
           $createRfqBatch =  \App\Models\RfqBatch::create([
           'rfq_id'           =>  $rfq->id,
-          'component_name'    => $value['component_name']??'UNAVAILABLE',
-          'model_number'      => $value['model_number']??'UNAVAILABLE',
-          'quantity'          => $value['quantity']??'0',
+          'component_name'    => $value['component_name'],
+          'model_number'      => $value['model_number'],
+          'quantity'          => $value['quantity'],
           'amount'            => 0.00,
-          'manufacturer_name' => $value['manufacturer_name']??'UNAVAILABLE',
-          'size'              => $value['size']?? '0',
-          'unit_of_measurement' => $value['unit_of_measurement']??'0',
-           'image'              => $value['image']
+          'manufacturer_name' => $value['manufacturer_name'],
+          'size'              => $value['size'],
+          'unit_of_measurement' => $value['unit_of_measurement'],
+          'image'              => $value['image']
         
           ]);
         }
+
+       
+    
+       
 
        if( $updateOldSupplierRfqDispatch AND $createRfqBatch){
         foreach($users as $supplier){
             $mail_data_supplier = collect([
                 'email' =>  $supplier['user']['email'],
-                'template_feature' => 'CSE_SENT_SUPPLIER_MESSAGE_NOTIFICATION',
-                'firstname' => $supplier['user']['account']['first_name'],
-                'lastname' => $supplier['user']['account']['last_name'],
-                'job_ref' =>  $request->service_request_unique_id,
-                'subject' => 'testing'
+                'template_feature' => 'SUPPLIER_NEW_RFQ_NOTIFICATION',
+                'customer_name' => $supplier['business_name'],
+                'job_ref' =>  $rfq->unique_id,
+                'url'   =>   url(app()->getLocale().'/client/requests/'),
             ]);
                 $mail1 = $this->mailAction($mail_data_supplier);
                 
             }  
-        } 
+        }
+        $createRfq = true;
+    }); 
         return '1';
             
         }
     
    
         protected function saveRfqSupplierInoviceStatus($request){
-   
-            foreach ($request->assigned_supplier_id as $value) {
-                $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id, 'supplier_id'=> $value])
-                ->update([
-                    'accepted'=> $request->approve_invoice == 'Approved' ? 'Yes': 'No'
-                ]);
+          
+            $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
+            $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
+          if($request->approve_invoice == 'Approved'){
 
-            }
+           $updateInvoiceStatus ='';
+            (bool) $approveInvoice = false;
+
+            DB::transaction(function () use ($request, $updateInvoiceStatus ,$supplier, &$approveInvoice) {
+            $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])
+            ->update([
+                'accepted'=> 'Yes'
+            ]);
 
             $updateRfqStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id])
             ->update([
-                'status'=> 'Awaiting'
+                 'status'=> 'Awaiting'
             ]);
+
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_ACCEPTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+            $approveInvoice = true;
+            }); 
+          }
+
+          if($request->approve_invoice == 'Declined'){
+            $updateInvoiceStatus ='';
+            (bool) $approveInvoice = false;
+
+            DB::transaction(function () use ($request, $updateInvoiceStatus ,$supplier, &$approveInvoice) {
+
+            $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])
+            ->update([
+                'accepted'=> 'No'
+            ]);
+
+            
+            $updateRfqStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id])
+            ->update([
+                'status'=> 'Rejected'
+            ]);
+
+            $creatteSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=> $request->service_request_id])
+            ->delete();
+
+
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DECLINED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
+            $approveInvoice = true;
+         }); 
+
+          }
 
      
         return  $updateInvoiceStatus;
@@ -404,27 +528,44 @@ class WarrantClaimController extends Controller
         protected function acceptMaterial($request)
         {
 
+            $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
+            $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
          
             if($request->accept_materials == 'Yes'){
             $rfqId  =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])->first();
          
-            
-            $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $rfqId->rfq_id ])
+            (bool) $createRfq = false;
+
+            DB::transaction(function () use ($request,  $rfqId, $supplier, &$createRfq) {
+
+            $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id ])
             ->update([
                 'accepted'=> $request->accept_materials,
-                'total_amount' =>    $rfqId->total_amount
+                'total_amount' =>    $rfqId->total_amount,
+                'status' => 'Delivered'
             ]);
 
             $updateDispatch   =  \App\Models\RfqSupplierDispatch::where(['rfq_supplier_invoice'=> $rfqId->id  ])
             ->update([
-                'cse_status'=> $request->accept_materials,
+                'cse_status'=> 'Delivered',
                 'cse_comment' =>  $request->accept_reason,
+                'cse_material_acceptance'=> $request->accept_materials,
             ]);
 
+            $mail_data_supplier = collect([
 
-            if( $updateInvoiceStatus &&  $updateDispatch ){
-                return '1';
-            }
+                'template_feature' => 'SUPPLIER_DISPATCHED_ACCEPTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
+            $$createRfq = true;
+        }); 
+        return '1';
 
         }
 
@@ -433,17 +574,23 @@ class WarrantClaimController extends Controller
               
                 $rfqId  =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])->first();
          
+            (bool) $createRfq = false;
+
+            DB::transaction(function () use ($request,  $rfqId,  $supplier,&$createRfq) {
             
-                $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $rfqId->rfq_id ])
+                $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id ])
                 ->update([
                     'accepted'=> $request->accept_materials,
-                    'total_amount' =>   0
+                    'total_amount' =>    $rfqId->total_amount,
+                    'status' => 'Rejected'
+                    
                 ]);
     
                 $updateDispatch   =  \App\Models\RfqSupplierDispatch::where(['rfq_supplier_invoice'=> $rfqId->id  ])
                 ->update([
-                    'cse_status'=> $request->accept_materials,
-                    'cse_comment' =>  $request->accept_reason,
+                    'cse_status'=> 'Pending',
+                'cse_comment' =>  $request->accept_reason,
+                'cse_material_acceptance'=> $request->accept_materials,
                 ]);
 
                 $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])
@@ -454,10 +601,20 @@ class WarrantClaimController extends Controller
                $creatteSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=> $request->service_request_id])
                ->delete();
 
-    
-                if( $updateInvoiceStatus &&  $updateDispatch ){
+               $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DISPATCHED_REJECTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
+               $$createRfq = true;
+            });
                     return '1';
-                }
 
                }
                
@@ -466,6 +623,11 @@ class WarrantClaimController extends Controller
 
 
      
+        public function rfqDetailsImage($language, $id){
+            return view('supplier.rfq._details_image', [
+                'rfqDetails'    =>  \App\Models\RfqBatch::select('image')->where('id', $id)->first(),
+            ]);
+        }
+    
 
 }
-

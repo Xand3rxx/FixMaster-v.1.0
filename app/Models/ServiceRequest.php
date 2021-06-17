@@ -69,7 +69,7 @@ class ServiceRequest extends Model
      */
     public function client()
     {
-        return $this->belongsTo(User::class, 'client_id')->with('account', 'contact');
+        return $this->belongsTo(User::class, 'client_id')->with('client', 'account', 'contact');
     }
 
     /**
@@ -240,6 +240,20 @@ class ServiceRequest extends Model
         return $this->hasOne(RfqDispatchNotification::class, 'service_request_id', 'id');
     }
 
+    public function adminAssignedCses()
+    {
+        return $this->hasMany(ServiceRequestAssignCse::class, 'service_request_id')->with('user.account');
+    }
+
+    public function supplier()
+    {
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('RfqSupplierInvoice');
+    }
+    
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'unique_id', 'unique_id');
+    }
 
     /**
      * Scope a query to only include all pending requests

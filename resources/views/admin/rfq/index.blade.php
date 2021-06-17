@@ -50,9 +50,9 @@
                 @foreach ($rfqs as $rfq)
                 <tr>
                   <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
-                  <td class="tx-medium">{{ $rfq->serviceRequest->unique_id }}</td>
-                  <td class="tx-medium">{{ $rfq->unique_id }}</td>
-                  <td class="tx-medium">{{ Str::title($rfq['client']['account']['first_name'] ." ". $rfq['client']['account']['last_name']) }}</td>
+                  <td class="tx-medium">{{ $rfq['serviceRequest']['unique_id'] }}</td>
+                  <td class="tx-medium">{{ $rfq['unique_id'] }}</td>
+                  <td class="tx-medium">{{ Str::title($rfq['serviceRequest']['client']['account']['first_name'] ." ". $rfq['serviceRequest']['client']['account']['last_name']) }}</td>
                   <td class="tx-medium">{{ Str::title($rfq['issuer']['account']['first_name'] ." ". $rfq['issuer']['account']['last_name']) }}</td>
                   <td class="tx-medium">{{ $rfq->type }}</td>
                   @if($rfq->status == 'Pending')
@@ -64,13 +64,13 @@
                   @elseif($rfq->status == 'Rejected')
                     <td class="text-medium text-success">RFQ was rejected</td>
                   @endif
-                  <td class="tx-medium text-center">{{ number_format($rfq->total_amount) ?? 'Null'}}</td>
-                  <td class="text-medium">{{ Carbon\Carbon::parse($rfq->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
+                  <td class="tx-medium text-center">{{ number_format($rfq['total_amount']) ?? 'Null'}}</td>
+                  <td class="text-medium">{{ Carbon\Carbon::parse($rfq['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                   <td class=" text-center">
                     <div class="dropdown-file">
                       <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a href="#rfqDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View {{ $rfq->unique_id}} details" data-batch-number="{{ $rfq->unique_id}}" data-url="{{ route('admin.rfq_details', ['rfq'=>$rfq->uuid, 'locale'=>app()->getLocale()]) }}" id="rfq-details"><i class="far fa-clipboard"></i> Details</a>
+                        <a href="#rfqDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View {{ $rfq['unique_id']}} details" data-batch-number="{{ $rfq['unique_id']}}" data-url="{{ route('admin.rfq_details', ['rfq'=>$rfq->uuid, 'locale'=>app()->getLocale()]) }}" id="rfq-details"><i class="far fa-clipboard"></i> Details</a>
                       </div>
                     </div>
                   </td>

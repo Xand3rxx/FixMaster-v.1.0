@@ -14,6 +14,10 @@ class CreateRfqDispatchNotificationsTable extends Migration
     public function up()
     {
         Schema::create('rfq_dispatch_notifications', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
+            
             $table->id();
             $table->foreignId('rfq_id');
             $table->foreignId('supplier_id');

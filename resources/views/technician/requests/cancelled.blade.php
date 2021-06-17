@@ -55,21 +55,24 @@
                     </tr>
                   </thead>
                   <tbody>
+                    @foreach ($cancelledJobs as $data)
+                      
+                    
                     <tr>
                         <td class="tx-color-03 tx-center">1</td>
-                        <td class="tx-medium">REF-79A722D6</td>
-                        <td class="tx-medium">Unavailable</td>
-                        <td class="tx-medium">kenneth</td>
-                        <td class="tx-medium"><button class="btn btn-sm" style="background-color: #E97D1F; color:#fff">Details</button></td>
+                        <td class="tx-medium">{{$data->service_request->unique_id}}</td>
+                        <td class="tx-medium">{{$data->service_request->service->category->name}}</td>
+                        @foreach($data->service_request->users as $res)
+                            @if ($res->type->role->name === 'Customer Service Executive')
+                            <td class="tx-medium">{{ $res->account->first_name.' '.$res->account->last_name }}</td>
+                            @endif
+                        @endforeach
+                        
+                        <td class="tx-medium">
+                          <a href="{{ route('technician.requests.active_details', [$data->service_request->uuid, 'locale' => app()->getLocale()]) }}" class="btn btn-primary btn-sm">Details</a>
+                        </td>
                     </tr>
-
-                    <tr>
-                        <td class="tx-color-03 tx-center">2</td>
-                        <td class="tx-medium">REF-79A722S5</td>
-                        <td class="tx-medium">Unavailable</td>
-                        <td class="tx-medium">Samuel</td>
-                        <td class="tx-medium"><button class="btn btn-sm" style="background-color: #E97D1F; color:#fff">Details</button></td>
-                    </tr>
+                    @endforeach
                   </tbody>
                 </table>
 
