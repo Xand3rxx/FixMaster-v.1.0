@@ -50,48 +50,18 @@
                     <div class="form-group">
                         <label>Sort</label>
                         <select class="custom-select" id="sort_by_range">
-                            <option value="None">Select...</option>
-                            {{-- <option value="Date">Date</option>
-                            <option value="service_request">Service Request</option> --}}
+                            <option value="None">Select...</option>                           
                             <option value="Date Range">Date Range</option>
 
                         </select>
                     </div>
                 </div><!--end col-->
-
-                {{-- <div class="col-md-4 specific-date d-none">
-                    <div class="form-group position-relative">
-                        <label>Specify Date <span class="text-danger">*</span></label>
-                        <input name="name" id="specific_date" type="date" class="form-control s_date pl-5">
-                    </div>
-                </div> --}}
-
-                {{-- <div class="col-md-4 sort-by-year d-none">
-                    <div class="form-group position-relative">
-                        <label>Service Type <span class="text-danger">*</span></label>
-                        <select class="form-control custom-select" id="sort_by_year">
-                            <option value="">Select...</option>
-                            {{-- @foreach ($pendingPayments as $data)
-                              <option value="{{ $data->service_type }}">{{ $data->service_type }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div> --}}
-
                 <div class="col-md-4 sort-by-month d-none" id="sort-by-month">
                     <div class="form-group position-relative">
                         <label>Select Service Request <span class="text-danger">*</span></label>
                         <select class="form-control custom-select" id="sort_by_month">
                             <option value="">Select...</option>
-                           {{-- @if($serve->count() == 1)
-                                @foreach($serve as $ken)
-                                <option value="{{$ken['service_request_id']}}">{{$ken['service_request']['unique_id']}}</option>
-                                @endforeach
-                           @else
-                                @foreach ($pendingPayments as $output)
-                                   <option value="{{ $output->service_request_id }}">{{ $output->service_request->unique_id }}</option>
-                                @endforeach
-                           @endif --}}
+                
                         </select>
                     </div>
                   </div>

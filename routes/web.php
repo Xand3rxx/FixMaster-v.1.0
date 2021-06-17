@@ -88,8 +88,8 @@ use App\Http\Controllers\Supplier\WarrantyDispatchController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('admin.index', [AdminController::class, 'index'])->name('index');
+    //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
+    Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::get('/ratings/cse-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');

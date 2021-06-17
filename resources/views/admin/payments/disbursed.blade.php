@@ -57,197 +57,76 @@ table tbody td:nth-child(26) {
             </div>
           </div><!-- card-body -->
           <div class="table-responsive">
+            
             <div class="row mt-1 mb-1 ml-1 mr-1">
-                <div class="col-md-4">
-                    <input value="{{ route("quality-assurance.disbursed_payments_sorting", app()->getLocale()) }}" type="hidden" id="route">
-                    <div class="form-group">
-                        <label>Sort</label>
-                        <select class="custom-select" id="sort_by_range">
-                            <option value="None">Select...</option>
-                            <option value="Date">Date</option>
-                            <option value="Month">Month</option>
-                            <option value="Year">Year</option>
-                            <option value="Date Range">Date Range</option>
-                        </select>
-                    </div>
-                </div><!--end col-->
+              <div class="col-md-4">
+                  <input value="{{ route("admin.payment_sorting", app()->getLocale()) }}" type="hidden" id="route">
+                  <input value="Paid" type="hidden" id="status" readonly>
+                  <div class="form-group">
+                      <label>Sort</label>
+                      <select class="custom-select" id="sort_by_range">
+                          <option value="None">Select...</option>
+                          <option value="Date">Date</option>
+                          <option value="service_request">Job ID</option>
+                          <option value="type">Service Type</option>
 
-                <div class="col-md-4 specific-date d-none">
-                    <div class="form-group position-relative">
-                        <label>Specify Date <span class="text-danger">*</span></label>
-                        <input name="name" id="specific_date" type="date" class="form-control s_date pl-5">
-                    </div>
-                </div>
-
-                <div class="col-md-4 sort-by-year d-none">
-                    <div class="form-group position-relative">
-                        <label>Specify Year <span class="text-danger">*</span></label>
-                        <select class="form-control custom-select" id="sort_by_year">
-                            <option value="">Select...</option>
-                            {{-- @foreach ($years as $year)
-                              <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach --}}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-4 sort-by-year d-none" id="sort-by-month">
-                    <div class="form-group position-relative">
-                        <label>Specify Month <span class="text-danger">*</span></label>
-                        <select class="form-control custom-select" id="sort_by_month">
-                            <option value="">Select...</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="August">August</option>
-                            <option value="September">September</option>
-                            <option value="October">October</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                        </select>
-                    </div>
+                      </select>
                   </div>
+              </div><!--end col-->
 
-                <div class="col-md-4 date-range d-none">
-                    <div class="form-group position-relative">
-                        <label>From <span class="text-danger">*</span></label>
-                        <input id="date_from" type="date" class="form-control pl-5">
-                    </div>
-                </div>
-
-                <div class="col-md-4 date-range d-none">
-                    <div class="form-group position-relative">
-                        <label>To <span class="text-danger">*</span></label>
-                        <input id="date_to" type="date" class="form-control pl-5">
-                    </div>
-                </div>
+              <div class="col-md-4 specific-date d-none">
+                  <div class="form-group position-relative">
+                      <label>Specify Date <span class="text-danger">*</span></label>
+                      <input name="name" id="specific_date" type="date" class="form-control s_date pl-5">
+                  </div>
               </div>
 
+              <div class="col-md-4 sort-by-year d-none">
+                  <div class="form-group position-relative">
+                      <label>Service Type <span class="text-danger">*</span></label>
+                      <select class="form-control custom-select" id="sort_by_year">
+                          <option value="">Select...</option>
+                            <option value="regular">Regular</option>
+                            <option value="warranty">Warranty</option>
+                      </select>
+                  </div>
+              </div>
+
+              <div class="col-md-4 sort-by-month d-none" id="sort-by-month">
+                  <div class="form-group position-relative">
+                      <label>Select Job ID <span class="text-danger">*</span></label>
+                      <select class="form-control custom-select" id="sort_by_month">
+                          <option value="">Select...</option>
+                         @if($serve->count() > 1)
+                              @foreach($serve as $result)
+                              <option value="{{$result['service_request_id']}}">{{$result['service_request']['unique_id']}}</option>
+                              @endforeach
+                         @else
+                              @foreach ($disbursedPayments as $output)
+                                 <option value="{{ $output->service_request_id }}">{{ $output->service_request->unique_id }}</option>
+                              @endforeach
+                         @endif
+                      </select>
+                  </div>
+                </div>
+
+              <div class="col-md-4 date-range d-none">
+                  <div class="form-group position-relative">
+                      <label>From <span class="text-danger">*</span></label>
+                      <input id="date_from" type="date" class="form-control pl-5">
+                  </div>
+              </div>
+
+              <div class="col-md-4 date-range d-none">
+                  <div class="form-group position-relative">
+                      <label>To <span class="text-danger">*</span></label>
+                      <input id="date_to" type="date" class="form-control pl-5">
+                  </div>
+              </div>
+            </div>
+
               <div id="sort_table">
-              {{-- @include('quality-assurance._disbursed_table') --}}
-
-              {{-- <div class="d-flex ml-4"><h4 class="text-success">{{ !empty($message)? $message: '' }}</h4></div> --}}
-<table class="table table-hover mg-b-0" id="basicExample">
-    <thead class="thead-primary">
-    {{-- {{$payment}} --}}
-      <tr>
-        <tr>
-            <th class="text-center">#</th>
-            <th>Job ID</th>
-            <th>Service Category</th>
-            <th>Service Type</th>
-            <th>CSE Name</th>
-            <th>CSE Nuban</th>
-            <th>CSE Bank</th>
-            <th>CSE Amount</th>
-            <th>QA Name</th>
-            <th>QA Nuban</th>
-            <th>QA Bank</th>
-            <th>QA Amount</th>
-            <th>Technician Name</th>
-            <th>Technician Nuban</th>
-            <th>Technician Bank</th>
-            <th>Technician Amount</th>
-            <th>Supplier Name</th>
-            <th>Supplier Nuban</th>
-            <th>Supplier Bank</th>
-            <th>Supplier Amount</th>
-            <th>Retention Fee</th>
-            <th>Amount After Retention</th>
-            <th>Amount to be Paid</th>
-            <th>Status</th>
-            <th class="text-center">Date of Completion</th>
-            <th>Action</th>
-          </tr>
-      </tr>
-    </thead>
-    <tbody>
-
-        @foreach($disbursedPayments as $payment)
-        <tr>
-
-            <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
-            <td class="tx-medium">{{$payment['service_request']['unique_id']}}</td>
-              <td class="tx-medium">{{$payment['service_request']['service']['name']}}</td>
-              <td class="tx-medium">{{$payment['service_type']}}</td>
-              @foreach($payment['users']['roles'] as $role)
-                @if($role['name'] == 'Customer Service Executive')
-                {{-- for CSEs --}}
-                    <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name'] ?? 'Unavailable'}}</td>
-                    <td class="tx-medium">{{!empty($payment['users']['account']['account_number']) ? $payment['users']['account']['account_number'] : 'Unavailable'}}</td>
-                    <td class="tx-medium">{{!empty($payment['users']['account']['bank']['name']) ? $payment['users']['account']['bank']['name'] : 'Unavailable'}}</td>
-                    <td class="tx-medium">&#8358;{{!empty($payment['flat_rate']) ? number_format($payment['flat_rate'],2) : 'Unavailable'}}</td>
-                @else
-                <td class="tx-medium">Unavailable</td>
-                <td class="tx-medium">Unavailable</td>
-                <td class="tx-medium">Unavailable</td>
-                <td class="tx-medium">Unavailable</td>
-                @endif
-
-                {{-- for QAs --}}
-                 @if($role['name'] == 'Quality Assurance Manager')
-                 <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name'] ?? 'Unavailable'}}</td>
-                 <td class="tx-medium">{{!empty($payment['users']['account']['account_number']) ? $payment['users']['account']['account_number'] : 'Unavailable'}}</td>
-                 <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
-                 <td class="tx-medium">&#8358;{{number_format($payment['flat_rate'],2)}}</td>
-                 @else
-                 <td class="tx-medium">Unavailable</td>
-                 <td class="tx-medium">Unavailable</td>
-                 <td class="tx-medium">Unavailable</td>
-                 <td class="tx-medium">Unavailable</td>
-                 @endif
-
-                  @if($role['name'] == 'Technicians & Artisans')
-              {{-- for Technicians --}}
-                    <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name']}}</td>
-                    <td class="tx-medium">{{$payment['users']['account']['account_number']}}</td>
-                    <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
-                    <td class="tx-medium">&#8358;{{number_format($payment['actual_labour_cost'],2)}}</td>
-                  @else
-                  <td class="tx-medium">Unavailable</td>
-                  <td class="tx-medium">Unavailable</td>
-                  <td class="tx-medium">Unavailable</td>
-                  <td class="tx-medium">Unavailable</td>
-                @endif
-
-                  @if($role['name'] == 'Suppliers')
-                  <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name']}}</td>
-                  <td class="tx-medium">{{$payment['users']['account']['account_number']}}</td>
-                  <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
-                  <td class="tx-medium">&#8358;{{number_format($payment['actual_material_cost'],2)}}</td>
-                  @else
-                   <td class="tx-medium">Unavailable</td>
-                   <td class="tx-medium">Unavailable</td>
-                   <td class="tx-medium">Unavailable</td>
-                   <td class="tx-medium">Unavailable</td>
-                  @endif
-
-                  @if($role['name'] == 'Technicians & Artisans' || $role['name'] == 'Suppliers')
-
-                    <td class="tx-medium">&#8358;{{number_format($payment['retention_fee'],2)}}</td>
-                    <td class="tx-medium">&#8358;{{number_format($payment['amount_after_retention'],2)}}</td>
-
-                  @else
-
-                  <td class="tx-medium">Unavailable</td>
-                  <td class="tx-medium">Unavailable</td>
-
-                  @endif
-
-                  <td class="tx-medium">&#8358;{{number_format($payment['amount_to_be_paid'],2)}}</td>
-                  <td class="tx-medium">{{$payment['status']}}</td>
-              @endforeach
-              <td class="text-medium tx-center">{{ Carbon\Carbon::parse($payment->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
-              {{-- <td><a href="#" data-toggle="modal" data-target="#transactionDetails" data-payment-ref="{{ $result->unique_id }}" data-url="{{ route('quality-assurance.payment_details', ['payment' => $result->id, 'locale' => app()->getLocale()]) }}" id="payment-details" class="btn btn-primary btn-sm ">Details</a></td> --}}
-               <td><a href="#" id="" class="btn btn-primary btn-sm ">Details</a></td>
-            </tr>
-        @endforeach
-    </tbody>
-  </table>
+                @include('admin.payments._admin_disbursed_table')
               </div>
           </div><!-- table-responsive -->
         </div><!-- card -->
@@ -275,7 +154,7 @@ table tbody td:nth-child(26) {
 </div>
 @endsection
 @section('scripts')
-<script src="{{ asset('assets/dashboard/assets/js/qa-payments-sortings.js') }}"></script>
+<script src="{{ asset('assets/dashboard/assets/js/admin-payments-sortings.js') }}"></script>
 
 <script>
     $(document).ready(function() {

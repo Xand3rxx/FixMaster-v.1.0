@@ -40,7 +40,7 @@
               <h6 class="mg-b-5">Your Most Recent Requests</h6>
             <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of pending<strong>Payments</strong> to be paid by <span>FixMaster</span> as of <strong>{{ date('l jS F Y') }}</strong>.</p>
             </div>
-  {{-- {{dd($serve->count())}} --}}
+  
           </div><!-- card-header -->
           <div class="card-body pd-y-30">
             <div class="d-sm-flex">
@@ -60,6 +60,8 @@
             <div class="row mt-1 mb-1 ml-1 mr-1">
                 <div class="col-md-4">
                     <input value="{{ route("admin.payment_sorting", app()->getLocale()) }}" type="hidden" id="route">
+                    <input value="Pending" type="hidden" id="status">
+                    
                     <div class="form-group">
                         <label>Sort</label>
                         <select class="custom-select" id="sort_by_range">
@@ -84,9 +86,8 @@
                         <label>Service Type <span class="text-danger">*</span></label>
                         <select class="form-control custom-select" id="sort_by_year">
                             <option value="">Select...</option>
-                            @foreach ($pendingPayments as $data)
-                              <option value="{{ $data->service_type }}">{{ $data->service_type }}</option>
-                            @endforeach
+                            <option value="regular">Regular</option>
+                            <option value="warranty">Warranty</option>
                         </select>
                     </div>
                 </div>
@@ -97,8 +98,8 @@
                         <select class="form-control custom-select" id="sort_by_month">
                             <option value="">Select...</option>
                            @if($serve->count() > 1)
-                                @foreach($serve as $ken)
-                                <option value="{{$ken['service_request_id']}}">{{$ken['service_request']['unique_id']}}</option>
+                                @foreach($serve as $result)
+                                <option value="{{$result['service_request_id']}}">{{$result['service_request']['unique_id']}}</option>
                                 @endforeach
                            @else
                                 @foreach ($pendingPayments as $output)
@@ -169,39 +170,6 @@
               })
           }
       })
-
-
-        // $(document).on('click', '#payment-details', function(event) {
-        //     event.preventDefault();
-        //     let route = $(this).attr('data-url');
-        //     let paymentRef = $(this).attr('data-payment-ref');
-
-        //     $.ajax({
-        //         url: route,
-        //         beforeSend: function() {
-        //             $("#modal-body").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');
-        //         },
-        //         // return the result
-        //         success: function(result) {
-        //             $('#modal-body').modal("show");
-        //             $('#modal-body').html('');
-        //             $('#modal-body').html(result).show();
-        //         },
-        //         complete: function() {
-        //             $("#spinner-icon").hide();
-        //         },
-        //         error: function(jqXHR, testStatus, error) {
-        //             var message = error+ ' An error occured while trying to retireve '+ paymentRef +' record.';
-        //             var type = 'error';
-        //             displayMessage(message, type);
-        //             $("#spinner-icon").hide();
-        //         },
-        //         timeout: 8000
-        //     })
-        // });
-        // $('.close').click(function (){
-        //     $(".modal-backdrop").remove();
-        // });
     });
 </script>
 @endsection
