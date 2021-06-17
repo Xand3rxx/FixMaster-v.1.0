@@ -20,7 +20,7 @@
                 </tbody>
               </table>
 
-              @if($rfqDetails['rfqSupplier']['supplier'])
+              @if(collect($rfqDetails['rfqSupplier'])->isNotEmpty())
               <h5 class="mt-4">Supplier Details</h5>
               <table class="table table-striped table-sm mg-b-0">
                   <tbody>

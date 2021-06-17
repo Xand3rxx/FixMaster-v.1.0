@@ -140,7 +140,7 @@
                         <h5 class="mt-4">Notified Client Service Executives</h5>
                         <div class="table-responsive mb-4">
                             <table class="table table-hover mg-b-0">
-                                <thead class="">
+                                <thead class="thead-primary">
                                     <tr>
                                         <th class="text-center">#</th>
                                         <th>Name</th>

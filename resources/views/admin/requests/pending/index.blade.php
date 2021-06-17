@@ -127,7 +127,7 @@ tr.bd-warning {
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                             <a href="{{ route('admin.requests-pending.show', ['requests_pending'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
-                                                <a href="#" class="dropdown-item text-danger"><i class="fas fa-times"></i> Cancel Request</a>
+                                                <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
                                             </div>
                                         </div>
                                     </td>
@@ -146,10 +146,38 @@ tr.bd-warning {
 </div>
 
 
-
+@include('admin.requests.includes._cancel_request')
 
 @push('scripts')
 
 <script src="{{ asset('assets/client/js/requests/4c676ab8-78c9-4a00-8466-a10220785892.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#cancel-request', function(event) {
+            event.preventDefault();
+            let route = $(this).attr('data-url');
+            let title = $(this).attr('title');
+
+            Swal.fire({
+                title: title + '?',
+                text: "Are you sure you want to execute this action!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#E97D1F',
+                cancelButtonColor: '#7987a1',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.value == true) {
+                    // window.location.href = route;
+                    $('#cancel-request-form').attr('action', route);
+                    $('#cancelRequest').modal('show')
+                }
+            });
+
+        });
+    });
+
+</script>
 @endpush
 @endsection
