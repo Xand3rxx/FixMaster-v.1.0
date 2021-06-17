@@ -393,15 +393,17 @@ class InvoiceController extends Controller
                 'status' => 'success'
             ]);
 
-            ServiceRequestPayment::create([
-                'user_id' => $invoice['client_id'],
-                'payment_id' => $paymentDetails['id'],
-                'service_request_id' => $invoice['service_request_id'],
-                'amount' => $actual_material_cost,
-                'unique_id' => static::generate('invoices', 'REF-'),
-                'payment_type' => 'rfq',
-                'status' => 'success'
-            ]);
+            if($invoice['rfq_id'] != null){
+                ServiceRequestPayment::create([
+                    'user_id' => $invoice['client_id'],
+                    'payment_id' => $paymentDetails['id'],
+                    'service_request_id' => $invoice['service_request_id'],
+                    'amount' => $actual_material_cost,
+                    'unique_id' => static::generate('invoices', 'REF-'),
+                    'payment_type' => 'rfq',
+                    'status' => 'success'
+                ]);
+            }
 
             $invoice->update([
                 'status' => '2',
