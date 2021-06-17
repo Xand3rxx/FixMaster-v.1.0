@@ -174,10 +174,10 @@
         </ul>
       </li>
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests.index', 'admin.requests.show') ? 'active show' : '' }}">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span><span class="badge badge-primary">{{ $pendingRequests }}</suspan></span></a>
         <ul>
-          <li class="{{ Route::currentRouteNamed('admin.requests.index', 'admin.requests.show') ? 'active' : '' }}"><a href="{{ route('admin.requests.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
+          <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
           <li class=""><a href="#">Ongoing</a></li>
           <li class=""><a href="#">Completed</a></li>
           <li class=""><a href="#">Cancelled</a></li>

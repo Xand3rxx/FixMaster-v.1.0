@@ -240,6 +240,11 @@ class ServiceRequest extends Model
         return $this->hasOne(RfqDispatchNotification::class, 'service_request_id', 'id');
     }
 
+    public function adminAssignedCses()
+    {
+        return $this->hasMany(ServiceRequestAssignCse::class, 'service_request_id')->with('user.account');
+    }
+
 
     /**
      * Scope a query to only include all pending requests
