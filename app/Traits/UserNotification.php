@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Http\Controllers\Messaging\MessageController;
-
+use App\Models\MessageTemplate;
 
 trait UserNotification
 {
@@ -20,6 +20,9 @@ trait UserNotification
      */
     public static function send(array $params, string $template_name)
     {
+        if (!in_array($template_name, MessageTemplate::FEATURES)) {
+            return abort(403, 'Template Doesnot Exist!');
+        }
         return array_key_exists('recipient_email', $params) ? self::notify($params, $template_name) : abort(403, 'Recipient Email Address not included');
     }
 
