@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ServiceRequest;
 use App\Models\PaymentDisbursed;
 use App\Http\Controllers\Controller;
+use App\Models\CollaboratorsPayment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceRequestAssigned;
 use App\Models\ServiceRequestWarranty;
@@ -53,7 +54,7 @@ class ServiceRequestController extends Controller
         ->where('assistive_role', 'Consultant')
         ->get()->count();
 
-        $QApayments = PaymentDisbursed::where('recipient_id',Auth::id())->get()->sum('amount');      
+        $QApayments = CollaboratorsPayment::where('user_id',Auth::id())->get()->sum('amount_to_be_paid');      
         return view('quality-assurance.index', compact('completedJobs', 'ongoingJobs','ongoingConsultations','pendingConsultations','completedConsultations','QApayments'));
     }
 
