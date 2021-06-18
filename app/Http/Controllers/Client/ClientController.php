@@ -31,15 +31,12 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ServicedAreas;
 use App\Traits\CancelRequest;
-use PHPMailer\PHPMailer\SMTP;
 use App\Models\ClientDiscount;
 use App\Models\PaymentGateway;
 use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
 use App\Models\ServiceRequestMedia;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Messaging\Message;
@@ -555,19 +552,6 @@ class ClientController extends Controller
     public function update_client_service_rating($language, Request $request, RatingController $updateClientRatings)
     {
         return $updateClientRatings->handleUpdateServiceRatings($request);
-    }
-
-    protected function verificationUrl($user)
-    {
-        return URL::temporarySignedRoute(
-            'verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 3600)),
-            [
-                'id' => $user->uuid,
-                'hash' => sha1($user->email),
-                'locale' => app()->getLocale()
-            ]
-        );
     }
 
     public function saveRequest($request, $media){
