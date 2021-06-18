@@ -108,7 +108,7 @@ class ActionsController extends Controller
         ]);
 
         //Check if uuid exists on `users` table.
-        $serviceRequest = ServiceRequest::where('uuid',  $uuid)->with('client', 'price', 'payment', 'status')->firstOrFail();
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment', 'status')->firstOrFail();
 
         return (($this->initiateCancellation($request, $serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been cancelled.') : back()->with('error', 'An error occurred while trying to to assign cancel '. $serviceRequest->unique_id.' request.'));
 

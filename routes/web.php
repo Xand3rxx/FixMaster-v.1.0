@@ -62,6 +62,7 @@ use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServic
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
+use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
 
 
 /*
@@ -286,6 +287,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
+    Route::resource('requests-ongoing', AdminOngoingRequestController::class);
     Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
 
     //CSE Reporting Routes

@@ -28,8 +28,8 @@ class CreateActivityLogsTable extends Migration
             $table->text('user_agent')->nullable();
             $table->enum('type', ['payment', 'request', 'others', 'login', 'logout', 'profile', 'errors']);
             $table->enum('severity', ['informational', 'warning', 'error']);
-            $table->string('action_url');
-            $table->string('request_url');
+            $table->text('action_url');
+            $table->text('request_url');
             $table->text('message');
             $table->timestamps();
         });
