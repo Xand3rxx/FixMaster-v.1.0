@@ -213,7 +213,7 @@
           </div><!-- card-body -->
         </div><!-- card -->
       </div>
-
+      
       <div class="col-lg-12 col-xl-12 mg-t-10">
         <style>
           canvas {
@@ -304,7 +304,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold tx-nowrap mg-b-5 mg-md-b-8"> Recieved</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦1,200,000</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($receivedPayments,2)}}</h4>
                 </div>
               </div>
               <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
@@ -322,7 +322,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8"> Disbursed</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦150,000</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($disbursedPayments,2)}}</h4>
                 </div>
               </div>
               

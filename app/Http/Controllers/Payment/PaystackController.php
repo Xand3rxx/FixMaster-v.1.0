@@ -243,10 +243,6 @@ class PaystackController extends Controller
                         if($savePayment){
                             return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('success', 'Invoice payment was successful!');
                         }
-                        else
-                        {
-                            return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('error', 'Invoice payment was unsuccessful!');
-                        }
                     }
 
                     if($paymentDetails['payment_for'] == 'service-request'){
@@ -263,9 +259,13 @@ class PaystackController extends Controller
 
                 }
             }else {
-                // NUMBER 3: add more for other payment process
+                // NUMBER 3: add more for other payment process            
                 if($paymentDetails['payment_for'] == 'service-request' ){
                     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'Verification not successful, try again!');
+                }
+                else if($paymentDetails['payment_for'] == 'invoice')
+                {
+                    return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('error', 'Invoice payment was unsuccessful!');
                 }
 
             }

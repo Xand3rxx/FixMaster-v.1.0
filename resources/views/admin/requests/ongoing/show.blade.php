@@ -60,10 +60,8 @@
             <div class="contact-content-header mt-4">
                 <nav class="nav">
                     <a href="#description" class="nav-link active" data-toggle="tab"><span>Job Description</a>
-                    @if($serviceRequest['payment_statuses']['status'] == 'success')   
-                        <a href="#notifyCSE" class="nav-link" data-toggle="tab"><span>Assign CSE</a>
-                    @endif
-                    @if(collect($serviceRequest['adminAssignedCses'])->isNotEmpty())   
+                    <a href="#notifyCSE" class="nav-link" data-toggle="tab"><span>Assign CSE</a>
+                     @if(collect($serviceRequest['adminAssignedCses'])->isNotEmpty())   
                         <a href="#assignedCSEs" class="nav-link" data-toggle="tab"><span>Notified CSE's</a>
                     @endif
                 </nav>
@@ -74,7 +72,7 @@
 
                     @include('admin.requests.includes.job_description')
 
-                    @if($serviceRequest['payment_statuses']['status'] == 'success')   
+
                     <div id="notifyCSE" class="tab-pane pd-20 pd-xl-25">
                         <div class="divider-text">Assign CSE</div>
 
@@ -136,7 +134,6 @@
                             @endforeach
                         </ul>
                     </div>
-                    @endif
 
                     @if(collect($serviceRequest['adminAssignedCses'])->isNotEmpty())   
                     <div id="assignedCSEs" class="tab-pane pd-20 pd-xl-25">

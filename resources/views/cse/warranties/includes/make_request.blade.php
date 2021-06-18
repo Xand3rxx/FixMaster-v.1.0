@@ -1,6 +1,6 @@
 
 
-  <div class="divider-text">Create Request  </div>
+  <div class="divider-text">Initial Request  </div>
 
   @foreach ($suppliers->rfqBatches as $item)
 

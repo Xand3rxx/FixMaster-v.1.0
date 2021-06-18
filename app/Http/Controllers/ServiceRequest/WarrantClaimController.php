@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\ServiceRequest;
 
-use Auth;
+use Image;
+use App\Models\Rfq;
+use App\Traits\Utility;
+use App\Models\RfqBatch;
+use App\Models\Supplier;
 use App\Traits\Loggable;
+use App\Traits\ImageUpload;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RfqSupplierInvoice;
 use App\Traits\findRecordWithUUID;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\CollaboratorsPayment;
+use App\Models\ServiceRequestReport;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use App\Traits\Utility;
-use App\Traits\ImageUpload;
-use Image;
+use App\Models\ServiceRequestAssigned;
+use App\Models\RfqDispatchNotification;
+use App\Models\ServiceRequestWarrantyImage;
+use App\Models\ServiceRequestWarrantyIssued;
+use App\Models\ServiceRequestWarrantyReport;
 
 
 class WarrantClaimController extends Controller
@@ -349,10 +360,23 @@ class WarrantClaimController extends Controller
       }
 
 
-    // dd($request, $component_name);
+    
 
+    $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
+    ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
+    ->whereIn('user_id', '=', $request->initial_supplier)
+    ->first();
+    dd($request,$retentionFee);
+    if(collect($retentionFee)->count() > 0){
+        $update   =  \App\Models\CollaboratorsPayment::where(['service_request_id'=> $value->service_request_id, 'user_id'=>$value->id, 'service_type'=> 'Regular', 'retention_cronjob_update'=>'Pending'])
+        ->update([
+            'amount_after_retention'=> (int)$retentionFee->amount_after_retention + (int)$retentionFee->retention_fee,
+            'retention_fee'=> 0,
+            'retention_cronjob_update' => 'Update'
+        ]);
+    }
 
-         $users = \App\Models\Supplier::where('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
+         $users = \App\Models\Supplier::whereIn('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
         
          (bool) $createRfq = false;
 
@@ -388,6 +412,10 @@ class WarrantClaimController extends Controller
           ]);
         }
 
+       
+    
+       
+
        if( $updateOldSupplierRfqDispatch AND $createRfqBatch){
         foreach($users as $supplier){
             $mail_data_supplier = collect([
@@ -401,7 +429,7 @@ class WarrantClaimController extends Controller
                 
             }  
         }
-        $$createRfq = true;
+        $createRfq = true;
     }); 
         return '1';
             
@@ -409,19 +437,75 @@ class WarrantClaimController extends Controller
     
    
         protected function saveRfqSupplierInoviceStatus($request){
-    
-            
-        
+          
+            $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
+            $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
+          if($request->approve_invoice == 'Approved'){
+
+           $updateInvoiceStatus ='';
+            (bool) $approveInvoice = false;
+
+            DB::transaction(function () use ($request, $updateInvoiceStatus ,$supplier, &$approveInvoice) {
             $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])
             ->update([
-                'accepted'=> $request->approve_invoice == 'Approved' ? 'Yes': 'No'
+                'accepted'=> 'Yes'
+            ]);
+
+            $updateRfqStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id])
+            ->update([
+                 'status'=> 'Awaiting'
+            ]);
+
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_ACCEPTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+            $approveInvoice = true;
+            }); 
+          }
+
+          if($request->approve_invoice == 'Declined'){
+            $updateInvoiceStatus ='';
+            (bool) $approveInvoice = false;
+
+            DB::transaction(function () use ($request, $updateInvoiceStatus ,$supplier, &$approveInvoice) {
+
+            $updateInvoiceStatus   =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])
+            ->update([
+                'accepted'=> 'No'
             ]);
 
             
             $updateRfqStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id])
             ->update([
-                'status'=> 'Awaiting'
+                'status'=> 'Rejected'
             ]);
+
+            $creatteSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=> $request->service_request_id])
+            ->delete();
+
+
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DECLINED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
+            $approveInvoice = true;
+         }); 
+
+          }
 
      
         return  $updateInvoiceStatus;
@@ -444,13 +528,15 @@ class WarrantClaimController extends Controller
         protected function acceptMaterial($request)
         {
 
+            $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
+            $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
          
             if($request->accept_materials == 'Yes'){
             $rfqId  =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id])->first();
          
             (bool) $createRfq = false;
 
-            DB::transaction(function () use ($request,  $rfqId, &$createRfq) {
+            DB::transaction(function () use ($request,  $rfqId, $supplier, &$createRfq) {
 
             $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id ])
             ->update([
@@ -466,6 +552,17 @@ class WarrantClaimController extends Controller
                 'cse_material_acceptance'=> $request->accept_materials,
             ]);
 
+            $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DISPATCHED_ACCEPTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
             $$createRfq = true;
         }); 
         return '1';
@@ -479,7 +576,7 @@ class WarrantClaimController extends Controller
          
             (bool) $createRfq = false;
 
-            DB::transaction(function () use ($request,  $rfqId, &$createRfq) {
+            DB::transaction(function () use ($request,  $rfqId,  $supplier,&$createRfq) {
             
                 $updateInvoiceStatus   =  \App\Models\Rfq::where(['id'=> $request->rfqWarranty_id ])
                 ->update([
@@ -504,6 +601,17 @@ class WarrantClaimController extends Controller
                $creatteSupplierRfqDispatch = \App\Models\RfqDispatchNotification::where(['service_request_id'=> $request->service_request_id])
                ->delete();
 
+               $mail_data_supplier = collect([
+
+                'template_feature' => 'SUPPLIER_DISPATCHED_REJECTED_INVOICE_NOTIFICATION',
+                'email' =>  $supplier->email,
+                'firstname' =>  $supplier->account->first_name,
+                'job_ref' =>  $request->service_request_unique_id,
+                
+              ]);
+        
+            $mail1 = $this->mailAction($mail_data_supplier);
+
                $$createRfq = true;
             });
                     return '1';
@@ -523,4 +631,3 @@ class WarrantClaimController extends Controller
     
 
 }
-
