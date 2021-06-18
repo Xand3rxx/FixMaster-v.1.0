@@ -228,7 +228,7 @@
                 {{-- </div><!--end row--> --}}
 
                     <div class="col-sm-12">
-                    <button type="submit" class="submitBnt btn btn-primary">Update</button>
+                    <button type="submit" class="submitBnt btn btn-primary">Submit</button>
                     </div><!--end col-->
                 </div><!--end row-->
             </form><!--end form-->
