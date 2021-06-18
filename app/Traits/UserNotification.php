@@ -23,7 +23,7 @@ trait UserNotification
         if (!in_array($template_name, MessageTemplate::FEATURES)) {
             return abort(403, 'Template Doesnot Exist!');
         }
-        return array_key_exists('recipient_email', $params) ? self::notify($params, $template_name) : abort(403, 'Recipient Email Address not included');
+       return array_key_exists('recipient_email', $params) ? self::notify($params, $template_name) : abort(403, 'Recipient Email Address not included');
     }
 
     /**
