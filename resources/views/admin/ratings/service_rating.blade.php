@@ -46,7 +46,7 @@
                     <tr>
 
                     <td class="tx-color-03 tx-center">{{$sn++}}</td>
-                    <td class="tx-medium">{{$rating->service_request->service->name}}</td>
+                    <td class="tx-medium">{{$rating->service_request->service->name ?? 'Unavailable'}}</td>
                       <td class="tx-medium text-center">{{$rating->id}}</td>
                       <td class="text-medium text-center">{{round($rating->starAvg)}}</td>
                       <td class=" text-center">
