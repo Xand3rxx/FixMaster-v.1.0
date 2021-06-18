@@ -556,7 +556,6 @@ class ClientController extends Controller
 
     public function saveRequest($request, $media){
 
-
         $service_request                        = new ServiceRequest();
         $service_request->client_id             = auth()->user()->id;
         if ($request['service_id']) {
@@ -624,6 +623,9 @@ class ClientController extends Controller
                 'locale' => app()->getLocale()
             ]
         );
+
+        return $service_request;
+        
     }
 
     public function editRequest($language, $request){
