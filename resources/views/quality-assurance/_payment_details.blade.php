@@ -6,33 +6,25 @@
             <td class="tx-color-03" width="75%">{{$payment->service_request->unique_id}}</td>
         </tr>
         <tr>
-            <td class="tx-medium" width="25%">Reference No.</td>
-            <td class="tx-color-03" width="75%">{{ $payment['payment_reference'] }}</td>
+            <td class="tx-medium" width="25%">Service Category</td>
+            <td class="tx-color-03" width="75%">{{$payment['service_request']['service']['name']}}</td></td>
         </tr>
-        {{-- <tr>
-            <td class="tx-medium" width="25%">Transaction ID.</td>
-            <td class="tx-color-03" width="75%">{{$payment->transaction_id == null ? 'UNAVAILABLE' : $payment->transaction_id  }}</td>
-        </tr> --}}
         <tr>
-            <td class="tx-medium" width="25%">Payment Channel</td>
-            <td class="tx-color-03" width="75%">{{ $payment->mode->name }}</td>
+            <td class="tx-medium" width="25%">Service Type</td>
+            <td class="tx-color-03" width="75%">{{$payment['service_type']?? 'Unavailable'}}</td>
         </tr>
+    
         <tr>
             <td class="tx-medium" width="25%">Amount</td>
-            <td class="tx-color-03" width="75%">₦{{ number_format($payment['amount']) }}</td>
+            <td class="tx-color-03" width="75%">₦{{ number_format($payment['amount_to_be_paid']) }}</td>
         </tr>
         <tr>
             <td class="tx-medium" width="25%">Status</td>
-            {{-- @if($payment->status=='success')
-                <td class="text-success" width="75%">Success</td>
-            @elseif($payment->status=='pending')
-                <td class="text-danger" width="75%">Pending</td>
-            @elseif($payment->status=='failed')
-                <td class="text-warning" width="75%">Failed</td>
-            @elseif($payment->status=='timeout')
-                <td class="text-info" width="75%">Timeout</td>
-            @endif --}}
-            <td class="tx-color-03"><span class="text-success">Success</td>
+            @if($payment->status=='Paid')
+                <td class="text-success" width="75%">Paid</td>
+            @else
+                <td class="text-warning" width="75%">Pending</td>
+            @endif
         </tr>
 
     </tbody>
