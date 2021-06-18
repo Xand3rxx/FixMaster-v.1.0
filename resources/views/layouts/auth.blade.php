@@ -81,11 +81,14 @@
         <script src="{{ asset('assets/client/js/sweetalert2.min.js') }}"></script>
 
         <!-- geolocation asset starts here -->
+        <script> var key = "{{config('app.geolocation_api_key')}}" </script>
+
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places"></script>
         <script src="{{asset('assets/frontend/js/geolocation.js')}}"></script>
         <!-- geolocation asset starts here -->
         
         <script>
+
             //Prevent characters or string asides number in ohone number input field 
             $("#number, #phone_number").on("keypress keyup blur", function(event) {
                 $(this).val($(this).val().replace(/[^\d].+/, ""));

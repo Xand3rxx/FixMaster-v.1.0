@@ -57,6 +57,7 @@ class ClientRegistrationController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         // Validate Client Registration
         $valid = $this->validateCreateClient($request);
         if (isset($request->ref)) {
