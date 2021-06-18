@@ -15,10 +15,7 @@ class OngoingRequestController extends Controller
      */
     public function index()
     {
-        return ServiceRequest::with('client', 'price',  'service_request_assignees')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'])->latest('created_at')->get();
-
-
-
+        
         return view('admin.requests.ongoing.index', [
             'requests'  =>  ServiceRequest::with('client', 'price',  'service_request_assignees')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'])->latest('created_at')->get()
         ]);
@@ -48,12 +45,25 @@ class OngoingRequestController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $uuid
      * @return \Illuminate\Http\Response
      */
     public function show($language, $uuid)
     {
-        return ServiceRequest::with('client', 'price', 'service_request_assignees', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs')->where('uuid', $uuid)->firstorFail();
+        $service_request =  ServiceRequest::where('uuid', $uuid)->firstorFail()->id;
+
+        ServiceRequest::with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses', 'client', 'service_request_assignees', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs'])->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'])function ($query) {
+            $query->where('type', 'Request')->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
+        }])->firstOrFail();
+
+        return view('admin.requests.ongoing.show', [
+            'serviceRequest'        =>  ServiceRequest::with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses', 'client', 'service_request_assignees', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs'])->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'])->firstOrFail(),
+
+            'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $service_request)
+            ->where('type', 'Request')
+            ->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
+        ]);
+
     }
 
     /**
