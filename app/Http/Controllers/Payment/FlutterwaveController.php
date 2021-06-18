@@ -58,7 +58,7 @@ class FlutterwaveController extends Controller
             // 'myContact_id'    => 'required',
         ]);
 
-        if($request['payment_for'] === 'invoice'){
+        if($request['payment_for'] == 'invoice'){
             $data = [
                 'logistics_cost' => $request['logistics_cost'],
                 'retention_fee' => $request['retention_fee'],
@@ -81,9 +81,9 @@ class FlutterwaveController extends Controller
         }
 
         $selectedContact = Contact::where('id', $request->myContact_id)->first();
-        if($request['payment_for'] === 'service-request'){
+        if($request['payment_for'] == 'service-request'){
              $Serviced_areas = ServicedAreas::where('town_id', '=', $selectedContact['town_id'])->orderBy('id', 'DESC')->first();
-               if ($Serviced_areas === null) {
+               if ($Serviced_areas == null) {
                    return back()->with('error', 'sorry!, this area you selected is not serviced at the moment, please try another area');
                }
 

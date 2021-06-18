@@ -64,7 +64,6 @@ use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceR
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes ONLY AUTHENTICATED USERS HAVE ACCESS TO THIS ROUTE
