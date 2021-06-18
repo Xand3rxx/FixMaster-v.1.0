@@ -84,7 +84,8 @@
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                             <a href="{{ route('admin.requests-ongoing.show', ['requests_ongoing'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
-                                                <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
+                                            <a href="{{ route('admin.request.mark_as_completed', ['request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-success"><i class="fas fa-check"></i>  Mark as Completed</a>
+                                            <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
                                             </div>
                                         </div>
                                     </td>

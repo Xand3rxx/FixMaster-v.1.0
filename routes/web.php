@@ -289,7 +289,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
     Route::resource('requests-ongoing', AdminOngoingRequestController::class);
-    Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
+    Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes
     Route::get('/reports/client-service-executive',      [CustomerServiceExecutiveReportController::class, 'index'])->name('cse_reports');
