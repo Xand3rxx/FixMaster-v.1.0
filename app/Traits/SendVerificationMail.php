@@ -23,7 +23,7 @@ trait SendVerificationMail
         $mail_data = [
             'lastname' => $account['last_name'],
             'firstname' => $account['first_name'],
-            'email' => $account->user['email'],
+            'recipient_email' => $account->user['email'],
             'url' => (string) $this->url($account->user)
         ];
         return \App\Traits\UserNotification::send($mail_data, 'USER_EMAIL_VERIFICATION');
