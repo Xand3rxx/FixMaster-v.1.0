@@ -33,6 +33,7 @@ use App\Models\WalletTransaction;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Messaging\Message;
 use App\Models\ServiceRequestProgress;
 use App\Models\ServiceRequestCancellation;
 use App\Models\ServiceRequestWarranty;
@@ -43,6 +44,8 @@ use App\Models\ServiceRequestMedia;
 use App\Models\Media;
 use Image;
 use File;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Config;
 use App\Http\Controllers\Payment\PaystackController;
 use App\Http\Controllers\Payment\FlutterwaveController;
 
@@ -68,7 +71,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-
+       
         $myRequest = Client::where('user_id', auth()->user()->id)->with('service_requests')->firstOrFail();
 
         //Get total available serviecs
@@ -281,7 +284,8 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function serviceQuote($language, $uuid, Request $request){
+    public function serviceQuote($language, $uuid, Request $request){     
+        
         $data['gateways']     = PaymentGateway::whereStatus(1)->orderBy('id', 'DESC')->get();
         $data['service']      = $this->service($uuid);
         $data['bookingFees']  = $this->bookingFees();
@@ -295,6 +299,7 @@ class ClientController extends Controller
         // ]
         // dd($data['balance']->closing_balance );
         // dd($data['discounts'] );
+        
         $data['states'] = State::select('id', 'name')->orderBy('name', 'ASC')->get();
 
         // $data['lgas'] = Lga::select('id', 'name')->orderBy('name', 'ASC')->get();
@@ -332,7 +337,7 @@ class ClientController extends Controller
         $clientContact->name      = $request->firstName.' '.$request->lastName;
         $clientContact->state_id  = $request->state;
         $clientContact->lga_id    = $request->lga;
-        $clientContact->town_id    = $request->town;
+        $clientContact->town_id   = $request->town;
         $client  = Client::where('user_id',auth()->user()->id)->orderBy('id','DESC')->firstOrFail();
         $clientContact->account_id    = $client->account_id;
         $clientContact->country_id    = '156';
@@ -550,14 +555,28 @@ class ClientController extends Controller
         return $updateClientRatings->handleUpdateServiceRatings($request);
     }
 
+    protected function verificationUrl($user)
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 3600)),
+            [
+                'id' => $user->uuid,
+                'hash' => sha1($user->email),
+                'locale' => app()->getLocale()
+            ]
+        );
+    }
+
     public function saveRequest($request, $media){
-        return $request;
+
 
         $service_request                        = new ServiceRequest();
         $service_request->client_id             = auth()->user()->id;
-        if ( !$request->service_id->isEmpty() ) {
+        if ($request['service_id']) {
             $service_request->service_id            = $request['service_id'];
         }
+        // auth-uuid, serviceRequest-uuid
         // $service_request->unique_id             = 'REF-'.$this->generateReference();
         $service_request->price_id              = $request['price_id'];
         $service_request->contact_id              = $request['myContact_id'];
@@ -579,62 +598,46 @@ class ClientController extends Controller
             $saveToMedia->original_name = $media['original_name'];
             $saveToMedia->unique_name   = $media['unique_name'];
             $saveToMedia->save();
-
-        //     $saveServiceRequestMedia = new ServiceRequestMedia;
-        //     $saveServiceRequestMedia->media_id            = $saveToMedia->id;
-        //     $saveServiceRequestMedia->service_request_id  = $service_request->id;
-        //     $saveServiceRequestMedia->save();
-
-
-
-                    //Temporary Assign a CSE to a client's request for demo purposes
-        //List of CSE's Id's on the DB
-        $cseArray = array(2, 3, 4);
-
-        $randomCSE = array_rand($cseArray);
-
-        //Create 2 records to `service_request_progresses`
-        $serviceRequestProgresses = array(
-            array(
-                'user_id'               =>  1,
-                'service_request_id'    =>  $service_request->id,
-                'status_id'             =>  1,
-                'sub_status_id'         =>  1,
-                'created_at'            =>  \Carbon\Carbon::now('UTC'),
-            ),
-            array(
-                'user_id'               =>  1,
-                'service_request_id'    =>  $service_request->id,
-                'status_id'             =>  1,
-                'sub_status_id'         =>  1,
-                'created_at'            =>  \Carbon\Carbon::now('UTC'),
-            ),
-            array(
-                'user_id'               =>  $cseArray[$randomCSE],
-                'service_request_id'    =>  $service_request->id,
-                'status_id'             =>  2,
-                'sub_status_id'         =>  8,
-                'created_at'            =>  \Carbon\Carbon::now('UTC'),
-            )
-        );
-
-        $serviceRequestAssign = array(
-            'user_id'               =>  $cseArray[$randomCSE],
-            'service_request_id'    =>  $service_request->id,
-            'job_accepted'          =>  'Yes',
-            'job_acceptance_time'   =>  \Carbon\Carbon::now('UTC'),
-            'status'                =>  'Active',
-            'created_at'            =>  \Carbon\Carbon::now('UTC'),
-        );
-
-        DB::table('service_request_progresses')->insert($serviceRequestProgresses);
-
-        //Create CSE record on `service_request_assigned` table
-        DB::table('service_request_assigned')->insert($serviceRequestAssign);
-
-
-        return $service_request;
         }
+
+        $cses    =  \App\Models\Cse::where('job_availability', 'Yes')->with('user')->get();
+        // $url = "http://127.0.0.1:8000/en/client/requests/";
+        (string)$url = $this->url( $service_request );
+
+        foreach($cses as $cse) {
+            $template_feature = 'CSE_NEW_JOB_NOTIFICATION';
+            if (!empty((string)$template_feature)) {
+                $messanger = new MessageController();
+                $mail_data = collect([
+                    'lastname' => $cse['user']['account']['first_name'],
+                    'firstname' => $cse['user']['account']['last_name'],
+                    'email' => $cse['user']['email'],
+                    'url'  => (string)$url
+                ]);            
+                    $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+                }                
+            }
+
+
+        return $service_request;        
+    }
+
+    public function url($service_request)
+    {
+        return $this->newJobNotifictaionUrl($service_request);
+    }
+
+    protected function newJobNotifictaionUrl($service_request)
+    {
+        return URL::temporarySignedRoute(
+            'cse.index',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 3600)),
+            [
+                'id' => auth()->user()->uuid,
+                'hash' => sha1($service_request->uuid),
+                'locale' => app()->getLocale()
+            ]
+        );
     }
 
     public function editRequest($language, $request){
@@ -964,4 +967,3 @@ class ClientController extends Controller
         }
       }
 }
-

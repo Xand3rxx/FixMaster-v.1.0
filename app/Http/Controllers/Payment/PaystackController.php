@@ -58,7 +58,7 @@ class PaystackController extends Controller
 
 
 
-    if($request['payment_for'] = 'invoice'){
+    if($request['payment_for'] == 'invoice'){
         $data = [
             'logistics_cost' => $request['logistics_cost'],
             'retention_fee' => $request['retention_fee'],
