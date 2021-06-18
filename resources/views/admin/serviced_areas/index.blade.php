@@ -90,7 +90,7 @@
              
               <div class="table-responsive">
                 <div id="sort_table">
-                  @include('admin.Serviced_areas._table')
+                  @include('admin.serviced_areas._table')
                 </div>
               </div><!-- table-responsive -->
             </div><!-- card -->    
