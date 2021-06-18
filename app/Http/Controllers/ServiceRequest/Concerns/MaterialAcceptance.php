@@ -105,6 +105,18 @@ class MaterialAcceptance
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
+            // 'notification' => [
+            //     'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+            //     'params'  => [
+            //         // customer_name
+            //         // cse_name
+            //         // date
+            //         // technician_name
+            //         // technician_id
+            //         // email
+            //         // 'recipient_email' => customer_email
+            //     ]
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',

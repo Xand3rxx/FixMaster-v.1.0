@@ -22,7 +22,6 @@ class RequestActionController extends Controller
      */
     public function incoming(Request $request, string $locale, ServiceRequest $service_request)
     {
-        // dd($request->all());
         (array)$to_be_stored = [];
 
         if ($request->filled('project_progress')) {

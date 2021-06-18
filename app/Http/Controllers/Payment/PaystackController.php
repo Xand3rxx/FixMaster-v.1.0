@@ -46,8 +46,8 @@ class PaystackController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // return $request;
+    {        
+        //  return $request;
         $valid = $this->validate($request, [
             // List of things needed from the request like
             'booking_fee'      => 'required',
@@ -58,7 +58,7 @@ class PaystackController extends Controller
 
 
 
-    if($request['payment_for'] = 'invoice'){
+    if($request['payment_for'] == 'invoice'){
         $data = [
             'logistics_cost' => $request['logistics_cost'],
             'retention_fee' => $request['retention_fee'],
@@ -76,52 +76,43 @@ class PaystackController extends Controller
             'payment_for' => $request['payment_for'],
             'invoiceUUID' => $request['uuid']
         ];
-
         $request->session()->put('collaboratorPayment', $data);
     }
+    
+    if($request['payment_for'] == 'service-request')
+    {
     $selectedContact = Contact::where('id', $request->myContact_id)->first();
-    if($request['payment_for'] == 'service-request'){
+    
     $Serviced_areas = ServicedAreas::where('town_id', '=', $selectedContact['town_id'])->orderBy('id', 'DESC')->first();
        if ($Serviced_areas === null) {
            return back()->with('error', 'sorry!, this area you selected is not serviced at the moment, please try another area');
        }
-
-    //    if ($request->media_file)
-    //    {
             // upload multiple media files
             foreach($request->media_file as $key => $file)
             {
                 $originalName[$key] = $file->getClientOriginalName();
-
                 $fileName = sha1($file->getClientOriginalName() . time()) . '.'.$file->getClientOriginalExtension();
                 $filePath = public_path('assets/service-request-media-files');
                 $file->move($filePath, $fileName);
-                $data[$key] = $fileName;
+                $uniqueName[$key] = $fileName;
             }
-                $data['unique_name']   = json_encode($data);
-                $data['original_name'] = json_encode($originalName);
+                $imageName['unique_name']   = json_encode($uniqueName);
+                $imageName['original_name'] = json_encode($originalName); 
 
-                // $request->session()->put('order_data', $request);
-                $request->session()->put('order_data', $request->except(['media_file']));
-                $request->session()->put('medias', $data);
-    //    }
+                $request->session()->put('order_data', $request->except(['media_file'])); //other request except medias
+                $request->session()->put('medias', $imageName); //media files
 
-
-    }
-
-
+            }
+            // return $request;
+        
         // fetch the Client Table Record
         $client = Client::where('user_id', $request->user()->id)->with('user')->firstOrFail();
         // generate reference ID
         $generatedVal = $this->generateReference();
-        // save ordered items
+        // save in payment table
         $payment = $this->payment($valid['booking_fee'], $valid['payment_channel'], $valid['payment_for'], $client['unique_id'], 'pending', $generatedVal);
-
         $payment_id = $payment->id;
-
         return $this->initiate($payment_id);
-
-
     }
 
     /**
@@ -246,7 +237,6 @@ class PaystackController extends Controller
                     }
 
                     if($paymentDetails['payment_for'] == 'service-request'){
-                        // return $request->session()->get('order_data');
 
                             $client_controller->saveRequest( $request->session()->get('order_data'), $request->session()->get('medias') );
                             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');

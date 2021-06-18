@@ -202,21 +202,35 @@ class MessageController extends Controller
     /**
      * Send message using Available Template Design
      * 
-     * @param string $template_name ...use \App\Models\MessageTemplate::Feature
-     * @param mixed $parameters 
+     * @param array $parameters 
+     * @param string $template_name
      * 
-     * @return \Illuminate\Http\Response
+     * @return \App\Models\Message
      */
-    // public static function usingTemplate(string $template_name, mixed $parameters)
-    // {
-    //     if (!in_array($template_name, \App\Models\MessageTemplate::FEATURES)) {
-    //         return response()->json(["message" => "Message Template not found!"], 404);
-    //     }
-    //     // Find needed Template
-    //     $messageTemplate = MessageTemplate::select('content')->where('feature', $template_name)->first();
-    //     // Build Message Body
-    //     $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
-    // }
+    public static function multiple(array $parameters, string $template_name)
+    {
+        if (!$messageTemplate = MessageTemplate::where('feature', $template_name)->first()) {
+            return response()->json(["message" => "Message Template not found!"], 404);
+        }
+        if (empty($parameters['recipient_email'])) {
+            return response()->json(["message" => "Recipient Email Address not included"], 404);
+        }
+        // Build Message Body
+        $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
+        $recipient = DB::table('users')->where('users.email', $parameters['recipient_email'])->first();
+        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com')->first();
+
+        return Message::create([
+            'title' => $$messageTemplate->title,
+            'content' => $message_body,
+            'recipient' => $recipient->id,
+            'sender' => $sender->id ?? 1,
+            'uuid' => Str::uuid()->toString(),
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now(),
+            'mail_status' => 'Not Sent',
+        ]);
+    }
 
     /**
      * Build Message Body
@@ -226,14 +240,15 @@ class MessageController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    // protected static function buildMessageBody($variables, $messageTemp)
-    // {
-    //     (array) $builtBody = [];
-    //     foreach ($variables as $key => $value) {
-    //         $builtBody = str_replace('{' . $key . '}', $value, $messageTemp);
-    //     }
-    //     return $builtBody;
-    // }
+    protected static function buildMessageBody($variables, $message_content)
+    {
+        foreach ($variables as $key => $value) {
+            $message_content = ($key == 'url')
+                ? str_replace('{' . $key . '}', '<a href="' . $value . '" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $message_content)
+                : str_replace('{' . $key . '}', $value, $message_content);
+        }
+        return $message_content;
+    }
 
     /**
      * Send message using feature
@@ -308,14 +323,14 @@ class MessageController extends Controller
         // }
 
         // return $messageTemp;
-      
+
         foreach ($variables as $key => $value) {
-        if($key == 'url'){
-            $messageTemp = str_replace('{'.$key.'}', '<a href="'.$value.'" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);  
-        }else{
-            $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
+            if ($key == 'url') {
+                $messageTemp = str_replace('{' . $key . '}', '<a href="' . $value . '" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);
+            } else {
+                $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
+            }
         }
-    }
 
         return $messageTemp;
     }
