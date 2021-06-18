@@ -72,7 +72,7 @@
                     <td class="tx-color-03 tx-center">1</td>
                     <td class="tx-medium">{{ $service_request['toolRequest']['unique_id'] }}</td>
                     <td class="tx-medium">{{ Str::title($service_request['toolRequest']['requester']['account']['first_name'] ." ". $service_request['toolRequest']['requester']['account']['last_name']) }}</td>
-                    <td class="tx-medium">{{ Str::title($service_request['toolRequest']['approver']['account']['first_name'] ." ". $service_request['toolRequest']['approver']['account']['last_name']) }}</td>
+                    <td class="tx-medium">{{ !empty($service_request['toolRequest']['approver']) ? Str::title($service_request['toolRequest']['approver']['account']['first_name'] ." ". $service_request['toolRequest']['approver']['account']['last_name']) : 'UNAVIALABLE'}}</td>
                     <td class="text-medium {{ (($service_request['toolRequest']['status'] == 'Pending') ? 'text-warning' : (($service_request['toolRequest']['status'] == 'Approved') ? 'text-success' : 'text-danger')) }}">{{ $service_request['toolRequest']['status'] }}</td>
 
                     
