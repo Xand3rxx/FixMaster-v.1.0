@@ -86,23 +86,14 @@
                 <tr>
                     <td colspan="2">1</td>
                     <td>
-<<<<<<< HEAD
                     <input  readonly class="form-control @error('delivery_fee') is-invalid @enderror each-amount" 
-=======
-                    <input  disabled class="form-control @error('delivery_fee') is-invalid @enderror each-amount" 
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
                     name="delivery_fe" id="delivery_fee" type="number" maxlength="7" min="1" 
                     value="{{CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
                             CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id)->delivery_fee: 0}}" 
                     autocomplete="off" onkeyup="deliveryFee()">
 
-<<<<<<< HEAD
                     <input type="hidden" class="form-control @error('delivery_fee') is-invalid @enderror " 
                     name="delivery_fee" id="" type="number" maxlength="7" min="1" 
-=======
-                    <input type="hidden" class="form-control @error('delivery_fee') is-invalid @enderror each-amount" 
-                    name="delivery_fee" id="delivery_fee" type="number" maxlength="7" min="1" 
->>>>>>> 5a572d23ac862a0611028335e69c4896602b5cfd
                     value="{{CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
                             CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id)->delivery_fee: 0}}" 
                  >

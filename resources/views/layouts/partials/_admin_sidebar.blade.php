@@ -116,7 +116,7 @@
         </ul>
       </li>
 
-      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.message_template', 'admin.new_template') ? 'active' : '' }}"><a href="{{ route('admin.message_template', app()->getLocale()) }}" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a></li>
 
       {{-- <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.template') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="bell"></i> <span>Notification Management</span></a>
@@ -174,11 +174,11 @@
         </ul>
       </li>
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active show' : '' }}">
+     <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show', 'admin.requests-ongoing.index', 'admin.requests-ongoing.show') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span><span class="badge badge-primary">{{ $pendingRequests }}</suspan></span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
-          <li class=""><a href="#">Ongoing</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.requests-ongoing.index', 'admin.requests-ongoing.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-ongoing.index', app()->getLocale()) }}">Ongoing</a></li>
           <li class=""><a href="#">Completed</a></li>
           <li class=""><a href="#">Cancelled</a></li>
         </ul>
