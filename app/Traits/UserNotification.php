@@ -20,7 +20,7 @@ trait UserNotification
      */
     public static function send(array $params, string $template_name)
     {
-        return array_key_exists('email', $params) ? self::notify($params, $template_name) : abort(403, 'Receiver Email Address not included');
+        return array_key_exists('recipient_email', $params) ? self::notify($params, $template_name) : abort(403, 'Recipient Email Address not included');
     }
 
     /**
@@ -34,6 +34,6 @@ trait UserNotification
     protected static function notify(array $params, string $template_name)
     {
         $messanger = new MessageController();
-        return $messanger->sendNewMessage(null, null, $params['email'], $params, $template_name);
+        return $messanger->sendNewMessage(null, null, $params['recipient_email'], $params, $template_name);
     }
 }

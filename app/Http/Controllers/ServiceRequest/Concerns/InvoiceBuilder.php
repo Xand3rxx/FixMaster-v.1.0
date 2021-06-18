@@ -56,6 +56,7 @@ class InvoiceBuilder
         $sub_status = SubStatus::where('uuid', 'f95c31c6-6667-4a64-bee3-8aa4b5b943d3')->firstOrFail();
         $valid['sub_services'] = [];
         foreach ($valid['quantity'] as $key => $quantity) {
+            dd($quantity);
             if (!empty($quantity)) {
                 array_push($valid['sub_services'], [
                     'uuid' => $key,
@@ -170,16 +171,16 @@ class InvoiceBuilder
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notifications' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-                'data'  => [
-                    'supplier_business_name',
-                    'url',
-                    'user_first_name',
-                    'user_last_name',
-                    // 'lastname' => $account['last_name'],
-                ]
-            ],
+            // 'notifications' => [
+            //     'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+            //     'data'  => [
+            //         'supplier_business_name',
+            //         'url',
+            //         'user_first_name',
+            //         'user_last_name',
+            //         // 'lastname' => $account['last_name'],
+            //     ]
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',

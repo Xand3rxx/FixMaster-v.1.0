@@ -49,6 +49,7 @@ class SchedulingDate
             // 'notification' => [
             //     'feature' => 'CSE_ASSIGNED_TECHNICIAN_TO_A_JOB',
             //     'params'    => [
+            //         'recipient_email' => $user->email
             //         'lastname' => $user['account']['last_name'],
             //         'firstname' => $user['account']['first_name'],
             //         'email' => $user['email'],

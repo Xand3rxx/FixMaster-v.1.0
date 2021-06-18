@@ -95,7 +95,6 @@ trait StoreInDatabase
                 }
 
                 if (!empty($table['update_rfq_supplier_dispatches'])) {
-                    // dd($table['update_rfq_supplier_dispatches']['rfq_supplier_dispatches']);
                     $table['update_rfq_supplier_dispatches']['rfq_supplier_dispatches']->update($table['update_rfq_supplier_dispatches']);
                 }
                 if (!empty($table['update_rfqs'])) {
@@ -122,13 +121,13 @@ trait StoreInDatabase
                     ActivityLog::create($table['log']);
                 }
 
-                if(!empty($table['notification'])) {
+                if (!empty($table['notification'])) {
                     // Notify the User
                     \App\Traits\UserNotification::send($table['notification']['params'], $table['notification']['feature']);
                 }
             }
 
-            // 6. update registered to be true
+            //   update registered to be true
             $registred = true;
         });
         return $registred;

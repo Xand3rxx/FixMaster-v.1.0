@@ -112,7 +112,7 @@ class ActionsRepeated
                         'qa_name'   => $user['account']['last_name'] .' '.$user['account']['first_name'],
                         'lastname' => $user['account']['last_name'],
                         'firstname' => $user['account']['first_name'],
-                        'email' => $user['email'],
+                        'recipient_email' => $user['email'],
                         'job_ref' =>  $service_request->unique_id
                     ]
                 ],
@@ -161,7 +161,7 @@ class ActionsRepeated
                     'params'    => [
                         'lastname' => $user['account']['last_name'],
                         'firstname' => $user['account']['first_name'],
-                        'email' => $user['email'],
+                        'recipient_email' => $user['email'],
                         'job_ref' =>  $service_request->unique_id
                     ]
                 ],
