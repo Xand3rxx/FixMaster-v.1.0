@@ -4,25 +4,33 @@ namespace App\Http\Controllers\Client;
 
 use DB;
 use Auth;
+use File;
+use Image;
 use Session;
 use Carbon\Carbon;
 use App\Models\Cse;
 use App\Models\Lga;
+use App\Models\Town;
 use App\Models\User;
+use App\Models\Media;
 use App\Models\State;
 use App\Models\Client;
 use App\Models\Rating;
 use App\Models\Review;
-use App\Models\Town;
 use App\Models\Account;
 use App\Models\Contact;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Service;
+use App\Traits\Utility;
 use App\Models\Category;
+use App\Models\Warranty;
+use App\Traits\Loggable;
 use App\Traits\Services;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ServicedAreas;
+use App\Traits\CancelRequest;
 use PHPMailer\PHPMailer\SMTP;
 use App\Models\ClientDiscount;
 use App\Models\PaymentGateway;
@@ -32,34 +40,27 @@ use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use App\Http\Controllers\Controller;
-use App\Models\ServiceRequestProgress;
-use App\Models\ServiceRequestCancellation;
-use App\Models\ServiceRequestWarranty;
-use App\Traits\Utility;
-use App\Traits\Loggable;
-use App\Models\ServiceRequestSetting;
 use App\Models\ServiceRequestMedia;
-use App\Models\Media;
-use Image;
-use File;
-use App\Http\Controllers\Payment\PaystackController;
-use App\Http\Controllers\Payment\FlutterwaveController;
-
+use App\Http\Controllers\Controller;
+use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\Route;
+use App\Models\ServiceRequestProgress;
+
+use App\Models\ServiceRequestWarranty;
 use App\Models\ClientLoyaltyWithdrawal;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
+use App\Models\ServiceRequestCancellation;
 use App\Traits\RegisterPaymentTransaction;
 use App\Traits\GenerateUniqueIdentity as Generator;
+use App\Http\Controllers\Payment\PaystackController;
 use App\Http\Controllers\Messaging\MessageController;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Warranty;
-use App\Models\ServicedAreas;
+use App\Http\Controllers\Payment\FlutterwaveController;
 
 
 class ClientController extends Controller
 {
-    use RegisterPaymentTransaction, Generator, Services, PasswordUpdator,Utility, Loggable;
+    use RegisterPaymentTransaction, Generator, Services, PasswordUpdator,Utility, Loggable, CancelRequest;
 
     /**
      * Display a listing of the resource.
@@ -710,92 +711,18 @@ class ClientController extends Controller
     }
 
 
-    public function cancelRequest(Request $request, $language, $id){
-
-        $requestExists = ServiceRequest::where('uuid', $id)->first();
-
-        //Validate user input fields
+    public function cancelRequest(Request $request, $language, $uuid){
+        
+        //Validate the incoming request.
         $request->validate([
-            'reason'       =>   'required',
+            'reason'    =>  'bail|required|string',
         ]);
 
+        //Check if uuid exists on `users` table.
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment', 'status')->firstOrFail();
 
-        //service_request_status_id = Pending(1), Ongoing(2), Completed(4), Cancelled(3)
-        $cancelRequest = ServiceRequest::where('uuid', $id)->update([
-            'status_id' =>  '3',
-        ]);
+        return (($this->initiateCancellation($request, $serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been cancelled.') : back()->with('error', 'An error occurred while trying to to assign cancel '. $serviceRequest->unique_id.' request.'));
 
-        $jobReference = $requestExists->unique_id;
-
-        //Create record in `service_request_progress` table
-        $recordServiceProgress = ServiceRequestProgress::create([
-            'user_id'                       =>  Auth::id(),
-            'service_request_id'            =>  $requestExists->id,
-            'status_id'                     => '3',
-            'sub_status_id'                 => '25'
-        ]);
-
-        $recordCancellation = ServiceRequestCancellation::create([
-            'user_id'                       =>  Auth::id(),
-            'service_request_id'            =>  $requestExists->id,
-            'reason'                        =>  $request->reason,
-        ]);
-
-
-
-
-        if($cancelRequest AND $recordServiceProgress AND $recordCancellation){
-
-            /**************************************************************/
-            /*******************REFUND MONEY TO WALLET STARTS**************/
-            /**************************************************************/
-            $client = Client::where('user_id', auth()->user()->id)->firstOrFail();
-
-            // get last payment details
-            $lastPayment  = Payment::where('unique_id', $client->unique_id)->orderBy('id', 'DESC')->first();
-
-                $walTrans = new WalletTransaction;
-                $walTrans['user_id']          = auth()->user()->id;
-                $walTrans['payment_id']       = $lastPayment->id;
-                $walTrans['amount']           = $request->amountToRefund;
-                $walTrans['payment_type']     = 'refund';
-                $walTrans['unique_id']        = $client->unique_id;
-                $walTrans['transaction_type'] = 'credit';
-                // if the user has not used this wallet for any transaction
-                if (!WalletTransaction::where('unique_id', '=', $client['unique_id'])->exists()) {
-                $walTrans['opening_balance'] = '0';
-                $walTrans['closing_balance'] = $request->amountToRefund;
-                }else{
-                    $previousWallet = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->first();
-                    $walTrans['opening_balance'] = $previousWallet->closing_balance;
-                    $walTrans['closing_balance'] = $previousWallet->closing_balance + $request->amountToRefund;
-                }
-                // save record
-                $walTrans->save();
-
-
-            /*
-            * Code to send email goes here...
-            */
-
-            //Notify CSE and Technician with messages
-            // $this->cancellationMessage = new EssentialsController();
-            // $this->cancellationMessage->clientServiceRequestCancellationMessage($clientName, $clientId, $jobReference, $reason);
-            // $this->cancellationMessage->adminServiceRequestCancellationMessage($clientName, $clientId, $jobReference, $reason, $supervisorId);
-
-            // MailController::clientServiceRequestCancellationEmailNotification($clientEmail, $clientName,$jobReference, $reason);
-            // MailController::adminServiceRequestCancellationEmailNotification('info@fixmaster.com.ng', $clientName,$jobReference, $reason);
-
-            $this->log('request', 'Informational', Route::currentRouteAction(), auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ') cancelled service request'. $jobReference);
-            return back()->with('success', $requestExists->unique_id.' was cancelled successfully.');
-
-        }else{
-            //Record Unauthorized user activity
-         //activity log
-            return back()->with('error', 'An error occurred while trying to cancel '.$jobReference.' service request.');
-        }
-
-        return back()->withInput();
     }
 
     public function addToWallet($data){

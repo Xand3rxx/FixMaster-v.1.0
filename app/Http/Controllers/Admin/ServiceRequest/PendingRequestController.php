@@ -52,10 +52,10 @@ class PendingRequestController extends Controller
         ]);
 
         //Check if uuid exists on `users` table.
-        $CseUser = \App\Models\User::where('uuid', $request->cse_user_uuid)->with('account')->firstOrFail();
+        $cse = \App\Models\User::where('uuid', $request->cse_user_uuid)->with('account')->firstOrFail();
 
         //Check if uuid exists on `users` table.
-        $serviceRequest = \App\Models\ServiceRequest::where('uuid',  $request->service_request_uuid)->firstOrFail();
+        $serviceRequest = ServiceRequest::where('uuid',  $request->service_request_uuid)->firstOrFail();
 
         //Set `assignCse` to false before Db transaction
         (bool) $assignCse  = false;
@@ -63,14 +63,14 @@ class PendingRequestController extends Controller
         $actionUrl = Route::currentRouteAction();
 
         //Check if this CSE has already been assigned to this pending request.
-        if((ServiceRequestAssignCse::where('user_id', $CseUser->id)->where('service_request_id', $serviceRequest->id)->exists()) == true){
+        if((ServiceRequestAssignCse::where('user_id', $cse->id)->where('service_request_id', $serviceRequest->id)->exists()) == true){
             //Return back with error
             return back()->with('error', 'Sorry! You already assgined this CSE to this pending request.');
         }else{
             //Create new record for CSE on `service_request_assign_cses` table.
-            DB::transaction(function () use ($CseUser, $serviceRequest, &$assignCse) {
+            DB::transaction(function () use ($cse, $serviceRequest, &$assignCse) {
                 ServiceRequestAssignCse::create([
-                    'user_id'               =>  $CseUser->id,
+                    'user_id'               =>  $cse->id,
                     'service_request_id'    => $serviceRequest->id,
                 ]);
 
@@ -88,23 +88,23 @@ class PendingRequestController extends Controller
                 $sendMail = new \App\Http\Controllers\Messaging\MessageController();
 
                 $messageBody = collect([
-                    'firstname' => $CseUser['account']['first_name'],
-                    'lastname'  => $CseUser['account']['last_name'],
+                    'firstname' => $cse['account']['first_name'],
+                    'lastname'  => $cse['account']['last_name'],
                     'url'       => url()->to("/")."/en/cse/requests/".$request->service_request_uuid, 
                 ]);
 
-                $sendMail->sendNewMessage('', 'dev@fix-master.com', $CseUser['email'], $messageBody, $template);
+                $sendMail->sendNewMessage('', 'info@fixmaster.com.ng', $cse['email'], $messageBody, $template);
             }
 
-            $this->log('Request', 'Informational', $actionUrl, $request->user()->email.' assigned '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
+            $this->log('Request', 'Informational', $actionUrl, $request->user()->email.' assigned '.$cse['account']['first_name'].' '.$cse['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
 
-            return back()->with('success', $CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' has been assigned to '. $serviceRequest->unique_id.' request.');
+            return back()->with('success', $cse['account']['first_name'].' '.$cse['account']['last_name'].' has been assigned to '. $serviceRequest->unique_id.' request.');
 
         }else{
 
-            $this->log('Errors', 'Error', $actionUrl, 'An error occurred while trying to assign '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '.$serviceRequest->unique_id.' request.');
+            $this->log('Errors', 'Error', $actionUrl, 'An error occurred while trying to assign '.$cse['account']['first_name'].' '.$cse['account']['last_name'].' to '.$serviceRequest->unique_id.' request.');
 
-            return back()->with('error', 'An error occurred while trying to assign '.$CseUser['account']['first_name'].' '.$CseUser['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
+            return back()->with('error', 'An error occurred while trying to assign '.$cse['account']['first_name'].' '.$cse['account']['last_name'].' to '. $serviceRequest->unique_id.' request.');
         }
 
     }
