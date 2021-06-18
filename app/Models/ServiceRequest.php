@@ -121,7 +121,7 @@ class ServiceRequest extends Model
     }
     public function rfq()
     {
-        return $this->hasOne(Rfq::class, 'service_request_id');
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('rfqBatches', 'rfqSupplier', 'rfqSupplierInvoice');
     }
     public function rfqs()
     {

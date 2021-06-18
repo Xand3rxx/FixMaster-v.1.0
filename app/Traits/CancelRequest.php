@@ -53,8 +53,11 @@ trait CancelRequest
         //If request is still pending and payment was successful, credit client's wallet with booking fee.
         if(($serviceRequest['status']['name'] == 'Pending') && ($serviceRequest['payment']['status'] == 'success')){
 
-            //Credit client wallet account with booking fee.
-            $this->creditClientWalletOnPendingRequest($request, $serviceRequest, $actionUrl);
+            //Check if this request has been refunded already.
+            if(!WalletTransaction::where('payment_id', $serviceRequest['payment']['id'])->exists()){
+                //Credit client wallet account with booking fee.
+                $this->creditClientWalletOnPendingRequest($request, $serviceRequest, $actionUrl);
+            }
             
         }else{
 
