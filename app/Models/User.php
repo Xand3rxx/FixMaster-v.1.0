@@ -252,4 +252,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Cse::class);
     }
 
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
 }

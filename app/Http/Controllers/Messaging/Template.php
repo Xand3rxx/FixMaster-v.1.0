@@ -93,22 +93,4 @@ class Template extends Controller
         return response()->json(["message" => "Template not found!"], 404);
 
     }
-
-
-
-    public function colabo(){
-        //$service_request = \App\Models\ServiceRequest::has('service_request_warranty')->with('service_request_assignees')->get();
-      
-        $supplierTechnicians = [];
-        $service_request = \App\Models\ServiceRequest::with('service_request_assignees')->whereHas('service_request_warranty', function (Builder $query) {
-            $query->where('initiated', '=', 'No')->where('expiration_date', '>', Carbon::now() );
-        })->get();
-        // foreach ( $service_request as  $value) {
-        //    foreach($value->service_request_assignees){
-               
-        //    }
-        // }
-      
-      
-        } 
 }
