@@ -42,7 +42,7 @@ class NotifySuppliers implements ShouldQueue, ShouldBeUniqueUntilProcessing
             # Build Notification
             $params = [
                 'recipient_email' => $supplier->email,
-                ''
+                // ''
             ];
             # send this supplier the notification... 
             $message = MessageController::multiple($params, 'ADMIN_CSE_JOB_ACCEPTANCE_NOTIFICATION');
