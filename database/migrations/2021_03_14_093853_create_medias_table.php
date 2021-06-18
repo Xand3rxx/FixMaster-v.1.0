@@ -21,7 +21,7 @@ class CreateMediasTable extends Migration
             $table->id();
             $table->foreignId('client_id');
             $table->string('original_name');
-            $table->string('unique_name');
+            $table->string('unique_name')->unique();
             $table->softDeletes();
             $table->timestamps();
         });

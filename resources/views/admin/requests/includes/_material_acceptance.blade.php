@@ -1,14 +1,47 @@
-<div id="serviceRequestSummary" class="tab-pane pd-20 pd-xl-25">
-    @if(count($serviceRequest['serviceRequestReports']) > 0)
+<div id="materialAccepted" class="tab-pane pd-20 pd-xl-25">
+    @if(!empty($materials_accepted))
     <div class="divider-text"> Request For Quote</div>
 
+    {{-- {{ dd($materials_accepted['rfqSupplier']) }} --}}
     <div class="table-responsive mt-4">
+        <h5>Basic Details</h5>
+
+            <table class="table table-striped table-sm mg-b-0">
+            <tbody>
+                <tr>
+                <td class="tx-medium">Issued By</td>
+                <td class="tx-color-03">{{ !empty($materials_accepted['issuer']['account']['first_name']) ? Str::title($materials_accepted['issuer']['account']['first_name'] ." ". $materials_accepted['issuer']['account']['last_name']) : 'UNAVAILABLE' }}</td>
+                </tr>
+                <tr>
+                <td class="tx-medium">Client Name</td>
+                <td class="tx-color-03">{{ !empty($materials_accepted['serviceRequest']['client']['account']['first_name']) ? Str::title($materials_accepted['serviceRequest']['client']['account']['first_name'] ." ". $materials_accepted['serviceRequest']['client']['account']['last_name']) : 'UNAVAILABLE' }}</td>
+                </tr>
+                
+                <tr>
+                <td class="tx-medium">Client Address</td>
+                <td class="tx-color-03">{{ !empty($materials_accepted['serviceRequest']['client']['contact']['address']) ? $materials_accepted['serviceRequest']['client']['contact']['address'] : 'UNAVAILABLE' }}</td>
+                </tr>
+
+                <tr>
+                    <td class="tx-medium">Status</td>
+                    <td class="tx-color-03">{{  $materials_accepted['status'] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="tx-medium">Type</td>
+                    <td class="tx-color-03">{{  $materials_accepted['type'] }}</td>
+                </tr>
+            </tbody>
+            </table>
+
+        @if(collect($materials_accepted['rfqSupplier'])->isNotEmpty())
+
         <h5>Supplier Details</h5>
         <table class="table table-striped table-sm mg-b-0">
             <tbody>
                 <tr>
                     <td class="tx-medium">Supplier Name</td>
-                    <td class="tx-color-03">{{ !empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']) ? Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) : 'UNAVAILABLE' }} <small class="text-muted">(Business Name: {{ $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] }})</small></td>
+                    <td class="tx-color-03">{{ collect($materials_accepted['rfqSupplier'])->isNotEmpty() ? Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) : 'UNAVAILABLE' }} <small class="text-muted">(Business Name: {{ collect($materials_accepted['rfqSupplier'])->isNotEmpty() ? $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] : 'UNAVAILABLE'}})</small></td>
                 </tr>
                 <tr>
                     <td class="tx-medium">Delivery Status</td>
@@ -34,6 +67,7 @@
                 </tr>
             </tbody>
         </table>
+        @endif
 
         @if(!empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch']))
         <h5 class="mt-4">Dispatch Details</h5>
@@ -125,7 +159,9 @@
             </tbody>
         </table>
     </div><!-- table-responsive -->
-   
+    @else
+    <h5 class="mt-4">No records for RFQ on this job request.</h5>
+   @endif
 </div>
 
 @push('scripts')

@@ -50,13 +50,16 @@ class OngoingRequestController extends Controller
      */
     public function show($language, $uuid)
     {
-
+        $serviceRequestID = ServiceRequest::where('uuid', $uuid)->firstOrFail()->id;
+        // return \App\Models\Rfq::where('service_request_id', $serviceRequestID)
+        //     // ->where('type', 'Request')
+        //     ->with('rfqSupplier', 'rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
         return view('admin.requests.ongoing.show', [
             'serviceRequest'        =>  ServiceRequest::with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses', 'client', 'service_request_assignees', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs'])->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'])->firstOrFail(),
 
-            'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $service_request)
-            ->where('type', 'Request')
-            ->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
+            'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $serviceRequestID)
+            // ->where('type', 'Request')
+            ->with('rfqSupplier', 'rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
         ]);
 
     }

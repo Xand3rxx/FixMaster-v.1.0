@@ -27,7 +27,7 @@
                     <a href="#description" class="nav-link active" data-toggle="tab"><span>Job Description</a>
                     <a href="#serviceRequestSummary" class="nav-link" data-toggle="tab"><span>Job Summary</a>
                     <a href="#serviceRequestProgress" class="nav-link" data-toggle="tab"><span>Job Progress</a>
-
+                    <a href="#materialAccepted" class="nav-link" data-toggle="tab"><span>Request For Qoute </a>
                 </nav>
             </div><!-- contact-content-header -->
 
@@ -36,6 +36,8 @@
                     @include('admin.requests.includes.job_description')
                     @include('admin.requests.includes._service_request_summary')
                     @include('admin.requests.includes._service_request_progress')
+                    @include('admin.requests.includes._material_acceptance')
+                    
                 </div>
             </div>
 
