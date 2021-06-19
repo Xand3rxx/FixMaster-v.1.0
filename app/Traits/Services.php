@@ -33,7 +33,7 @@ trait Services
     }
 
     /**
-     * Check if password match
+     * Check if service uuid exist
      *
      * @param  App\Models\Service $uuid
      * @param  string  $uuid

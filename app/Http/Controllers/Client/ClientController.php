@@ -316,6 +316,9 @@ class ClientController extends Controller
             ->with('usercontact')
             ->orderBy('id', 'DESC')
             ->firstOrFail();
+        
+        $data['displayDescription'] = 'blank';
+        
         // dd($data['registeredAccount']);
         return view('client.services.quote', $data);
     }
