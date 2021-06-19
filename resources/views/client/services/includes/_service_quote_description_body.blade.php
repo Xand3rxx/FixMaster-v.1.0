@@ -84,7 +84,7 @@
 
     <div class="col-md-6 form-group">
         <div class="custom-control custom-radio form-group position-relative">
-            <input type="radio" id="wallet_payment_option" name="payment_channel" class="custom-control-input input-check" onclick="displayPaymentGateways('1')" value="wallet" data-tabid="wallet" data-action="{{route('wallet-submit', app()->getLocale()) }}" @if($canPayWithWallet == 'cannot-pay') disabled readonly @endif />
+            <input type="radio" id="wallet_payment_option" name="payment_channel" class="custom-control-input input-check" onclick="displayPaymentGateways('1')" value="wallet" data-tabid="wallet"  @if($canPayWithWallet == 'cannot-pay') disabled readonly @endif />
             <label class="custom-control-label" for="wallet_payment_option">E-Wallet</label>
             @if($canPayWithWallet == 'cannot-pay')
                 <small class="text-small text-danger">Insufficient funds!.</small>
@@ -126,7 +126,7 @@
         <div class="col-md-12">
             <h5>Sorry! The selected contact area is not serviced at the moment, please try another area. Thank you.</h5>
         </div>
-    @elseif($displayDescription == 'blank')
+    @else
         <div class="col-md-12">
             <h6>Select a booking fee and a contact to proceed.</h6>
         </div>

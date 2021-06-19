@@ -115,7 +115,6 @@
         //Check if clien't service request location is part of areas currently serviced by FixMaster
         $(document).on('change', '.contact-id', function(event) {
             event.preventDefault();
-            let route = $(this).attr('data-url');
             let conctactName = $(this).attr('data-contact-name');
             let townID = $(this).attr('data-town-id')
             let bookingFee = 0;
@@ -126,9 +125,13 @@
                 displayMessage("Kindly select a booking fee.", "error");
                 return;
             }
+            return services_areas(townID, bookingFee);
+           
+        });
 
+        function services_areas(townID,bookingFee) {
             $.ajax({
-                url: route,
+                url:  "{{ route('client.service-request.validate_service_area', app()->getLocale()) }}",
                 method: 'POST',
                 data: {_token: "{{ csrf_token() }}", town_id: townID, booking_fee: bookingFee },
                 beforeSend: function() {
@@ -150,7 +153,7 @@
                 },
                 timeout: 8000
             })
-        });
+        }
 
     });
 

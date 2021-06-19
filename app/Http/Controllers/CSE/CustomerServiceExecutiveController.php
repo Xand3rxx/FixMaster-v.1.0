@@ -5,14 +5,9 @@ namespace App\Http\Controllers\CSE;
 use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Account;
-use App\Models\Contact;
 use App\Models\ServiceRequest;
 use App\Models\ServiceRequestAssigned;
-use App\Models\User;
 use App\Models\Cse;
-use Illuminate\Support\Facades\Route;
-
 use App\Traits\Loggable;
 
 
