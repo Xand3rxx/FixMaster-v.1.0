@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PaymentGateway;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +24,7 @@ class CreatePaymentGatewaysTable extends Migration
             $table->string('name')->unique();
             $table->json('information');
             $table->string('keyword');
-            $table->unsignedTinyInteger('status')->default(1);
+            $table->enum('status', PaymentGateway::STATUS)->default(PaymentGateway::STATUS['active']);
             $table->timestamps();
         });
     }

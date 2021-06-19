@@ -116,6 +116,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Contact::class, 'user_id');
     }
 
+     /**
+     * Get contacts with the user.
+     */
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class, 'user_id', 'id')->orderBy('created_at', 'DESC');
+    }
+
     /**
      * Get the Administrator associated with the user.
      */

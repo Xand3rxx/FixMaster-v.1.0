@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreatePaymentsTable extends Migration
 {
@@ -21,13 +22,13 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->integer('amount')->unsigned();
-            $table->enum('payment_channel', ['paystack','flutterwave','offline','wallet', 'loyalty']);
-            $table->enum('payment_for', ['e-wallet','service-request','warranty', 'invoice']);
+            $table->enum('payment_channel', Payment::PAYMENT_CHANNEL);
+            $table->enum('payment_for', Payment::PAYMENT_FOR);
             $table->string('unique_id')->comment('e.g. REF-330CB862, WAL-23782382, WAR-09328932');
             $table->string('reference_id', 191)->unique();
             $table->string('transaction_id', 191)->nullable();
 
-            $table->enum('status', ['success','pending','failed','timeout']);
+            $table->enum('status', Payment::STATUS);
             $table->softDeletes();
             $table->timestamps();
         });

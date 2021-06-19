@@ -71,4 +71,15 @@ class Price extends Model
     {
         return $this->hasMany(ServiveRequest::class, 'user_id')->withDefault();
     }
+
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeBookingFees($query)
+    {
+        return $query->select('id', 'name', 'description', 'amount');
+    }
 }
