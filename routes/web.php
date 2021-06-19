@@ -65,6 +65,7 @@ use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
+use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -289,7 +290,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
     Route::resource('requests-ongoing', AdminOngoingRequestController::class);
-    Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
+    Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes
     Route::get('/reports/client-service-executive',      [CustomerServiceExecutiveReportController::class, 'index'])->name('cse_reports');
@@ -402,7 +403,11 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('get-sub-service-list', [CseController::class, 'getSubServices'])->name('needed.sub_service');
 
     //Client messaging routes
-    Route::resource('messages', ClientMessageController::class);
+    Route::resource('messages',         ClientMessageController::class);
+
+    //Client service request routes
+    Route::resource('service-request',  ClientRequestController::class);
+    Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
 
 });
 
