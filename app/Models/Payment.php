@@ -19,6 +19,11 @@ class Payment extends Model
         'status',
     ];
 
+    const PAYMENT_FOR = ['e-wallet','service-request','warranty', 'invoice'];
+    const PAYMENT_CHANNEL = ['paystack','flutterwave','offline','wallet', 'loyalty'];
+    const STATUS = ['success','pending','failed','timeout'];
+
+
     public const PAYMENT_E_WALLET = 'e-wallet';
     public const PAYMENT_SERVICE_REQUEST = 'service-request';
 

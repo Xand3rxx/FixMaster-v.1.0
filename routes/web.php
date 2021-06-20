@@ -371,7 +371,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     // Service request SECTION
     Route::get('/services',                     [ClientController::class, 'services'])->name('services.list');
-    Route::get('services/quote/{service}',      [ClientController::class, 'serviceQuote'])->name('services.quote');
+    Route::get('services/quote/{service:uuid}',      [ClientRequestController::class, 'show'])->name('services.quote')->whereUuid('service');
     Route::get('services/details/{service}',    [ClientController::class, 'serviceDetails'])->name('services.details');
     Route::post('services/search',              [ClientController::class, 'search'])->name('services.search');
     Route::get('services/custom/',              [ClientController::class, 'customService'])->name('services.custom');
