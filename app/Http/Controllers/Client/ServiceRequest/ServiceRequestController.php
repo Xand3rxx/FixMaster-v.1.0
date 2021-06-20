@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Client\ServiceRequest;
 
+use App\Models\Payment;
+use App\Models\Service;
 use App\Traits\Services;
 use Illuminate\Http\Request;
+use App\Models\PaymentGateway;
 use App\Http\Controllers\Controller;
 
 class ServiceRequestController extends Controller
@@ -16,7 +19,6 @@ class ServiceRequestController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -50,7 +52,24 @@ class ServiceRequestController extends Controller
          * payment option, [required, In: ewallet, payment gateway]
          * payment gateway, [required, In: flutterwave, paystack]
          * discount, optional
-         */        
+         */
+        
+        //  Validate Request
+        (array) $valid = $request->validate([
+            'service_uuid'              => 'required|uuid|exists:services,uuid',
+            'payment_for'               => ['required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
+            'price_id'                  => 'required|integer',
+            'description'               => 'required|string',
+            'preferred_time'            => 'required|date',
+            'payment_channel'           => ['required_if:payment_for,', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
+            'contactme_status'          => 'required|boolean',
+            'client_discount_id'        => 'sometimes|integer',
+            'media_file'                => 'required|array',
+            'media_file.*'              => 'sometimes|file',
+            'contact_id'                => 'required|integer|exists:contacts,id'
+        ]);
+        
+        dd($request->all());
 
         return $request->all();
     }
@@ -61,9 +80,19 @@ class ServiceRequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $locale, Service $service)
     {
-        //
+        $user = $request->user()->loadMissing('contacts', 'account');
+        return view('client.services.quote', [
+            'service'               => $service,
+            'discounts'             => \App\Models\ClientDiscount::ClientServiceRequestsDiscounts()->get(),
+            'bookingFees'           => \App\Models\Price::bookingFees()->get(),
+            'states'                => \App\Models\State::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'gateways'              => PaymentGateway::where('status', PaymentGateway::STATUS['active'])->orderBy('id', 'DESC')->get(),
+            'displayDescription'    => 'blank',
+            'myContacts'            => $user['contacts'],
+            'registeredAccount'     => $user['account']
+        ]);
     }
 
     /**
@@ -107,24 +136,25 @@ class ServiceRequestController extends Controller
      * This is an ajax call to check if client contact town is an available service area.
      * Present on change of contact list radio button selection
      */
-    public function verifyServiceArea($language, Request $request){
-           if ($request->ajax()) {
+    public function verifyServiceArea($language, Request $request)
+    {
+        if ($request->ajax()) {
             //Get request via ajax
             (array) $filter = $request->only('town_id', 'booking_fee');
 
             //Check if town ID exists on `serviced_areas` table
             $isServiced = \App\Models\ServicedAreas::where('town_id', $filter['town_id'])->exists();
 
-            $walletBalance = \App\Models\WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->first()->closing_balance;
-
+            $walletBalance = \App\Models\WalletTransaction::where('user_id', $request->user()->id)->orderBy('id', 'DESC')->first()->closing_balance;
             //Return to partial view with response
-            return view('client.services.includes._service_quote_description_body', 
-            [
-                'displayDescription'    => !empty($isServiced) ? 'serviced' : 'not-serviced' ,
-                'discounts'             => $this->clientDiscounts(),
-                'canPayWithWallet'      => !empty($walletBalance >= $filter['booking_fee']) ? 'can-pay' : 'cannot-pay',
-            ]);
-            
+            return view(
+                'client.services.includes._service_quote_description_body',
+                [
+                    'displayDescription'    => !empty($isServiced) ? 'serviced' : 'not-serviced',
+                    'discounts'             => $this->clientDiscounts(),
+                    'canPayWithWallet'      => !empty($walletBalance >= $filter['booking_fee']) ? 'can-pay' : 'cannot-pay',
+                ]
+            );
         }
     }
 }

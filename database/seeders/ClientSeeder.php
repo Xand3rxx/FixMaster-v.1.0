@@ -126,8 +126,8 @@ class ClientSeeder extends Seeder
         $clientAccount3 = \App\Models\Account::create([
             'user_id'       =>  $client3->id,
             'state_id'         =>  24,
-            'lga_id'           =>  513,
-            'town_id'           =>  193,
+            'lga_id'           =>  505,
+            'town_id'           =>  80,
             'first_name'    => "Jennifer",
             'middle_name'   => "Ifeyinwa",
             'last_name'     => "Isaac",
@@ -153,7 +153,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-760BCC86';
         $clientTable->account_id = $clientAccount->id;
         $clientTable->estate_id = '1';
-        $clientTable->profession_id = '18';
+        // $clientTable->profession_id = '18';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -161,7 +161,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-A3C9FAC4';
         $clientTable->account_id = $clientAccount1->id;
         $clientTable->estate_id = '1';
-        $clientTable->profession_id = '12';
+        // $clientTable->profession_id = '12';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -169,7 +169,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-1D61A777';
         $clientTable->account_id = $clientAccount2->id;
         $clientTable->estate_id = '2';
-        $clientTable->profession_id = '3';
+        // $clientTable->profession_id = '3';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -177,7 +177,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-DCE47AD1';
         $clientTable->account_id = $clientAccount3->id;
         $clientTable->estate_id = '3';
-        $clientTable->profession_id = '14';
+        // $clientTable->profession_id = '14';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -185,7 +185,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-19362ADF';
         $clientTable->account_id = $clientAccount4->id;
         $clientTable->estate_id = '3';
-        $clientTable->profession_id = '22';
+        // $clientTable->profession_id = '22';
         $clientTable->save();
 
         // Sample Implementation for storing Contact Details of a user
@@ -246,8 +246,8 @@ class ClientSeeder extends Seeder
                 'account_id'        =>  $clientAccount->id,
                 'country_id'        =>  156,
                 'state_id'          =>  24,
-                'lga_id'            =>  505,
-                'town_id'           =>  80,
+                'lga_id'            =>  498,
+                'town_id'           =>  3,
                 'name'              =>  'Yinka Odumosu',
                 'phone_number'      =>  '08086717489',
                 'address'           => 'C99 Rd 27, Victoria Garden City, Lekki',
@@ -260,8 +260,8 @@ class ClientSeeder extends Seeder
                 'account_id'        =>  $clientAccount->id,
                 'country_id'        =>  156,
                 'state_id'          =>  24,
-                'lga_id'            =>  505,
-                'town_id'           =>  94,
+                'lga_id'            =>  517,
+                'town_id'           =>  237,
                 'name'              =>  'Adewale Daniel',
                 'phone_number'      =>  '08085517815',
                 'address'           => 'Holly Ave, Eti-Osa, Lekki',
