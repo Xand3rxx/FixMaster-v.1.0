@@ -16,14 +16,14 @@
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>First Name <span class="text-danger">*</span></label>
-                                <input id="first-name" type="text" class="form-control" placeholder="First Name" name="first_name" autocomplete="off" value="{{ old('first_name') }}" />
+                                <input id="first_name" type="text" class="form-control" placeholder="First Name" name="first_name" autocomplete="off" value="{{ old('first_name') }}" />
                             </div>
                         </div>
                         <!--end col-->
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Last Name <span class="text-danger">*</span></label>
-                                <input id="last-name" type="text" class="form-control" placeholder="Last Name" name="last_name" autocomplete="off" value="{{ old('last_name') }}" />
+                                <input id="last_name" type="text" class="form-control" placeholder="Last Name" name="last_name" autocomplete="off" value="{{ old('last_name') }}" />
                             </div>
                         </div>
 
@@ -88,7 +88,7 @@
                         <div class="col-12">
                             <div class="form-group position-relative">
                                 <label>Full Address <span class="text-danger">* <span style="font-size: 10px;">Use auto complete feature after typing to select your address</span></span></label>
-                                <input type="text" id="street-address" class="form-control user_address" placeholder="Full address of contact" name="address" autocomplete="off">
+                                <input type="text" id="address" class="form-control user_address" placeholder="Full address of contact" name="address" autocomplete="off">
                             </div>
                         </div>
                         <!--end col-->

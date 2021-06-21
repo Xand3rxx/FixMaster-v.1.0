@@ -1,5 +1,7 @@
 {{-- Hidden fields needed for request --}}
+@if(Route::currentRouteNamed('client.services.quote'))
 <input type="hidden" value="{{ $service->uuid }}" name="service_uuid" class="d-none" />
+@endif
 <input name="payment_for" type="hidden" value="service-request" class="d-none" />
 <input type="hidden" value="" class="d-none alt-booking" />
 <input type="hidden" value="" class="d-none town-id" />

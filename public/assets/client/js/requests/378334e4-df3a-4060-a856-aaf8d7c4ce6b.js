@@ -214,6 +214,7 @@ $(document).ready(function () {
         errorClass: "invalid-response",
         errorElement: "div",
         submitHandler: function () {
+
             $('#insert').prop('disabled', true);
             // form.submit();
             return createNewClientContact();
@@ -224,21 +225,35 @@ $(document).ready(function () {
 
 function createNewClientContact(){
 
-    // $('#insert_form').on("submit", function(event){  
-    //     event.preventDefault();  
+    $('#insert_form').on("submit", function(event){  
+        event.preventDefault();  
         let route = $(".ajax-contact-form").val();
-		formData = new FormData($('#insert_form')[0]);
+		// formData = $(this).serialize();
 
+        formData = {
+            first_name        : $('#first_name').val(),
+            last_name         : $('#last_name').val(),
+            phone_number      : $('#phone_number').val(),
+            state_id          : $('#state_id').val(),
+            lga_id            : $('#lga_id').val(),
+            town_id           : $('#town_id').val(),
+            address           : $('#address').val(),
+            user_latitude     : $('#user_latitude').val(),
+            user_longitude    : $('#user_longitude').val()
+        };
         // Appending CSRF token to formData
 		// formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
+        $.ajaxSetup({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
         $.ajax({  
             url: route,  
 			type: "POST",
-            processData: false,
-			contentType: false,
-			cache: false,
-            data: {"_token": $('meta[name="csrf-token"]').attr('content'), "formData":formData},  
+            dataType: "json",
+            data: formData,  
             beforeSend:function(){  
                 $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
             },  
@@ -255,7 +270,7 @@ function createNewClientContact(){
             },
             timeout: 3000  
         }); 
-    // }); 
+    }); 
 }
 
 function displayPaymentGateways(val) {

@@ -394,7 +394,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     Route::post('servicesRequest',              [ClientController::class, 'serviceRequest'])->name('services.serviceRequest');
     // add my new contact to DB
-    Route::post('/create-new-client-contact',            [ClientController::class, 'ajax_contactForm'])->name('ajax_contactForm');
+    Route::post('/create-new-client-contact',            [ClientController::class, 'createNewClientContact'])->name('ajax_contactForm');
 
     Route::get('myContactList',                 [ClientController::class, 'myContactList'])->name('service.myContacts');
 

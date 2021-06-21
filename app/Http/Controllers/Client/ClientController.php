@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Client;
 
-use DB;
 use Auth;
 use File;
 use Image;
@@ -37,22 +36,23 @@ use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
 use App\Models\ServiceRequestMedia;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Messaging\Message;
-use App\Models\ServiceRequestProgress;
-use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use App\Models\ServiceRequestSetting;
+use Illuminate\Support\Facades\Route;
+use App\Models\ServiceRequestProgress;
+use App\Models\ServiceRequestWarranty;
+
 use Illuminate\Support\Facades\Config;
 
-use Illuminate\Support\Facades\Route;
-
-use App\Models\ServiceRequestWarranty;
 use App\Models\ClientLoyaltyWithdrawal;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
 use App\Models\ServiceRequestCancellation;
 use App\Traits\RegisterPaymentTransaction;
+use App\Http\Controllers\Messaging\Message;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Http\Controllers\Payment\PaystackController;
 use App\Http\Controllers\Messaging\MessageController;
@@ -330,11 +330,8 @@ class ClientController extends Controller
      * This is an ajax call to save a new client contact.
      * Present on click of Create button from the form.
      */
-    function ajax_contactForm(Request $request)
+    function createNewClientContact(Request $request)
     {
-
-        dd($request->user()->account);
-
         if ($request->ajax()) {
 
             //Validate data from ajax request
@@ -350,27 +347,45 @@ class ClientController extends Controller
                 'user_longitude'    =>   'bail|required',
             ]);
 
-            $clientContact = new Contact;
-            $clientContact->user_id   = auth()->user()->id;
-            $clientContact->name      = $validatedData['firstName'] . ' ' . $validatedData['lastName'];
-            $clientContact->state_id  = $validatedData['state'];
-            $clientContact->lga_id    = $validatedData['lga'];
-            $clientContact->town_id   = $validatedData['town'];
-            $client  = Client::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->firstOrFail();
-            $clientContact->account_id    = $client->account_id;
-            $clientContact->country_id    = '156';
-            $clientContact->phone_number       = $validatedData['phoneNumber'];
-            $clientContact->address            = $validatedData['streetAddress'];
-            $clientContact->address_longitude  = $validatedData['addressLat'];
-            $clientContact->address_latitude   = $validatedData['addressLng'];
+            //Set `createService` to false before Db transaction
+            (bool) $createContact  = false;
 
-            if ($clientContact->save()) {
-                return view('client.services._contactList', [
-                    'myContacts'    => Contact::where('user_id', auth()->user()->id)->get(),
+            $actionUrl = Route::currentRouteAction();
+
+            // Set DB to rollback DB transacations if error occurs
+            DB::transaction(function () use ($request, $validatedData, &$createContact) {
+
+                Contact::create([
+                    'user_id'           =>   $request->user()->id,    
+                    'account_id'        =>   $request->user()->account->id,    
+                    'name'              =>   $validatedData['first_name'] . ' ' . $validatedData['last_name'],
+                    'phone_number'      =>   $validatedData['phone_number'],
+                    'country_id'        =>   156,
+                    'state_id'          =>   $validatedData['state_id'],
+                    'lga_id'            =>   $validatedData['lga_id'],
+                    'town_id'           =>   $validatedData['town_id'],
+                    'address'           =>   $validatedData['address'],
+                    'user_latitude'     =>   $validatedData['user_latitude'],
+                    'user_longitude'    =>   $validatedData['user_longitude'],
                 ]);
-            } else {
-                return back()->with('error', 'Sorry!, an error occured please try again');
+                $createContact  = true;
+
+            });
+
+            if($createContact){
+                
+                $this->log('Profile', 'Informarional', $actionUrl, $request->user()->account->first_name.' '.$request->user()->account->last_name.' successfully created a new contact address');
+
+                return view('client.services._contactList', [
+                    'myContacts'    => $request->user()->contacts,
+                ]);
+            }else{
+
+                $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.$request->user()->account->first_name.' '.$request->user()->account->last_name.' was trying to create a new contact address');
+
+                return back()->with('error', 'Sorry! An error occurred while to create a new contact address');
             }
+
         }
     }
 
