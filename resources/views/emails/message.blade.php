@@ -87,21 +87,23 @@
                                  
                                 <span style="display:inline-block;vertical-align:middle; margin:19px 0 26px; border-bottom:1px solid #cecece; width:100%;"></span>
 
-                                 
+                              
                                  <div style="float:left;padding:0 35px">
+                                 <br/>
+                                 <br/>
                                  <p style="color: #8492a6; margin:5px 0px 2px; font-size:15px"> Connect With Us</p>
                                  <a href="javascript:void(0)">
                                 <img src="{{ asset('assets/images/twitter.png') }}" height="20" alt="twitter"/>
                                 </a>
-                                <a href="javascript:void(0)" style="background-color: #007bb5; padding:0 5px;border-radius: 50%;  display: inline-block;  margin: 5px 3px;">
-                                <img src="{{ asset('assets/images/facebook.png') }}" height="15" alt="facebook" style=""/>
+                                <a href="javascript:void(0)" style=" ">
+                                <img src="{{ asset('assets/images/official-facebook-circle-icon.png') }}" height="23" alt="facebook" style=""/>
                                 </a>
 
                                 <a href="javascript:void(0)" style="margin: 5px 2px;">
                                 <img src="{{ asset('assets/images/index.jpeg') }}" height="23" alt="instagram" style=""/>
                                 </a>
-                                <a href="javascript:void(0)" style="background-color: #007bb5; padding:0 5px;border-radius: 50%;  display: inline-block;  margin: 5px 3px;">
-                                <img src="{{ asset('assets/images/linkedin.png') }}" height="15" alt="linkedin" style=""/>
+                                <a href="javascript:void(0)" style="">
+                                <img src="{{ asset('assets/images/inkedin-circle-logo-transparent.jpeg') }}" height="23" alt="linkedin" style=""/>
                                 </a>
                                  </div>
 

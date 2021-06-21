@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller;
 class ServiceRequestController extends Controller
 {
     use Services;
-
     /**
      * Store a newly created resource in storage.
      *

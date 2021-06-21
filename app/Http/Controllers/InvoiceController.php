@@ -328,6 +328,26 @@ class InvoiceController extends Controller
         }
     }
 
+    public function invoicePayment(Request $request)
+    {
+        $valid = $this->validate($request, [
+            // List of things needed from the request like
+            'booking_fee'      => 'required',
+            'payment_channel'  => 'required',
+            'payment_for'      => 'required',
+            'invoice_uuid'     => 'required|uuid',
+        ]);
+
+        $payment = [
+            'amount' => $valid['booking_fee'],
+            'payment_channel' => $valid['payment_channel'],
+            'payment_for' => $valid['payment_for'],
+            'unique_id' => \App\Traits\GenerateUniqueIdentity::generate('invoice', 'INV-'),
+            'return_route_name' => '',
+            'meta_data' => $valid
+        ];
+    }
+
     public function saveInvoiceRecord($paymentRecord, $paymentDetails) 
     {
         // dd($paymentRecord);
