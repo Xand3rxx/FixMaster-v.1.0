@@ -189,7 +189,7 @@ class ClientSeeder extends Seeder
         $clientTable->save();
 
         // Sample Implementation for storing Contact Details of a user
-        \App\Models\Contact::attemptToStore($client->id, $clientAccount->id, 156, '07069836642', "14 Idowu Martins St, Victoria Island, Lagos", "3.420010", "6.432820");
+        \App\Models\Contact::attemptToStore($client->id, $clientAccount->id, 156, 24, 517, 242, '07069836642', "14 Idowu Martins St, Victoria Island, Lagos", "3.420010", "6.432820");
         \App\Models\Contact::attemptToStore($client1->id, $clientAccount1->id, 156, '08069386642', "1-9 Reeve Rd, Ikoyi, Lagos", "3.441440", "6.453120");
         \App\Models\Contact::attemptToStore($client2->id, $clientAccount2->id, 156, '08069386641', "Bisola Durosinmi Etti Drive, The Rock Dr, Lekki Phase 1, Lagos", "3.464150", "6.437240");
         \App\Models\Contact::attemptToStore($client3->id, $clientAccount3->id, 156, '07036722889', "8 Oba Akinjobi Way, Ikeja GRA, Ikeja", "3.346660", "6.586420");

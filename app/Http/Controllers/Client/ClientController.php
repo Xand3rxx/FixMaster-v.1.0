@@ -323,41 +323,54 @@ class ClientController extends Controller
         return view('client.services.quote', $data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * This is an ajax call to save a new client contact.
+     * Present on click of Create button from the form.
+     */
     function ajax_contactForm(Request $request)
     {
 
-        $validatedData = $request->validate([
-            'firstName'                   =>   'required',
-            'lastName'                    =>   'required',
-            'phoneNumber'                 =>   'required',
-            'state'                       =>   'required',
-            'lga'                         =>   'required',
-            'town'                        =>   'required',
-            'streetAddress'               =>   'required',
-            'addressLat'                  =>   'required',
-            'addressLng'                  =>   'required',
-        ]);
+        dd($request->user()->account);
 
-        $clientContact = new Contact;
-        $clientContact->user_id   = auth()->user()->id;
-        $clientContact->name      = $request->firstName . ' ' . $request->lastName;
-        $clientContact->state_id  = $request->state;
-        $clientContact->lga_id    = $request->lga;
-        $clientContact->town_id   = $request->town;
-        $client  = Client::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->firstOrFail();
-        $clientContact->account_id    = $client->account_id;
-        $clientContact->country_id    = '156';
-        // $clientContact->is_default        = '1';
-        $clientContact->phone_number       = $request->phoneNumber;
-        $clientContact->address            = $request->streetAddress;
-        $clientContact->address_longitude  = $request->addressLat;
-        $clientContact->address_latitude   = $request->addressLng;
-        if ($clientContact->save()) {
-            return view('client.services._contactList', [
-                'myContacts'    => Contact::where('user_id', auth()->user()->id)->get(),
+        if ($request->ajax()) {
+
+            //Validate data from ajax request
+            $validatedData = $request->validate([
+                'first_name'        =>   'bail|required|string',
+                'last_name'         =>   'bail|required|string',
+                'phone_number'      =>   'bail|required',
+                'state_id'          =>   'bail|required|integer',
+                'lga_id'            =>   'bail|required|integer',
+                'town_id'           =>   'sometimes|integer',
+                'address'           =>   'bail|required',
+                'user_latitude'     =>   'bail|required',
+                'user_longitude'    =>   'bail|required',
             ]);
-        } else {
-            return back()->with('error', 'sorry!, an error occured please try again');
+
+            $clientContact = new Contact;
+            $clientContact->user_id   = auth()->user()->id;
+            $clientContact->name      = $validatedData['firstName'] . ' ' . $validatedData['lastName'];
+            $clientContact->state_id  = $validatedData['state'];
+            $clientContact->lga_id    = $validatedData['lga'];
+            $clientContact->town_id   = $validatedData['town'];
+            $client  = Client::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->firstOrFail();
+            $clientContact->account_id    = $client->account_id;
+            $clientContact->country_id    = '156';
+            $clientContact->phone_number       = $validatedData['phoneNumber'];
+            $clientContact->address            = $validatedData['streetAddress'];
+            $clientContact->address_longitude  = $validatedData['addressLat'];
+            $clientContact->address_latitude   = $validatedData['addressLng'];
+
+            if ($clientContact->save()) {
+                return view('client.services._contactList', [
+                    'myContacts'    => Contact::where('user_id', auth()->user()->id)->get(),
+                ]);
+            } else {
+                return back()->with('error', 'Sorry!, an error occured please try again');
+            }
         }
     }
 

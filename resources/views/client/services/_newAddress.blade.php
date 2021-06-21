@@ -16,21 +16,21 @@
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>First Name <span class="text-danger">*</span></label>
-                                <input id="first-name" type="text" class="form-control" placeholder="First Name" name="first_name" autocomplete="off" />
+                                <input id="first-name" type="text" class="form-control" placeholder="First Name" name="first_name" autocomplete="off" value="{{ old('first_name') }}" />
                             </div>
                         </div>
                         <!--end col-->
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Last Name <span class="text-danger">*</span></label>
-                                <input id="last-name" type="text" class="form-control" placeholder="Last Name" name="last_name" autocomplete="off" />
+                                <input id="last-name" type="text" class="form-control" placeholder="Last Name" name="last_name" autocomplete="off" value="{{ old('last_name') }}" />
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Contact Phone Number <span class="text-danger">*</span></label>
-                                <input type="tel" maxlength="11" id="phone_number" class="form-control phone" placeholder="Phone Number" name="phone_number" autocomplete="off" />
+                                <input type="tel" maxlength="11" id="phone_number" class="form-control phone" placeholder="Phone Number" name="phone_number" autocomplete="off" value="{{ old('phone_number') }}" />
                             </div>
                         </div>
                         <!--end col-->
@@ -95,7 +95,7 @@
 
                     </div>
                     <br />
-                    <input type="submit" name="insert" id="insert" value="Create" class="btn btn-primary" />
+                    <input type="submit" id="insert" value="Create" class="btn btn-primary" />
                 </form>
             </div>
             
