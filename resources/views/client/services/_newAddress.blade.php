@@ -87,16 +87,12 @@
 
                         <div class="col-12">
                             <div class="form-group position-relative">
-                                <label>Full Address <span class="text-danger">*</span></label>
+                                <label>Full Address <span class="text-danger">* <span style="font-size: 10px;">Use auto complete feature after typing to select your address</span></span></label>
                                 <input type="text" id="street-address" class="form-control user_address" placeholder="Full address of contact" name="address" autocomplete="off">
                             </div>
                         </div>
                         <!--end col-->
 
-                        <!-- hidden fields -->
-                        <input type="hidden" value="" id="user_latitude" />
-                        <input type="hidden" value="" id="user_longitude" />
-                        <!--end col-->
                     </div>
                     <br />
                     <input type="submit" name="insert" id="insert" value="Create" class="btn btn-primary" />

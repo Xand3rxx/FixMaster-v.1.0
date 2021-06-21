@@ -28,31 +28,39 @@
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
 
-        // var key = "AIzaSyDeDLVAiaU13p2O0d3jfcPjscsbVsCQUzc";
+        var key = $('meta[name="app-alt-name"]').attr('content');
 
         $.get('https://maps.googleapis.com/maps/api/geocode/json', {
             address: place.formatted_address,
             key: key
         }, function (data, status) {
             $(data.results).each(function (key, value) {
+
+                //Get formatted place from user address selection
                 $('.user_address').val(place.formatted_address);
-                $('#user_latitude').val(value.geometry.location.lat);
-                $('#user_longitude').val(value.geometry.location.lng);
+                
+                //If hidden input field for geocodes already exist, update gelocatoin coordinates
+                if($('#user_latitude').length > 0 && $('#user_longitude').length > 0){
+                    $('#user_latitude').val(value.geometry.location.lat);
+                    $('#user_longitude').val(value.geometry.location.lng);
+                }else{
 
-                let user_latitude = document.createElement("input");
-                user_latitude.name = "address_latitude";
-                user_latitude.type = "hidden";
-                user_latitude.value = value.geometry.location.lat;
-                $('.user_address').closest('form').append(user_latitude);
+                    //Create hidden input fields for gelocatoin coordinates
+                    let user_latitude = document.createElement("input");
+                    user_latitude.name = "address_latitude";
+                    user_latitude.type = "hidden";
+                    user_latitude.id = "user_latitude";
+                    user_latitude.value = value.geometry.location.lat;
+                    $('.user_address').closest('form').append(user_latitude);
 
-                let user_longitude = document.createElement("input");
-                user_longitude.name = "address_longitude";
-                user_longitude.type = "hidden";
-                user_longitude.value = value.geometry.location.lng;
-                $('.user_address').closest('form').append(user_longitude);
-                console.log(user_longitude, user_latitude, $('.user_address').closest('form'));
-                //  console.log(value.geometry.location.lat);
-                //  console.log(value.geometry.location.lng);
+                    let user_longitude = document.createElement("input");
+                    user_longitude.name = "address_longitude";
+                    user_longitude.type = "hidden";
+                    user_longitude.id = "user_longitude";
+                    user_longitude.value = value.geometry.location.lng;
+                    $('.user_address').closest('form').append(user_longitude);
+                    // console.log(user_longitude, user_latitude, $('.user_address').closest('form'));
+                }
 
             });
         });

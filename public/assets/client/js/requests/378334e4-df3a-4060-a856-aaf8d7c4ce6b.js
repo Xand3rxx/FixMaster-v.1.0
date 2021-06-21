@@ -1,7 +1,5 @@
 $(document).ready(function () {
-
-    //Disable button to add new client contact
-    $('#insert').prop('disabled', true)
+    "use strict";
 
     //Get list of L.G.A's in a particular state.
     $("#state_id").on("change", function () {
@@ -56,43 +54,7 @@ $(document).ready(function () {
     });
 
 
-    $('#insert_form').on("submit", function(event){  
-        event.preventDefault();  
-        let route = $(".ajax-contact-form").val();
-        // validateNewClientContact();
-
-        $.ajax({  
-            url: route,  
-            method: "POST",  
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                firstName: $("#first-name").val(),
-                lastName: $("#last-name").val(),
-                phoneNumber: $("#phone_number").val(),
-                state: $("#state_id").val(),
-                lga: $("#lga_id").val(),
-                town: $("#town_id").val(),
-                streetAddress: $("#street-address").val(), 
-                addressLat: $("#user_latitude").val(),
-                addressLng: $("#user_longitude").val(),
-            },  
-            beforeSend:function(){  
-                $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
-            },  
-            success:function(data){ 
-                $('#insert_form')[0].reset(); 
-                $('#add_data_Modal').modal('hide');
-                $('#contacts_table').html(data);
-                var message = $("#first-name").val()+' '+$("#last-name").val()+' contact has been saved.';
-                displayMessage(message, success);
-            },
-            error: function(jqXHR, testStatus, error) {
-                
-                displayMessage('An error occured while trying to save the new contact information.', 'error');
-            },
-            timeout: 3000  
-        }); 
-    }); 
+    
 
     //Check if clien't service request location is part of areas currently serviced by FixMaster
     $(document).on('change', '.contact-id', function(event) {
@@ -180,10 +142,6 @@ $(document).ready(function () {
         $(this).closest(".remove-file").remove();
     });
 
-
-});
-
-function validateNewClientContact(){
     $("#insert_form").validate({
         rules: {
             first_name: {
@@ -250,11 +208,51 @@ function validateNewClientContact(){
         errorClass: "invalid-response",
         errorElement: "div",
         submitHandler: function (form) {
-            // $('#insert').prop('disabled', true);
-            alert('here');
-            form.submit();
+            $('#insert').prop('disabled', true);
+            // form.submit();
+            createNewClientContact();
         }
     });
+});
+
+
+function createNewClientContact(){
+    // $('#insert_form').on("submit", function(event){  
+        // event.preventDefault();  
+        let route = $(".ajax-contact-form").val();
+
+        $.ajax({  
+            url: route,  
+            method: "POST",  
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                firstName: $("#first-name").val(),
+                lastName: $("#last-name").val(),
+                phoneNumber: $("#phone_number").val(),
+                state: $("#state_id").val(),
+                lga: $("#lga_id").val(),
+                town: $("#town_id").val(),
+                streetAddress: $("#street-address").val(), 
+                addressLat: $("#user_latitude").val(),
+                addressLng: $("#user_longitude").val(),
+            },  
+            beforeSend:function(){  
+                $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
+            },  
+            success:function(data){ 
+                $('#insert_form')[0].reset(); 
+                $('#add_data_Modal').modal('hide');
+                $('#contacts_table').html(data);
+                var message = $("#first-name").val()+' '+$("#last-name").val()+' contact has been saved.';
+                displayMessage(message, success);
+            },
+            error: function(jqXHR, testStatus, error) {
+                
+                displayMessage('An error occured while trying to save the new contact information.', 'error');
+            },
+            timeout: 3000  
+        // }); 
+    }); 
 }
 
 function displayPaymentGateways(val) {

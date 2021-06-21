@@ -73,7 +73,8 @@
 @include('client.services._newAddress')
 
 @push('scripts')
-    @include('client.services.includes._service_quote_script')
+    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/client/js/requests/378334e4-df3a-4060-a856-aaf8d7c4ce6b.js') }}"></script>
 @endpush 
 
 @endsection
