@@ -66,6 +66,7 @@ use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceR
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
+use App\Http\Controllers\Admin\Report\WarrantyReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -326,8 +327,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
-    Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
-    Route::get('/see',  [Template::class, 'see'])->name('see');
+  
+    Route::get('/reports/warranty',  [WarrantyReportController::class, 'index'])->name('warranty_reports');
+   
 });
 
 //All routes regarding clients should be in here
