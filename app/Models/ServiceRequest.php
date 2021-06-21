@@ -249,12 +249,8 @@ class ServiceRequest extends Model
     public function supplier()
     {
         return $this->hasOne(Rfq::class, 'service_request_id')->with('RfqSupplierInvoice');
-<<<<<<< HEAD
-    }  
-=======
     }
     
->>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
     public function payment()
     {
         return $this->hasOne(Payment::class, 'unique_id', 'unique_id');

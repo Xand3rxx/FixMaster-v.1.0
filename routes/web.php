@@ -56,10 +56,6 @@ use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
-<<<<<<< HEAD
-//use App\Http\Controllers\Admin\Report\SupplierReportController;
-=======
->>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
 use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
@@ -331,6 +327,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
     Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
+    Route::get('/see',  [Template::class, 'see'])->name('see');
 });
 
 //All routes regarding clients should be in here
@@ -445,7 +442,7 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
         Route::post('/update_service_request',  [CseController::class, 'update_cse_service_rating'])->name('update_service_request');
     });
 
-    Route::get('/see',  [CseController::class, 'see'])->name('see');
+
     Route::view('/messages/inbox', 'cse.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent', 'cse.messages.sent')->name('messages.sent');
     Route::view('/payments', 'cse.payments')->name('payments');

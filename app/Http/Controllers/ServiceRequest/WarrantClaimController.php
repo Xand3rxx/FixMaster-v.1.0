@@ -362,7 +362,6 @@ class WarrantClaimController extends Controller
 
     
 
-<<<<<<< HEAD
     // $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
     // ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
     // ->whereIn('user_id', '=', $request->initial_supplier)
@@ -376,23 +375,8 @@ class WarrantClaimController extends Controller
     //         'retention_cronjob_update' => 'Update'
     //     ]);
     // }
-=======
-    $retentionFee  =  \App\Models\CollaboratorsPayment::select('retention_fee', 'amount_after_retention')
-    ->where(['service_request_id'=> $request->service_request_id, 'service_type'=> 'Regular'])
-    ->whereIn('user_id', '=', $request->initial_supplier)
-    ->first();
-    dd($request,$retentionFee);
-    if(collect($retentionFee)->count() > 0){
-        $update   =  \App\Models\CollaboratorsPayment::where(['service_request_id'=> $value->service_request_id, 'user_id'=>$value->id, 'service_type'=> 'Regular', 'retention_cronjob_update'=>'Pending'])
-        ->update([
-            'amount_after_retention'=> (int)$retentionFee->amount_after_retention + (int)$retentionFee->retention_fee,
-            'retention_fee'=> 0,
-            'retention_cronjob_update' => 'Update'
-        ]);
-    }
->>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
 
-         $users = \App\Models\Supplier::whereIn('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
+         $users = \App\Models\Supplier::where('user_id' ,'<>', $request->initial_supplier)->with('user')->get();
         
          (bool) $createRfq = false;
 
