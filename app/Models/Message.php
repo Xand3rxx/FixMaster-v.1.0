@@ -3,45 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Message extends Model
 {
-    protected $fillable = [
-        'title',
-        'recipient',
-        'content',
-        'sender',
-        'mail_status',
-        'uuid',
-    ];
 
-    protected $softDelete = true;
+    use SoftDeletes;
 
     /**
-     * The relationships that should always be loaded.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $with = ['recipient','sender'];
+    protected $guarded = ['uuid', 'deleted_at', 'created_at', 'updated_at'];
 
-    protected static function boot()
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
     {
-        parent::boot();
-        self::creating(function ($model) {
-            $model->uuid = Str::uuid()->toString();
+        static::creating(function ($user) {
+            $user->uuid =  (string) \Illuminate\Support\Str::uuid(); 
         });
-    }
-
-    public function getIncrementing()
-    {
-        return false;
-    }
-
-    public function getKeyType()
-    {
-        return 'string';
     }
 
     /**
