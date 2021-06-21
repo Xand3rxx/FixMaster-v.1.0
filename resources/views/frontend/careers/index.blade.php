@@ -2,7 +2,12 @@
 @section('title', 'Join Us')
 @section('contents')
     @include('layouts.partials._messages')
-
+    <style>
+        .invalid-response{
+            font-size: 12px !important;
+            color: #e43f52;
+        }
+    </style>
     <section class="section bg-light">
         <div class="container" style="margin-top: 3rem;">
             <div class="row justify-content-center">
@@ -603,6 +608,6 @@
                 color: #e43f52;
             }
 
-        </style>
+        </sty>
     @endpush
 @endsection

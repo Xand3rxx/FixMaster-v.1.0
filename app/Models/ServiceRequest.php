@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
+use App\Traits\GenerateUniqueIdentity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use App\Traits\GenerateUniqueIdentity as Generator;
 
 class ServiceRequest extends Model
 {
-    use SoftDeletes, Generator;
+    use SoftDeletes;
 
     const SERVICE_REQUEST_STATUSES = [
         'Pending'   => 1,
@@ -57,10 +57,10 @@ class ServiceRequest extends Model
             $serviceRequest->uuid = (string) Str::uuid();
 
             // Create a Unique Service Request reference id
-            $serviceRequest->unique_id = static::generate('service_requests', 'REF-');
+            $serviceRequest->unique_id = GenerateUniqueIdentity::generate('service_requests', 'REF-');
 
             // Create a Unique Service Request Client Security Code id
-            $serviceRequest->client_security_code = static::generate('service_requests', 'SEC-');
+            $serviceRequest->client_security_code = GenerateUniqueIdentity::generate('service_requests', 'SEC-');
         });
     }
 
@@ -78,6 +78,14 @@ class ServiceRequest extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'service_request_assigned')->with('account', 'roles');
+    }
+
+    /**
+     * Get all media files assigned to the service request
+     */
+    public function medias()
+    {
+        return $this->belongsToMany(Media::class, 'service_request_medias');
     }
 
     /**

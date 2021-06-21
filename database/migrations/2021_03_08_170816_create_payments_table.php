@@ -27,7 +27,8 @@ class CreatePaymentsTable extends Migration
             $table->string('unique_id')->comment('e.g. REF-330CB862, WAL-23782382, WAR-09328932');
             $table->string('reference_id', 191)->unique();
             $table->string('transaction_id', 191)->nullable();
-
+            $table->string('return_route_name')->nullable();
+            $table->json('meta_data')->nullable();
             $table->enum('status', Payment::STATUS);
             $table->softDeletes();
             $table->timestamps();

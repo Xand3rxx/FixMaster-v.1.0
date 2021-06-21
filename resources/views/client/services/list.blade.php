@@ -23,11 +23,12 @@
                                 <thead class="thead-primary">
                                 <tr>
                                     <th class="text-center">#</th>
+                                    <th>Job Reference</th>
                                     <th>Service Name</th>
                                     <th class="text-center">Service Charge(₦)</th>
                                     <th>Status</th>
-                                    <th>Issued Created </th>
                                     <th>Scheduled Date</th>
+                                    <th>Date Created </th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -39,6 +40,7 @@
                                 <tr>
 
                                 <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                                <td class="font-weight-bold">{{ $myServiceRequest->unique_id }} </td>
                                 <td>{{ $myServiceRequest['service']['name'] ?? 'Custom Request' }} </td>
                                 <td class="text-center font-weight-bold">{{ $myServiceRequest->bookingFee->amount }}</td>
                                 <td class="tx-medium">
@@ -52,8 +54,8 @@
                                     <span class="badge badge-success rounded">Completed</span>
                                 @endif
                                 </td>
-                                <td class="tx-medium">{{ Carbon\Carbon::parse($myServiceRequest['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                                 <td class="tx-medium font-weight-bold">{{ !empty($myServiceRequest['preferred_time']) ? Carbon\Carbon::parse($myServiceRequest['preferred_time'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') : 'Not Scheduled yet'}} </td>
+                                <td class="tx-medium">{{ Carbon\Carbon::parse($myServiceRequest['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                                 <td class=" text-center">
 
                                     <div class="btn-group dropdown-primary mr-2 mt-2">

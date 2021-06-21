@@ -162,6 +162,11 @@
 
     .text-small{ font-size: 12px !important; }
     .text-small-2{ font-size: 13px !important; }
+
+    .invalid-response{
+        font-size: 12px !important;
+        color: #e43f52;
+    }
 </style>
 
 
