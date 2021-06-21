@@ -7,30 +7,15 @@ use App\Models\Service;
 use App\Traits\Services;
 use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
+use App\Models\ServiceRequest;
+use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Mail\Mailer;
+use App\Http\Controllers\Messaging\MessageController;
 
 class ServiceRequestController extends Controller
 {
     use Services;
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -38,7 +23,7 @@ class ServiceRequestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, \App\Http\Controllers\Client\ServiceRequest\Concerns\PaymentHandler $payment_handler, Mailer $mailer)
     {
         /**
          * fields to be validated.
@@ -54,25 +39,84 @@ class ServiceRequestController extends Controller
          * payment gateway, [required, In: flutterwave, paystack]
          * discount, optional
          */
-        
+
         //  Validate Request
         (array) $valid = $request->validate([
-            'service_uuid'              => 'required|uuid|exists:services,uuid',
-            'payment_for'               => ['required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
-            'price_id'                  => 'required|integer',
-            'description'               => 'required|string',
-            'preferred_time'            => 'required|date',
-            'payment_channel'           => ['required_if:payment_for,', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
-            'contactme_status'          => 'required|boolean',
-            'client_discount_id'        => 'sometimes|integer',
-            'media_file'                => 'required|array',
-            'media_file.*'              => 'sometimes|file',
-            'contact_id'                => 'required|integer|exists:contacts,id'
+            'service_uuid'              => 'bail|required|uuid|exists:services,uuid', // Handle service of custom to 
+            'payment_for'               => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
+            'price_id'                  => 'bail|required|integer',
+            'description'               => 'bail|required|string',
+            'preferred_time'            => 'bail|required|date',
+            'payment_channel'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
+            'contactme_status'          => 'bail|required|boolean',
+            'client_discount_id'        => 'bail|sometimes|integer',
+            'media_file'                => 'bail|sometimes|array',
+            'media_file.*'              => 'bail|sometimes|file',
+            'contact_id'                => 'bail|required|integer|exists:contacts,id'
         ]);
-        
-        dd($request->all());
+        // Check for media files
+        if (!empty($valid['media_file'])) {
+            (array) $files = $this->handle_media_files($valid['media_file']);
+            $valid['media_file'] = $files;
+        }
+        $payment = [
+            'amount' => \App\Models\Price::where('id', $valid['price_id'])->first()->amount,
+            'payment_channel' => $valid['payment_channel'],
+            'payment_for' => $valid['payment_for'],
+            'unique_id' => \App\Traits\GenerateUniqueIdentity::generate('service_requests', 'REF-'),
+            'return_route_name' => 'client.service_request.init',
+            'meta_data' => $valid
+        ];
 
-        return $request->all();
+        // Transfer to Concerns
+        return $payment_handler->redirectToGateway($payment);
+    }
+
+   
+
+    
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  string  $locale
+     * @param  \App\Models\Payment  $payment
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function init($locale, Payment $payment)
+    {
+        // Verify Payment status
+        if ($payment['status'] = Payment::STATUS['success']) {
+            $service = \App\Models\Service::where('uuid', $payment['meta_data']['service_uuid'])->first();
+            $service_request = ServiceRequest::create([
+                'unique_id' => $payment['unique_id'],
+                'service_id' => $service['id'] ?? NULL,
+                'client_id' => request()->user()->id,
+                'client_discount_id' => $payment['meta_data']['client_discount_id'],  //To be Confirmed from Rade and Joyboy
+                'preferred_time' => $payment['meta_data']['preferred_time'] ?? NULL,
+                'contactme_status' => $payment['meta_data']['contactme_status'],
+                'contact_id' => $payment['meta_data']['contact_id'],
+                'description' => $payment['meta_data']['description'],
+                'price_id' => $payment['meta_data']['price_id'],
+                'total_amount' => $payment['amount'],
+            ]);
+            if (!empty($payment['meta_data']['media_file'])) {
+                foreach ($payment['meta_data']['media_file'] as $key => $file) {
+                    $media = \App\Models\Media::create([
+                        'client_id' =>  $service_request['client_id'],
+                        'original_name' => $file['original_name'],
+                        'unique_name' => $file['unique_name'],
+                    ]);
+                    $service_request->medias()->attach($media);
+                }
+            }
+            // Use created service request to trigger notification
+            \App\Jobs\Servicerequest\NotifyCse::dispatch($service_request);
+            return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
+        }
+        // 
+        // dd($payment, $service_request, 'returned');
     }
 
     /**
@@ -99,12 +143,22 @@ class ServiceRequestController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  array  $files
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    protected function handle_media_files(array $files)
     {
-        //
+        (array) $uploadedFiles = [];
+        foreach ($files as $key => $file) {
+            $original = $file->getClientOriginalName();
+            $fileName = sha1($original . time()) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/service-request-media-files'), $fileName);
+            array_push($uploadedFiles, [
+                'original_name' => $original,
+                'unique_name' => $fileName
+            ]);
+        }
+        return $uploadedFiles;
     }
 
     /**
