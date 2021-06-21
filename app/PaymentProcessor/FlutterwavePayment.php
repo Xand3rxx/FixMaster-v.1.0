@@ -1,4 +1,5 @@
 <?php
+
 namespace App\PaymentProcessor;
 
 
@@ -81,6 +82,9 @@ class FlutterwavePayment
     {
         try {
             $verified = $this->verifyTransactionAtGateway();
+            if (is_null($verified['verified'])) {
+                return back()->with('error', 'User Cancelled Transaction');
+            }
             return redirect()->route($verified['payment']['return_route_name'], ['locale' => app()->getLocale(), 'payment' => $verified['payment']]);
         } catch (ModelNotFoundException $th) {
             return back()->with('error', 'Error Finding Payment Reference Record');
@@ -130,6 +134,9 @@ class FlutterwavePayment
     protected function verifyTransactionAtGateway()
     {
         $response = Http::withToken($this->secretKey)->retry(2, 100)->get($this->baseUrl . 'transactions/' . request()->get('transaction_id') . '/verify', [])->throw()->json();
+        if (is_null($response)) {
+            return  ['verified' => null];
+        }
         if ($response['message'] == "Transaction fetched successfully") {
             $payment = Payment::where('reference_id', $response['data']['tx_ref'])->firstOrFail();
             $payment->status = $response['data']['status'] == 'successful' ? Payment::STATUS['success'] : Payment::STATUS['failed'];
