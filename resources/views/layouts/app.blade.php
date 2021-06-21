@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="app-alt-name" content="{{ config('app.geolocation_api_key') }}">
 
     <title>@yield('title') | FixMaster - We Fix, You Relax!</title>
     {{-- <meta name="Author" content="Anthony Joboy (Lagos, Nigeria)" />

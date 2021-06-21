@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 class ServiceRequestController extends Controller
 {
     use Services;
-
     /**
      * Display a listing of the resource.
      *
