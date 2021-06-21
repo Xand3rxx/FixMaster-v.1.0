@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client\ServiceRequest\Concerns;
 use App\Models\Payment;
 
 use App\Http\Controllers\Controller;
+use App\PaymentProcessor\Facades\FlutterwavePayment;
 use App\PaymentProcessor\Traits\CreatePayment;
 
 
@@ -24,7 +25,8 @@ class PaymentHandler extends Controller
         if ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['paystack']) {
             return \App\PaymentProcessor\Facades\PaystackPayment::makePaymentRequest($payment);
         } elseif ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['flutterwave']) {
-            return \App\PaymentProcessor\Facades\FlutterwavePayment::makePaymentRequest($payment);
+//            dd($payment);
+            return FlutterwavePayment::makePaymentRequest($payment);
         } elseif ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['offline']) {
             // determine how to handle offline
         } elseif ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['wallet']) {
