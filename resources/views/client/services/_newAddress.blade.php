@@ -16,24 +16,21 @@
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>First Name <span class="text-danger">*</span></label>
-                                <input id="first-name" type="text" class="form-control" placeholder="First Name"
-                                    autocomplete="off" />
+                                <input id="first-name" type="text" class="form-control" placeholder="First Name" name="first_name" autocomplete="off" />
                             </div>
                         </div>
                         <!--end col-->
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Last Name <span class="text-danger">*</span></label>
-                                <input id="last-name" type="text" class="form-control" placeholder="Last Name"
-                                    autocomplete="off" />
+                                <input id="last-name" type="text" class="form-control" placeholder="Last Name" name="last_name" autocomplete="off" />
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Contact Phone Number <span class="text-danger">*</span></label>
-                                <input type="tel" maxlength="11" id="phone_number" class="form-control phone"
-                                    placeholder="Phone Number :" autocomplete="off" />
+                                <input type="tel" maxlength="11" id="phone_number" class="form-control phone" placeholder="Phone Number" name="phone_number" autocomplete="off" />
                             </div>
                         </div>
                         <!--end col-->
@@ -41,7 +38,7 @@
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>State <span class="text-danger">*</span></label>
-                                <select class="form-control @error('state_id') is-invalid @enderror" id="state_id">
+                                <select class="form-control @error('state_id') is-invalid @enderror" id="state_id" name="state_id">
                                     <option selected value="" disabled>Select...</option>
                                     {{-- <option value="24">Lagos</option> --}}
                                     @foreach ($states as $state)
@@ -60,7 +57,7 @@
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>LGA <span class="text-danger">*</span></label>
-                                <select class="form-control @error('lga_id') is-invalid @enderror" id="lga_id">
+                                <select class="form-control @error('lga_id') is-invalid @enderror" id="lga_id" name="lga_id">
                                     <option selected value="">Select...</option>
                                 </select>
                                 @error('lga_id')
@@ -76,7 +73,7 @@
                             <div class="form-group position-relative">
                                 <label>Town/City <span class="text-danger">*</span></label>
 
-                                <select class="form-control @error('town_id') is-invalid @enderror" id="town_id">
+                                <select class="form-control @error('town_id') is-invalid @enderror" id="town_id" name="town_id">
                                     <option selected value="">Select...</option>
                                 </select>
                                 @error('town_id')
@@ -86,32 +83,22 @@
                                 @enderror
                             </div>
                         </div>
-
-
-
                         <!--end col-->
 
                         <div class="col-12">
                             <div class="form-group position-relative">
-                                <label>Full Address <span class="text-danger">*</span></label>
-                                <input type="text" id="street-address" class="form-control user_address"
-                                    placeholder="Full address of contact" autocomplete="off">
+                                <label>Full Address <span class="text-danger">* <span style="font-size: 10px;">Use auto complete feature after typing to select your address</span></span></label>
+                                <input type="text" id="street-address" class="form-control user_address" placeholder="Full address of contact" name="address" autocomplete="off">
                             </div>
                         </div>
                         <!--end col-->
 
-                        <!-- hidden fields -->
-                        <input type="hidden" value="" id="user_latitude" />
-                        <input type="hidden" value="" id="user_longitude" />
-                        <!--end col-->
                     </div>
                     <br />
                     <input type="submit" name="insert" id="insert" value="Create" class="btn btn-primary" />
                 </form>
             </div>
-            {{-- <div class="modal-footer">  
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
-            </div> --}}
+            
         </div>
     </div>
 </div>
