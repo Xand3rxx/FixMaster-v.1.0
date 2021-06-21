@@ -96,6 +96,9 @@ Route::prefix('payment')->name('payment.')->group(function () {
         Route::get('paystack', function () {
            return  \App\PaymentProcessor\Facades\PaystackPayment::isTransactionVerificationValid();
         })->name('paystack');
+        Route::get('flutterwave', function () {
+            return  \App\PaymentProcessor\Facades\FlutterwavePayment::isTransactionVerificationValid();
+         })->name('flutterwave');
     });
 });
 

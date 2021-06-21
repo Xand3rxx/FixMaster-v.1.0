@@ -46,7 +46,7 @@ class ServiceRequestController extends Controller
             'payment_for'               => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
             'price_id'                  => 'bail|required|integer',
             'description'               => 'bail|required|string',
-            'preferred_time'            => 'bail|required|date',
+            'preferred_time'            => 'bail|sometimes|date',
             'payment_channel'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
             'contactme_status'          => 'bail|required|boolean',
             'client_discount_id'        => 'bail|sometimes|integer',
@@ -67,14 +67,9 @@ class ServiceRequestController extends Controller
             'return_route_name' => 'client.service_request.init',
             'meta_data' => $valid
         ];
-
         // Transfer to Concerns
         return $payment_handler->redirectToGateway($payment);
     }
-
-   
-
-    
 
     /**
      * Display the specified resource.
@@ -93,7 +88,7 @@ class ServiceRequestController extends Controller
                 'unique_id' => $payment['unique_id'],
                 'service_id' => $service['id'] ?? NULL,
                 'client_id' => request()->user()->id,
-                'client_discount_id' => $payment['meta_data']['client_discount_id'],  //To be Confirmed from Rade and Joyboy
+                'client_discount_id' => $payment['meta_data']['client_discount_id'] ?? 1,  //To be Confirmed from Rade and Joyboy
                 'preferred_time' => $payment['meta_data']['preferred_time'] ?? NULL,
                 'contactme_status' => $payment['meta_data']['contactme_status'],
                 'contact_id' => $payment['meta_data']['contact_id'],
@@ -115,8 +110,6 @@ class ServiceRequestController extends Controller
             \App\Jobs\Servicerequest\NotifyCse::dispatch($service_request);
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
         }
-        // 
-        // dd($payment, $service_request, 'returned');
     }
 
     /**
