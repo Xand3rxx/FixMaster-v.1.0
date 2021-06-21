@@ -8,10 +8,8 @@ use App\Traits\Services;
 use Illuminate\Http\Request;
 use App\Models\PaymentGateway;
 use App\Models\ServiceRequest;
-use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Mail\Mailer;
-use App\Http\Controllers\Messaging\MessageController;
+
 
 class ServiceRequestController extends Controller
 {
@@ -22,7 +20,7 @@ class ServiceRequestController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, \App\Http\Controllers\Client\ServiceRequest\Concerns\PaymentHandler $payment_handler, Mailer $mailer)
+    public function store(Request $request)
     {
         /**
          * fields to be validated.
@@ -67,7 +65,7 @@ class ServiceRequestController extends Controller
             'meta_data' => $valid
         ];
         // Transfer to Concerns
-        return $payment_handler->redirectToGateway($payment);
+        return \App\PaymentProcessor\Concerns\PaymentHandler::redirectToGateway($payment);
     }
 
     /**
