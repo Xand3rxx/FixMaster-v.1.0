@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Client\ServiceRequest\Concerns;
+namespace App\PaymentProcessor\Concerns;
 
 use App\Models\Payment;
 
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD:app/Http/Controllers/Client/ServiceRequest/Concerns/PaymentHandler.php
 use App\PaymentProcessor\Facades\FlutterwavePayment;
 use App\PaymentProcessor\Traits\CreatePayment;
+=======
+
+>>>>>>> 78e5c10e6b53e86356a5b6993efab0aa0bad9e05:app/PaymentProcessor/Concerns/PaymentHandler.php
 
 
 class PaymentHandler extends Controller
@@ -14,12 +18,12 @@ class PaymentHandler extends Controller
 
     /**
      * Redirect the User to Payment Gateway Page
-     * @return Url
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function redirectToGateway(array $params)
+    public static function redirectToGateway(array $params)
     {
         // Create Payment Record in the database before instantiating request
-        $payment = CreatePayment::init($params['amount'], $params['payment_channel'], $params['payment_for'], $params['unique_id'], $params['return_route_name'], $params['meta_data']);
+        $payment = \App\PaymentProcessor\Traits\CreatePayment::init($params['amount'], $params['payment_channel'], $params['payment_for'], $params['unique_id'], $params['return_route_name'], $params['meta_data']);
 
         // Determine payment channel
         if ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['paystack']) {
