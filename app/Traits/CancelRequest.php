@@ -20,7 +20,6 @@ trait CancelRequest
      * 
      */
     public function initiateCancellation($request, $serviceRequest){
-
         //Set `cancelRequest` to false before Db transaction
         (bool) $cancelRequest  = false;
 
@@ -41,6 +40,9 @@ trait CancelRequest
 
         }, 3);
 
+        //Send mail to recipient
+        $this->sendCancellationMail($request, $serviceRequest);
+
         return $cancelRequest;
     }
 
@@ -51,8 +53,12 @@ trait CancelRequest
         //If request is still pending and payment was successful, credit client's wallet with booking fee.
         if(($serviceRequest['status']['name'] == 'Pending') && ($serviceRequest['payment']['status'] == 'success')){
 
-            //Credit client wallet account with booking fee.
-            $this->creditClientWalletOnPendingRequest($request, $serviceRequest, $actionUrl);
+            //Check if this request has been refunded already.
+            if(!WalletTransaction::where('payment_id', $serviceRequest['payment']['id'])->exists()){
+                //Credit client wallet account with booking fee.
+                $this->creditClientWalletOnPendingRequest($request, $serviceRequest, $actionUrl);
+            }
+            
         }else{
 
             if($request->user()->type->role->slug == 'client-user'){
@@ -69,6 +75,7 @@ trait CancelRequest
                 $this->log('Request', 'Informational', $actionUrl, $request->user()->email.' cancelled '.$serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' '.$serviceRequest['unique_id'].' service request.');
             }
         }
+
     }
 
     protected function creditClientWalletOnPendingRequest($request, $serviceRequest, $actionUrl){
@@ -87,7 +94,7 @@ trait CancelRequest
             $creditWallet['opening_balance'] = 0;
             $creditWallet['closing_balance'] = (float)$serviceRequest['price']['amount'];
         }else{
-            $previousWallet = WalletTransaction::where('user_id', $serviceRequest->client_id)->last();
+            $previousWallet = WalletTransaction::where('user_id', $serviceRequest->client_id)->latest('created_at')->first();
             $creditWallet['opening_balance'] = (float)$previousWallet->closing_balance;
             $creditWallet['closing_balance'] = (float)$previousWallet->closing_balance + (float)$serviceRequest['price']['amount'];
         }
@@ -111,5 +118,39 @@ trait CancelRequest
             }
         }
         
+    }
+
+    protected function sendCancellationMail($request, $serviceRequest){
+
+        //Mail object instance
+        $sendMail = new \App\Http\Controllers\Messaging\MessageController();
+
+        //Client mail data
+        $clientMessageBody = collect([
+            'firstname' => $serviceRequest['client']['account']['first_name'],
+            'lastname'  => $serviceRequest['client']['account']['last_name'],
+            'job_ref'   => $serviceRequest['unique_id'], 
+            'reason'    => $request->reason, 
+        ]);
+
+        //Admin mail data
+        $adminMessageBody = collect([
+            'client_name' => $serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'],
+            'job_ref'   => $serviceRequest['unique_id'], 
+            'reason'    => $request->reason, 
+        ]);
+
+        if($request->user()->type->role->slug == 'client-user'){
+
+            //Send mail to client
+            $sendMail->sendNewMessage('', 'info@fixmaster.com.ng', $serviceRequest['client']['email'], $clientMessageBody, 'CUSTOMER_JOB_CANCELLATION_NOTIFICATION');
+
+            //Send mail to Admin
+            $sendMail->sendNewMessage('', 'info@fixmaster.com.ng', 'info@fixmaster.com.ng', $adminMessageBody, 'ADMIN_JOB_CANCELLATION_NOTIFICATION');
+
+        }else{
+             //Send mail to client
+            $sendMail->sendNewMessage('', 'info@fixmaster.com.ng', $serviceRequest['client']['email'], $clientMessageBody, 'CUSTOMER_JOB_CANCELLATION_NOTIFICATION');
+        }
     }
 }

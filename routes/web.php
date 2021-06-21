@@ -22,14 +22,17 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
+//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
+use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
+
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
@@ -59,14 +62,14 @@ use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchControll
 >>>>>>> 770e8daaa68323bcc2d09e969bfe5be4d3e11310
 use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
-use App\Http\Controllers\Admin\Prospective\CSEController as ProspectiveCSEController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
 //use App\Http\Controllers\CSE\CseWarrantyClaimController;
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
-
+use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
+use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -290,7 +293,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
-    Route::get('/requests/completed-request/{request:id}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('completed_request');
+    Route::resource('requests-ongoing', AdminOngoingRequestController::class);
+    Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes
     Route::get('/reports/client-service-executive',      [CustomerServiceExecutiveReportController::class, 'index'])->name('cse_reports');
@@ -371,7 +375,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     // Service request SECTION
     Route::get('/services',                     [ClientController::class, 'services'])->name('services.list');
-    Route::get('services/quote/{service}',      [ClientController::class, 'serviceQuote'])->name('services.quote');
+    Route::get('services/quote/{service:uuid}',      [ClientRequestController::class, 'show'])->name('services.quote')->whereUuid('service');
     Route::get('services/details/{service}',    [ClientController::class, 'serviceDetails'])->name('services.details');
     Route::post('services/search',              [ClientController::class, 'search'])->name('services.search');
     Route::get('services/custom/',              [ClientController::class, 'customService'])->name('services.custom');
@@ -403,7 +407,11 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('get-sub-service-list', [CseController::class, 'getSubServices'])->name('needed.sub_service');
 
     //Client messaging routes
-    Route::resource('messages', ClientMessageController::class);
+    Route::resource('messages',         ClientMessageController::class);
+
+    //Client service request routes
+    Route::resource('service-request',  ClientRequestController::class);
+    Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
 
 });
 

@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 
 class Message extends Model
 {
-    use HasFactory;
-     protected $fillable = [
+    protected $fillable = [
         'title',
         'recipient',
         'content',
@@ -19,8 +17,14 @@ class Message extends Model
         'uuid',
     ];
 
-   protected $softDelete = true;
+    protected $softDelete = true;
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['recipient','sender'];
 
     protected static function boot()
     {
@@ -38,5 +42,21 @@ class Message extends Model
     public function getKeyType()
     {
         return 'string';
+    }
+
+    /**
+     * Get the sender associated to the message
+     */
+    public function sender()
+    {
+        return $this->hasOne(User::class, 'id', 'sender');
+    }
+
+    /**
+     * Get the recipient associated to the message
+     */
+    public function recipient()
+    {
+        return $this->hasOne(User::class, 'id', 'recipient');
     }
 }

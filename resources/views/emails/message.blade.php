@@ -110,7 +110,7 @@
                                              <p style="text-align:right;margin-top: 5px; font-size: 13px; color: #8492a6">(+234) 0813-286-3878</p>
                                              <p style="text-align:right; margin-top: -5px; font-size: 13px;color: #8492a6">info@fixmaster.com.ng</p>
                                              <p style="text-align:right; margin-top: -5px; font-size: 13px; color: #8492a6">www.fixmaster.com.ng</p>
-                                             <p style="text-align:right; margin-top: -5px; font-size: 13px;color: #8492a6">FixMaster ,Ajose Adeogun, Lagos, Nigeria</p>
+                                             <p style="text-align:right; margin-top: -5px; font-size: 13px;color: #8492a6">284 Ajose Adeogun Street, Victoria Island, Lagos, Nigeria</p>
 
                                 </div>
                

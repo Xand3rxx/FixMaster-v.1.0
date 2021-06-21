@@ -46,9 +46,16 @@ class SchedulingDate
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notification' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-            ],
+            // 'notification' => [
+            //     'feature' => 'CSE_ASSIGNED_TECHNICIAN_TO_A_JOB',
+            //     'params'    => [
+            //         'recipient_email' => $user->email
+            //         'lastname' => $user['account']['last_name'],
+            //         'firstname' => $user['account']['first_name'],
+            //         'email' => $user['email'],
+            //         'job_ref' =>  $service_request->unique_id
+            //     ]
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',

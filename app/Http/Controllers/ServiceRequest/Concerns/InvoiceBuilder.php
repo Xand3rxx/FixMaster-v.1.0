@@ -80,12 +80,17 @@ class InvoiceBuilder
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notification' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-                'data'  => [
-                    // 'lastname' => $account['last_name'],
-                ]
-            ],
+            // 'notification' => [
+            //     'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+            //     'params'  => [
+            //         // customer_name
+            //         // cse_name
+            //         // date
+            //         // technician_name
+            //         // technician_id
+            //         // 'email' => customer_email
+            //     ]
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',
@@ -165,16 +170,16 @@ class InvoiceBuilder
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notifications' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-                'data'  => [
-                    'supplier_business_name',
-                    'url',
-                    'user_first_name',
-                    'user_last_name',
-                    // 'lastname' => $account['last_name'],
-                ]
-            ],
+            // 'notifications' => [
+            //     'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+            //     'data'  => [
+            //         'supplier_business_name',
+            //         'url',
+            //         'user_first_name',
+            //         'user_last_name',
+            //         // 'lastname' => $account['last_name'],
+            //     ]
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',

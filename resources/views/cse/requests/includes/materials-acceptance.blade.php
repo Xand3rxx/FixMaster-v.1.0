@@ -11,7 +11,12 @@
             <tbody>
                 <tr>
                     <td class="tx-medium">Supplier Name</td>
-                    <td class="tx-color-03">{{ !empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']) ? Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) : 'UNAVAILABLE' }} <small class="text-muted">(Business Name: {{ $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] }})</small></td>
+                    @if (!empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']))
+                    <td class="tx-color-03">{{  Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) }} <small class="text-muted">(Business Name: {{ collect($materials_accepted['rfqSupplier'])->isNotEmpty() ? $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] : 'UNAVAILABLE'}})</small></td>
+                    @else
+                    <td class="tx-color-03"> UNAVAILABLE <small class="text-muted">(Business Name: UNAVAILABLE)</small></td>
+                    @endif
+                    
                 </tr>
                 <tr>
                     <td class="tx-medium">Delivery Status</td>
