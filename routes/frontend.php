@@ -91,6 +91,18 @@ Route::get("/editCriteria",   [App\Http\Controllers\EssentialsController::class,
 // Route::get('/rfq/details/{id}',                     [App\Http\Controllers\RFQController::class, 'rfqDetails'])->name('rfq_details');
 
 
+Route::prefix('payment')->name('payment.')->group(function () {
+    Route::prefix('verification')->name('verify.')->group(function () {
+        Route::get('paystack', function () {
+           return  \App\PaymentProcessor\Facades\PaystackPayment::isTransactionVerificationValid();
+        })->name('paystack');
+        Route::get('flutterwave', function () {
+            return  \App\PaymentProcessor\Facades\FlutterwavePayment::isTransactionVerificationValid();
+         })->name('flutterwave');
+    });
+});
+
+
 //Paystack Routes
 Route::post('/payment/paystack/submit',                [App\Http\Controllers\Payment\PaystackController::class, 'store'])->name('paystack-submit');
 Route::get('/payment/paystack/{paymentId}/initiate',   [App\Http\Controllers\Payment\PaystackController::class, 'initiate'])->name('paystack-start');

@@ -205,7 +205,7 @@ class MessageController extends Controller
      * @param array $parameters 
      * @param string $template_name
      * 
-     * @return \App\Models\Message
+     * @return array
      */
     public static function multiple(array $parameters, string $template_name)
     {
@@ -219,9 +219,9 @@ class MessageController extends Controller
         $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
         $recipient = DB::table('users')->where('users.email', $parameters['recipient_email'])->first();
         $sender = DB::table('users')->where('users.email', 'dev@fix-master.com')->first();
-
-        return Message::create([
-            'title' => $$messageTemplate->title,
+       
+        Message::create([
+            'title' => $messageTemplate->title,
             'content' => $message_body,
             'recipient' => $recipient->id,
             'sender' => $sender->id ?? 1,
@@ -230,6 +230,7 @@ class MessageController extends Controller
             'updated_at'        => Carbon::now(),
             'mail_status' => 'Not Sent',
         ]);
+        return ['to' => $parameters['recipient_email'], 'from' => 'dev@fix-master.com', 'subject' => $messageTemplate->title, 'content' => $message_body];;
     }
 
     /**
