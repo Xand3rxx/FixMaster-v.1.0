@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
-use Auth;
 use File;
 use Image;
 use Session;
 use Carbon\Carbon;
 use App\Models\Cse;
 use App\Models\Lga;
+use App\Models\Rfq;
 use App\Models\Town;
 use App\Models\User;
 use App\Models\Media;
@@ -36,17 +36,20 @@ use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
+use App\Models\RfqSupplierInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Models\ServiceRequestMedia;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\Route;
+
+use App\Models\ServiceRequestAssigned;
+
 use App\Models\ServiceRequestProgress;
 use App\Models\ServiceRequestWarranty;
-
 use Illuminate\Support\Facades\Config;
-
 use App\Models\ClientLoyaltyWithdrawal;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
@@ -338,7 +341,7 @@ class ClientController extends Controller
             $validatedData = $request->validate([
                 'first_name'        =>   'bail|required|string',
                 'last_name'         =>   'bail|required|string',
-                'phone_number'      =>   'bail|required',
+                'phone_number'      =>   'bail|required||unique:contacts,phone_number',
                 'state_id'          =>   'bail|required|integer',
                 'lga_id'            =>   'bail|required|integer',
                 'town_id'           =>   'sometimes|integer',
@@ -358,27 +361,28 @@ class ClientController extends Controller
                 Contact::create([
                     'user_id'           =>   $request->user()->id,    
                     'account_id'        =>   $request->user()->account->id,    
-                    'name'              =>   $validatedData['first_name'] . ' ' . $validatedData['last_name'],
+                    'name'              =>   ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
                     'phone_number'      =>   $validatedData['phone_number'],
                     'country_id'        =>   156,
                     'state_id'          =>   $validatedData['state_id'],
                     'lga_id'            =>   $validatedData['lga_id'],
                     'town_id'           =>   $validatedData['town_id'],
                     'address'           =>   $validatedData['address'],
-                    'user_latitude'     =>   $validatedData['user_latitude'],
-                    'user_longitude'    =>   $validatedData['user_longitude'],
+                    'address_latitude'     =>   $validatedData['user_latitude'],
+                    'address_longitude'    =>   $validatedData['user_longitude'],
                 ]);
                 $createContact  = true;
 
             });
 
             if($createContact){
-                
-                $this->log('Profile', 'Informarional', $actionUrl, $request->user()->account->first_name.' '.$request->user()->account->last_name.' successfully created a new contact address');
+
+                $this->log('Profile', 'Informational', $actionUrl, $request->user()->account->first_name.' '.$request->user()->account->last_name.' successfully created a new contact address');
 
                 return view('client.services._contactList', [
                     'myContacts'    => $request->user()->contacts,
                 ]);
+
             }else{
 
                 $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.$request->user()->account->first_name.' '.$request->user()->account->last_name.' was trying to create a new contact address');
@@ -460,14 +464,17 @@ class ClientController extends Controller
      */
     public function customService()
     {
-        $data['bookingFees']  = $this->bookingFees();
-        $data['myContacts'] = Contact::where('user_id', auth()->user()->id)->latest('created_at')->get();
-        $data['discounts']    = $this->clientDiscounts();
-        $data['gateways']     = PaymentGateway::whereStatus(1)->orderBy('id', 'DESC')->get();
-        $data['states'] = State::select('id', 'name')->orderBy('name', 'ASC')->get();
-        $data['balance']      = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->first();
+        $user = Auth::user()->loadMissing('contacts', 'account');
 
-        return view('client.services.service_custom', $data);
+        return view('client.services.service_custom', [
+            'discounts'             => \App\Models\ClientDiscount::ClientServiceRequestsDiscounts()->get(),
+            'bookingFees'           => \App\Models\Price::bookingFees()->get(),
+            'states'                => \App\Models\State::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'gateways'              => PaymentGateway::where('status', PaymentGateway::STATUS['active'])->orderBy('id', 'DESC')->get(),
+            'displayDescription'    => 'blank',
+            'myContacts'            => $user['contacts'],
+            'registeredAccount'     => $user['account']
+        ]);
     }
 
 

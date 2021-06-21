@@ -38,7 +38,8 @@
 
                 //Get formatted place from user address selection
                 $('.user_address').val(place.formatted_address);
-                
+                $('body').find('#address').val(place.formatted_address);
+
                 //If hidden input field for geocodes already exist, update gelocatoin coordinates
                 if($('#user_latitude').length > 0 && $('#user_longitude').length > 0){
                     $('#user_latitude').val(value.geometry.location.lat);

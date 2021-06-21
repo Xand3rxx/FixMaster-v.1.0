@@ -215,7 +215,7 @@ $(document).ready(function () {
         errorElement: "div",
         submitHandler: function () {
 
-            $('#insert').prop('disabled', true);
+            // $('#insert').prop('disabled', true);
             // form.submit();
             return createNewClientContact();
         }
@@ -225,51 +225,51 @@ $(document).ready(function () {
 
 function createNewClientContact(){
 
-    $('#insert_form').on("submit", function(event){  
-        event.preventDefault();  
-        let route = $(".ajax-contact-form").val();
-		// formData = $(this).serialize();
+    let route = $(".ajax-contact-form").val();
+    // formData = $(this).serialize();
 
-        formData = {
-            first_name        : $('#first_name').val(),
-            last_name         : $('#last_name').val(),
-            phone_number      : $('#phone_number').val(),
-            state_id          : $('#state_id').val(),
-            lga_id            : $('#lga_id').val(),
-            town_id           : $('#town_id').val(),
-            address           : $('#address').val(),
-            user_latitude     : $('#user_latitude').val(),
-            user_longitude    : $('#user_longitude').val()
-        };
-        // Appending CSRF token to formData
-		// formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
-        $.ajaxSetup({
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+    formData = {
+        first_name        : $('#first_name').val(),
+        last_name         : $('#last_name').val(),
+        phone_number      : $('#phone_number').val(),
+        state_id          : $('#state_id').val(),
+        lga_id            : $('#lga_id').val(),
+        town_id           : $('#town_id').val(),
+        address           : $('#address').val(),
+        user_latitude     : $('#user_latitude').val(),
+        user_longitude    : $('#user_longitude').val()
+    };
 
-        $.ajax({  
-            url: route,  
-			type: "POST",
-            dataType: "json",
-            data: formData,  
-            beforeSend:function(){  
-                $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
-            },  
-            success:function(data){ 
+    // Appending CSRF token to formData
+    // formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
+    $.ajaxSetup({
+        headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({  
+        url: route,  
+        type: "POST",
+        data: formData,  
+        beforeSend:function(){  
+            $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
+        },  
+        success:function(data){ 
+
+            if($.trim(data).length > 0){
                 $('#insert_form')[0].reset(); 
                 $('#add_data_Modal').modal('hide');
                 $('#contacts_table').html(data);
-                var message = $("#first-name").val()+' '+$("#last-name").val()+' contact has been saved.';
-                displayMessage(message, success);
-            },
-            error: function(jqXHR, testStatus, error) {
-                
-                displayMessage('An error occured while trying to save the new contact information.', 'error');
-            },
-            timeout: 3000  
-        }); 
+
+                displayMessage(formData["first_name"]+' '+formData["last_name"]+'\'s contact has been saved successsfully.', 'success');
+            }
+        },
+        error: function(jqXHR, testStatus, error) {
+            
+            displayMessage('An error occured while trying to save the new contact information.', 'error');
+        },
+        timeout: 3000  
     }); 
 }
 

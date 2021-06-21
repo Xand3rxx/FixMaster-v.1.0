@@ -88,7 +88,7 @@
                         <div class="col-12">
                             <div class="form-group position-relative">
                                 <label>Full Address <span class="text-danger">* <span style="font-size: 10px;">Use auto complete feature after typing to select your address</span></span></label>
-                                <input type="text" id="address" class="form-control user_address" placeholder="Full address of contact" name="address" autocomplete="off">
+                                <input type="text" id="address" class="form-control user_address" placeholder="Full address of contact" value="" name="address" >
                             </div>
                         </div>
                         <!--end col-->
