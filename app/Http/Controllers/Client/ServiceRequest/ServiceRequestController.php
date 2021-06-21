@@ -105,7 +105,7 @@ class ServiceRequestController extends Controller
                 }
             }
             // Use created service request to trigger notification
-            \App\Jobs\Servicerequest\NotifyCse::dispatch($service_request);
+            \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
         }
     }

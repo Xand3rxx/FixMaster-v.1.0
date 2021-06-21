@@ -405,6 +405,9 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     //Client messaging routes
     Route::resource('messages',         ClientMessageController::class);
 
+    Route::post('invoicePayment', [InvoiceController::class, 'invoicePayment'])->name('invoice_payment');
+    Route::get('initialize-invoice-request/{payment:reference_id}', [InvoiceController::class, 'init'])->name('invoice_payment.init');
+
     //Client service request routes
     Route::resource('service-request',  ClientRequestController::class);
     Route::get('initialize-service-request/{payment:reference_id}', [ClientRequestController::class, 'init'])->name('service_request.init');

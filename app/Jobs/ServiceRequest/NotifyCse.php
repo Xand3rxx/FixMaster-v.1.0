@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Servicerequest;
+namespace App\Jobs\ServiceRequest;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
