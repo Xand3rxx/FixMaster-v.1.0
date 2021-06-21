@@ -30,7 +30,7 @@ class PaystackPayment
 
 
     /**
-     * Handle Job Acceptance from a Service Request Assignee
+     * Handle Paystack Request
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class PaystackPayment
 
     /**
      * True or false condition whether the transaction is verified
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponsew
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function isTransactionVerificationValid()
     {

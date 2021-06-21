@@ -30,7 +30,7 @@ class FlutterwavePayment
 
 
     /**
-     * Handle Job Acceptance from a Service Request Assignee
+     * Handle Flutterwave Request
      *
      * @return void
      */
