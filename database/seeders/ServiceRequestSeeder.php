@@ -48,6 +48,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => NULL,
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            => '2020-12-14 13:39:55',
             ),
             array(
@@ -70,6 +71,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => \Carbon\Carbon::now('UTC'),
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            => '2020-12-15 10:51:29',
             ),
             array(
@@ -92,6 +94,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => \Carbon\Carbon::now('UTC'),
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            =>  '2021-01-05 15:04:48',
             ),
             array(
@@ -114,6 +117,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => \Carbon\Carbon::now('UTC'),
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            =>  '2021-01-14 15:53:45',
             ),
             array(
@@ -136,12 +140,13 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => \Carbon\Carbon::now('UTC'),
                 'has_client_rated'      => 'Yes',
                 'has_cse_rated'         => 'Yes',
+                'date_completed'        => '2020-01-07 13:12:43',
                 'created_at'            =>  '2020-01-05 18:53:37',
             ),
             array(
                 'uuid'                  => Str::uuid('uuid'),      
                 'client_id'             => 7, 
-                'service_id'            => 3, 
+                'service_id'            => NULL, 
                 'unique_id'             => 'REF-1FC50FCC', 
                 // 'state_id'              => 24, 
                 // 'lga_id'                => 515, 
@@ -158,6 +163,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        =>  '2021-01-06 18:19:11',
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            =>  '2021-01-05 15:53:37',
             ),
             array(
@@ -180,6 +186,7 @@ class ServiceRequestSeeder extends Seeder
                 'preferred_time'        => '2021-01-08 17:05:43',
                 'has_client_rated'      => 'No',
                 'has_cse_rated'         => 'No',
+                'date_completed'        =>  NULL,
                 'created_at'            =>  '2021-01-05 16:54:18',
             ),
 

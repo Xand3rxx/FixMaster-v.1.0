@@ -5,14 +5,7 @@ namespace App\PaymentProcessor\Concerns;
 use App\Models\Payment;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD:app/Http/Controllers/Client/ServiceRequest/Concerns/PaymentHandler.php
 use App\PaymentProcessor\Facades\FlutterwavePayment;
-use App\PaymentProcessor\Traits\CreatePayment;
-=======
-
->>>>>>> 78e5c10e6b53e86356a5b6993efab0aa0bad9e05:app/PaymentProcessor/Concerns/PaymentHandler.php
-
-
 class PaymentHandler extends Controller
 {
 

@@ -196,7 +196,13 @@ $(document).ready(function () {
                 required: 'Phone number is mandatory',
             },
             address: {
-                required: "Residential address is mandatory",
+                required: "Use the Google address autocomplete to select your Residential address is mandatory",
+            },
+            user_latitude: {
+                required: 'Kindly use the Google address autocomplete',
+            },
+            user_longitude: {
+                required: 'Kindly use the Google address autocomplete',
             },
             state_id: {
                 required: 'You must select a State',
@@ -207,35 +213,32 @@ $(document).ready(function () {
         },
         errorClass: "invalid-response",
         errorElement: "div",
-        submitHandler: function (form) {
+        submitHandler: function () {
             $('#insert').prop('disabled', true);
             // form.submit();
-            createNewClientContact();
+            return createNewClientContact();
         }
     });
 });
 
 
 function createNewClientContact(){
+
     // $('#insert_form').on("submit", function(event){  
-        // event.preventDefault();  
+    //     event.preventDefault();  
         let route = $(".ajax-contact-form").val();
+		formData = new FormData($('#insert_form')[0]);
+
+        // Appending CSRF token to formData
+		// formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
 
         $.ajax({  
             url: route,  
-            method: "POST",  
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                firstName: $("#first-name").val(),
-                lastName: $("#last-name").val(),
-                phoneNumber: $("#phone_number").val(),
-                state: $("#state_id").val(),
-                lga: $("#lga_id").val(),
-                town: $("#town_id").val(),
-                streetAddress: $("#street-address").val(), 
-                addressLat: $("#user_latitude").val(),
-                addressLng: $("#user_longitude").val(),
-            },  
+			type: "POST",
+            processData: false,
+			contentType: false,
+			cache: false,
+            data: {"_token": $('meta[name="csrf-token"]').attr('content'), "formData":formData},  
             beforeSend:function(){  
                 $("#contacts_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');  
             },  
@@ -251,8 +254,8 @@ function createNewClientContact(){
                 displayMessage('An error occured while trying to save the new contact information.', 'error');
             },
             timeout: 3000  
-        // }); 
-    }); 
+        }); 
+    // }); 
 }
 
 function displayPaymentGateways(val) {
