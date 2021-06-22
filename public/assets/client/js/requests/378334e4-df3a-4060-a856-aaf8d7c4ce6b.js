@@ -130,10 +130,10 @@ $(document).ready(function () {
 
     $('body').on('click', '#add-more-file', function () {
         count++;
-        $('.attachments').append('<div class="form-group position-relative custom-file remove-file">'+
+        $('.attachments').append('<div class="form-group position-relative custom-file mt-3 remove-file">'+
             '<input type="file" name="media_file[]" accept="image/*,.txt,.doc,.docx,.pdf" class="form-control-file btn btn-primary btn-sm" onchange="ValidateSize(this);" id="custom_file_'+count+'"  />'+
             '<small style="font-size: 10px;" class="text-muted">File must not be more than 2MB</small>'+
-        '<div class="form-group position-relative"><a class="btn btn-danger btn-sm remove-media-file"><i data-feather="minus" class="fea icon-sm"></i></a></div></div>')
+        '<div class="form-group position-relative"><a class="btn btn-danger btn-sm remove-media-file" style="font-size: 14px; font-weight: bold;">-</a></div></div>')
     });
 
     //Remove sub service row
