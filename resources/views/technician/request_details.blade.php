@@ -303,7 +303,6 @@
                             <div class="row row-xs">
                               <div class="col-6 col-sm-6 col-md-6 col-xl mg-t-10 mg-sm-t-0">
                                 <div class="card card-file">
-                                  {{-- {{ dd(pathInfo($requestDetail->serviceRequestDetail->media_file, PATHINFO_EXTENSION)) }} --}}
                                   
                                   {{-- Media file design will come in here afterwrds --}}
                                   <div class="placeholder-media wd-100p wd-sm-55p wd-md-45p">

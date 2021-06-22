@@ -125,7 +125,7 @@
     <!-- Main Js -->
     <script src="{{asset('assets/frontend/js/app.js')}}"></script>
     <!-- scroll -->
-    <script src="{{ asset('assets/frontend/js/scroll.js')}}"></script>
+    {{-- <script src="{{ asset('assets/frontend/js/scroll.js')}}"></script> --}}
     <script src="{{ asset('assets/frontend/js/typed/lib/typed.js')}}"></script>
     <script src="{{ asset('assets/client/datatables/dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/client/datatables/dataTables.bootstrap.min.js') }}"></script>

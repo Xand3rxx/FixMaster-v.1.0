@@ -97,7 +97,6 @@
                     @endif
                 </tbody>
             </table>
-            {{-- {{ dd($serviceRequest['serviceRequestMedias']) }} --}}
             <div class="divider-text">Media Files</div>
             @if (count($serviceRequest['serviceRequestMedias']) > 0)
             <div class="row row-xs">

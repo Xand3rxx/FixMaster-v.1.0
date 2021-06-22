@@ -2,7 +2,6 @@
     @if(!empty($materials_accepted))
     <div class="divider-text"> Request For Quote</div>
 
-    {{-- {{ dd($materials_accepted['rfqSupplier']) }} --}}
     <div class="table-responsive mt-4">
         <h5>Basic Details</h5>
 
