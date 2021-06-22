@@ -45,7 +45,7 @@
                             </div><!--end col-->
 
                             <div class="col-6 mt-4 pt-2">
-                            <a href="{{ route('client.services.list', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote') ? 'active' : '' }}">
+                            <a href="{{ route('client.services.list', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}">
                                     <span class="pro-icons h3 text-muted"><i class="uil uil-calendar-alt"></i></span>
                                     <h6 class="title text-dark h6 my-0">Book a Service</h6>
                                 </a>

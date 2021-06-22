@@ -131,7 +131,7 @@
                     <ul class="submenu">
                         <li class="{{ Route::currentRouteNamed('client.index', app()->getLocale()) ? 'active' : '' }}"><a href="{{ route('client.index') }}">Dashboard</a></li>
 
-                        <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.list', 'client.services.details', 'client.services.quote') ? 'active' : '' }}"><a href="{{ route('client.services.list') }}">Book a Service</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}"><a href="{{ route('client.services.list') }}">Book a Service</a></li>
 
                         <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">E-Wallet</a></li>
 
