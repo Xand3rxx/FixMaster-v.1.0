@@ -107,6 +107,7 @@ class ServiceRequestController extends Controller
             \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
         }
+        return back()->with('error', 'Payment for Service Failed!!');
     }
 
     /**
@@ -190,14 +191,14 @@ class ServiceRequestController extends Controller
             //Check if town ID exists on `serviced_areas` table
             $isServiced = \App\Models\ServicedAreas::where('town_id', $filter['town_id'])->exists();
 
-            $walletBalance = \App\Models\WalletTransaction::where('user_id', $request->user()->id)->orderBy('id', 'DESC')->first()->closing_balance;
+            $walletBalance = \App\Models\WalletTransaction::where('user_id', $request->user()->id)->orderBy('id', 'DESC')->first();
             //Return to partial view with response
             return view(
                 'client.services.includes._service_quote_description_body',
                 [
                     'displayDescription'    => !empty($isServiced) ? 'serviced' : 'not-serviced',
                     'discounts'             => $this->clientDiscounts(),
-                    'canPayWithWallet'      => !empty($walletBalance >= $filter['booking_fee']) ? 'can-pay' : 'cannot-pay',
+                    'canPayWithWallet'      => $walletBalance['closing_balance'] ?? 0 >= $filter['booking_fee'] ? 'can-pay' : 'cannot-pay',
                 ]
             );
         }

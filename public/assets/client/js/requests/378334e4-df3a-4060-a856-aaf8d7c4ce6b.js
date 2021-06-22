@@ -42,6 +42,7 @@ $(document).ready(function () {
                 "state_id": stateId, "lga_id": lgaId
             },
             success: function(data) {
+                console.log(data);
                 if (data) {
                     $('#town_id').html(data.towns_list);
                 } else {

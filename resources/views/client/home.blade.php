@@ -2,7 +2,6 @@
 @section('title', 'Home')
 @section('content')
 @include('layouts.partials._messages')
-{{-- {{ dd($user->state) }} --}}
 
 <div class="col-lg-8 col-12">
     <div class="border-bottom pb-4 row">
@@ -130,12 +129,8 @@
                                 </p>
                                 @endif 
                             
-                                {{-- {{dd($userServiceRequest['service_request_assignees']->count())}} --}}
                                 <p class="mb-0"><a href="{{ route('client.request_details', [ 'request'=>$userServiceRequest['uuid'], 'locale'=>app()->getLocale() ]) }}" style="color: #161c2d" title="View Service request details">CSE: <span class="text-muted">
 
-                                    
-
-                                    {{-- {{dd()}} --}}
                                     @if($userServiceRequest['service_request_assignees']->count() > 0)
                                         @foreach ($userServiceRequest['service_request_assignees'] as $item)
                                             @if(($item['user']['roles'][0]['slug'] == 'cse-user') && ($item['status'] == 'Active'))

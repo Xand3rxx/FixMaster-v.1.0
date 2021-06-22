@@ -1,5 +1,4 @@
 <h5>JOB: {{ $rfqDetails->rfq->serviceRequest->unique_id }} <br>RFQ: {{ $rfqDetails->rfq->unique_id }}</h5>
-{{-- {{dd($supplierInvoice->supplierInvoiceBatches->count())}} --}}
 <div class="table-responsive mt-4">
   <table class="table table-striped table-sm mg-b-0">
     <tbody>

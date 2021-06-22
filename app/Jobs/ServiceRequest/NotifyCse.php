@@ -14,7 +14,7 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 use App\Http\Controllers\Messaging\MessageController;
 use App\Models\ServiceRequest;
 
-class NotifyCse implements ShouldQueue
+class NotifyCse implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -54,7 +54,6 @@ class NotifyCse implements ShouldQueue
         })->loadMissing(['account', 'cse']);
         // Loop through all cess and send each of them email
         foreach ($users as $key => $cse) {
-            return $cse;
             $params = [
                 'recipient_email' => $cse->email,
                 'lastname' => $cse['account']['first_name'],
@@ -84,7 +83,6 @@ class NotifyCse implements ShouldQueue
         return URL::signedRoute(
             'cse.index',
             [
-                'id' => auth()->user()->uuid,
                 'hash' => sha1($service_request->uuid),
                 'locale' => app()->getLocale()
             ]

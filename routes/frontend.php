@@ -70,7 +70,6 @@ Route::post('/contact-us',                  [App\Http\Controllers\PageController
 
 Route::get('/mail',                  [App\Http\Controllers\PageController::class, 'mail'])->name('frontend.mail');
 
-
 // //Essential Routes
 Route::post('towns-list',                    [App\Http\Controllers\EssentialsController::class, 'getTowns'])->name('towns.show');
 Route::post('/lga-list',                    [App\Http\Controllers\EssentialsController::class, 'lgasList'])->name('lga_list');
@@ -79,17 +78,6 @@ Route::get("/getServiceDetails",            [App\Http\Controllers\EssentialsCont
 Route::post('/avalaible-tool-quantity',     [App\Http\Controllers\EssentialsController::class, 'getAvailableToolQuantity'])->name('available_quantity');
 Route::get("/getServiceDetails",            [App\Http\Controllers\EssentialsController::class, 'editCriteria'])->name("getServiceDetails");
 Route::get("/editCriteria",   [App\Http\Controllers\EssentialsController::class, 'Edit'])->name("editServiceRequestCriteria");
-// Route::post('/avalaible-tool-quantity',     [App\Http\Controllers\EssentialsController::class, 'getAvailableToolQuantity'])->name('available_quantity');
-// Route::get('/administrators-list',          [App\Http\Controllers\EssentialsController::class, 'getAdministratorsList'])->name('administrators_list');
-// Route::get('/clients-list',                 [App\Http\Controllers\EssentialsController::class, 'getClientsList'])->name('clients_list');
-// Route::get('/technicians-list',             [App\Http\Controllers\EssentialsController::class, 'getTechniciansList'])->name('technicians_list');
-// Route::get('/cses-list',                    [App\Http\Controllers\EssentialsController::class, 'getCsesList'])->name('cses_list');
-// Route::get('/ongoing-service-requests',     [App\Http\Controllers\EssentialsController::class, 'getOngoingServiceRequests'])->name('ongoing_service_request_list');
-// Route::get('/ongoing-service-request/{id}', [App\Http\Controllers\EssentialsController::class, 'getOngoingServiceRequestDetail'])->name('ongoing_service_request_detail');
-
-// Route::get('/tools-request/details/{id}',           [App\Http\Controllers\ToolsRequestController::class, 'toolRequestDetails'])->name('tool_request_details');
-// Route::get('/rfq/details/{id}',                     [App\Http\Controllers\RFQController::class, 'rfqDetails'])->name('rfq_details');
-
 
 Route::prefix('payment')->name('payment.')->group(function () {
     Route::prefix('verification')->name('verify.')->group(function () {
@@ -101,7 +89,6 @@ Route::prefix('payment')->name('payment.')->group(function () {
          })->name('flutterwave');
     });
 });
-
 
 //Paystack Routes
 Route::post('/payment/paystack/submit',                [App\Http\Controllers\Payment\PaystackController::class, 'store'])->name('paystack-submit');
@@ -120,7 +107,6 @@ Route::post('/payment/ewallet/submit',                [App\Http\Controllers\Paym
 //All frontend routes for Services
 Route::prefix('/services')->name('services.')->group(function () {
     Route::get('/',                     [PageController::class, 'services'])->name('list');
-    // Route::view('/details',             'frontend.services.show')->name('details');
     Route::get('/details/{service}',    [PageController::class, 'serviceDetails'])->name('details');
     Route::post('/search',              [PageController::class, 'search'])->name('search');
 });
