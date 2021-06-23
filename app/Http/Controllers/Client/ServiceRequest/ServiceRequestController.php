@@ -85,7 +85,7 @@ class ServiceRequestController extends Controller
                 'unique_id' => $payment['unique_id'],
                 'service_id' => $service['id'] ?? NULL,
                 'client_id' => request()->user()->id,
-                'client_discount_id' => $payment['meta_data']['client_discount_id'] ?? 1,  //To be Confirmed from Rade and Joyboy
+                'client_discount_id' => $payment['meta_data']['client_discount_id'] ?? NULL,  //To be Confirmed from Rade and Joyboy
                 'preferred_time' => $payment['meta_data']['preferred_time'] ?? NULL,
                 'contactme_status' => $payment['meta_data']['contactme_status'],
                 'contact_id' => $payment['meta_data']['contact_id'],
@@ -102,6 +102,11 @@ class ServiceRequestController extends Controller
                     ]);
                     $service_request->medias()->attach($media);
                 }
+            }
+
+            //Mark discount selected as used
+            if(!empty($payment['meta_data']['client_discount_id'])){
+                \App\Models\ClientDiscount::where('id', $payment['meta_data']['client_discount_id'])->update(['availability' =>  'used']);
             }
             // Use created service request to trigger notification
             \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);

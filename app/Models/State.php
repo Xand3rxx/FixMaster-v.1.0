@@ -15,7 +15,7 @@ class State extends Model
 
     public function lgas()
     {
-        return $this->hasMany(Lga::class, 'state_id');
+        return $this->hasMany(Lga::class, 'state_id')->orderBy('name','ASC');
     }
 
     public function client()

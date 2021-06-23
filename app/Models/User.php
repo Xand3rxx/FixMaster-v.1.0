@@ -264,4 +264,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Client::class);
     }
+
+    public function lastActivityLog()
+    {
+        return $this->hasOne(ActivityLog::class)->latest('created_at');
+    }
+
+    public function clientWalletBalance()
+    {
+        return $this->hasOne(WalletTransaction::class)->latest('created_at');
+    }
+
+    
 }

@@ -142,12 +142,7 @@ class ServiceRequest extends Model
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
 
-    // This is very wrong
-    // public function service_request()
-    // {
-    //     return $this->hasOne(ServiceRequest::class, 'uuid', 'service_request_id');
-    // }
-
+   
     public function address()
     {
         return $this->belongsTo(Contact::class, 'contact_id');
@@ -158,13 +153,6 @@ class ServiceRequest extends Model
         return $this->hasMany(serviceRequestMedia::class)->with('media_files');
     }
 
-    // Wrong, this return just the first assigned person to a request
-    // public function service_request_assignee()
-    // {
-    //     return $this->belongsTo(ServiceRequestAssigned::class, 'id', 'service_request_id');
-    // }
-
-
     public function clientDiscount()
     {
         return $this->belongsTo(ClientDiscount::class, 'client_id');
@@ -174,19 +162,6 @@ class ServiceRequest extends Model
     {
         return $this->hasMany(ClientDiscount::class, 'client_id', 'client_id');
     }
-
-    // Very Wrong
-    // public function payment_status()
-    // {
-    //     return $this->belongsTo(Payment::class, 'id', 'user_id');
-    // }
-
-    // Wrong, this return just the first assigned person to a request
-    // public function cse_service_request()
-    // {
-    //     return $this->belongsTo(ServiceRequestAssigned::class, 'service_request_id')->with('users', 'client');
-    // }
-
 
     public function payment_statuses()
     {

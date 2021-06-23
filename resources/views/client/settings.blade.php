@@ -147,18 +147,16 @@
                               <div class="form-group position-relative">
                                   <label>Residential Address</label>
                                   <i data-feather="map-pin" class="fea icon-sm icons"></i>
-                                  <!-- <input type="text" class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria." name="full_address" id="full_address" value="{{ old('full_address') }}" required> -->
-                                  <!-- <textarea name="full_address" id="full_address" class="form-control pl-5 user_address" placeholder="Residential address :"></textarea> -->
-
-                                  <input type="text" class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" name="full_address" id="full_address" value="{{$client->user->address->address}}" required>
+                                  
+                                  <input type="text" class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" name="full_address" id="full_address" value="{{ old('full_address') ?? $client->user->address->address}}" required>
 
                               </div>
                           </div>
                       </div>
 
                       <!-- hidden fields -->
-                      <input type="hidden" value="{{$client->user->contact->address_latitude}}" id="user_latitude" name="user_latitude"/>
-                      <input type="hidden" value="{{$client->user->contact->address_longitude}}" id="user_longitude" name="user_longitude"/>
+                      <input type="hidden" value="{{ old('user_latitude') ?? $client->user->contact->address_latitude}}" id="user_latitude" name="user_latitude"/>
+                      <input type="hidden" value="{{ old('user_longitude') ?? $client->user->contact->address_longitude}}" id="user_longitude" name="user_longitude"/>
                       <!--end col-->
                      
                       <!--end row-->

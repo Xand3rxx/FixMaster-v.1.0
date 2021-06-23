@@ -118,9 +118,8 @@
         </div>
     </div><!-- payment ends -->
 
-
-    <div class="col-sm-12">
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+    <div class="col-md-12">
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
     </div><!--end col-->
 
     @elseif($displayDescription == 'not-serviced')

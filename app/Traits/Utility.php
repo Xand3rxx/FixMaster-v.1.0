@@ -501,7 +501,7 @@ trait Utility
 
   public function mailAction($data){
       $messanger = new MessageController();
-     return  $jsonResponse = $messanger->sendNewMessage('', 'dev@fix-master.com', $data['email'], $data, $data['template_feature']);
+     return  $jsonResponse = $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $data['email'], $data, $data['template_feature']);
 
 
   }

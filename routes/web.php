@@ -28,7 +28,6 @@ use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
-
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 
@@ -341,8 +340,8 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('/updatePassword',                       [ClientController::class, 'updatePassword'])->name('updatePassword');
 
     // Route::get('/requests',                              [ClientController::class, 'index'])->name('requests');
-    Route::get('/requests/details/{request:id}',         [ClientController::class, 'clientRequestDetails'])->name('request_details');
-    Route::get('/requests/edit/{request:id}',            [ClientController::class, 'editRequest'])->name('edit_request');
+    Route::get('/requests/details/{request:uuid}',         [ClientController::class, 'clientRequestDetails'])->name('request_details');
+    Route::get('/requests/edit/{request:uuid}',            [ClientController::class, 'editRequest'])->name('edit_request');
     Route::get('/requests/cancel/{request:id}',          [ClientController::class, 'cancelRequest'])->name('cancel_request');
     Route::get('/requests/send-messages',                [ClientController::class, 'sendMessages'])->name('send_messages');
     Route::post('/requests/update-request/{request:id}', [ClientController::class, 'updateRequest'])->name('update_request');

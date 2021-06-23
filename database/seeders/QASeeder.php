@@ -16,7 +16,7 @@ class QASeeder extends Seeder
     {
         // QA User
         $qa = new \App\Models\User;
-        $qa->email = 'quality@fix-master.com';
+        $qa->email = 'qa@9thtest.com.ng ';
         $qa->password = bcrypt('admin12345');
         $qa->save();
 
