@@ -32,7 +32,6 @@ class InvoiceController extends Controller
 {
     use RegisterPaymentTransaction, Generator, AddCollaboratorPayment;
 
-    public $public_key;
     private $private_key;
 
     public function __construct() {
