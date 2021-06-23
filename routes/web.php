@@ -28,7 +28,7 @@ use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
-use App\Http\Controllers\Payment\FlutterwaveController;
+
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 
@@ -115,11 +115,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     Route::prefix('prospective')->name('prospective.')->group(function () {
-        Route::resource('cse', ProspectiveCSEController::class);
+        Route::resource('cse', \App\Http\Controllers\Admin\Prospective\CSEController::class);
         Route::resource('supplier', ProspectiveSupplierController::class);
-        Route::resource('technician-artisan', ProspectiveTechnicianArtisanController::class);
+        Route::resource('technician-artisan', \App\Http\Controllers\Admin\Prospective\TechnicianArtisanController::class);
         Route::post('supplier-decision', [ProspectiveSupplierController::class, 'decision'])->name('supplier.decision');
-        Route::post('cse-decision', [ProspectiveCSEController::class, 'decision'])->name('cse.decision');
+        Route::post('cse-decision', [\App\Http\Controllers\Admin\Prospective\CSEController::class, 'decision'])->name('cse.decision');
     });
 
     //Routes for estate management

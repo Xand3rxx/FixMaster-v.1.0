@@ -60,7 +60,7 @@
       //Onclick to view message
       $(document).on('click', '.mail-group-body .media', function(){
         
-        var url = window.location.origin
+        var url = "{{config('app.url')}}";
         
         var mailid = $(this).attr('data-id')
         $.ajax({

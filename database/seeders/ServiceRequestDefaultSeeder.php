@@ -47,7 +47,7 @@ class ServiceRequestDefaultSeeder extends Seeder
         Payment::truncate();
         PaymentDisbursed::truncate();
         WalletTransaction::truncate();
-        Warranty::truncate();
+        // Warranty::truncate();
         DB::table('service_requests')->delete();
 
     }
