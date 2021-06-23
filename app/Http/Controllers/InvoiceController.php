@@ -464,7 +464,7 @@ class InvoiceController extends Controller
                 'invoice_ref' => $invoice['unique_id'],
             ]);
 //            dd($invoice_created['client']['email']);
-            $messenger->sendNewMessage(null, 'dev@fix-master.com', $invoice['client']['email'], $mail_data, $template_feature);
+            $messenger->sendNewMessage(null, 'info@fixmaster.com.ng', $invoice['client']['email'], $mail_data, $template_feature);
 
             $status = true;
 

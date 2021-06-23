@@ -133,7 +133,7 @@
 
                         <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}"><a href="{{ route('client.services.list') }}">Book a Service</a></li>
 
-                        <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">E-Wallet</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.wallet') ? 'active' : '' }}"><a href="{{ route('client.wallet', app()->getLocale()) }}">E-Wallet</a></li>
 
                         <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details') ? 'active' : '' }}"><a href="{{ route('client.requests') }}">Requests</a></li>
 

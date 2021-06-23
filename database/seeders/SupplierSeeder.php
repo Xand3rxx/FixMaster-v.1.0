@@ -16,7 +16,7 @@ class SupplierSeeder extends Seeder
     {
         // supplier User
         $supplier = new \App\Models\User;
-        $supplier->email = 'supplier@fix-master.com';
+        $supplier->email = 'supplier@9thtest.com.ng';
         $supplier->password = bcrypt('admin12345');
         $supplier->save();
 

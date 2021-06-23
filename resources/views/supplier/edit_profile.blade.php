@@ -41,9 +41,7 @@
                                       <div class="user-img">
                                         @php 
                                           if($profile['account']['gender'] == 'male' || $profile['account']['gender'] == 'others'){
-                                              $genderAvatar = 'default-male-avatar.png';
-                                          }else{
-                                              $genderAvatar = 'default-female-avatar.png';
+                                              $genderAvatar = 'default-male-avatar.png' ?? 'default-female-avatar.png';
                                           }
                                         @endphp
 
