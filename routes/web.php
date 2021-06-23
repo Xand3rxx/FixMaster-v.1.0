@@ -22,7 +22,6 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
-//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
@@ -60,12 +59,13 @@ use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminP
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
-//use App\Http\Controllers\CSE\CseWarrantyClaimController;
+
 use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
 use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
+use App\Http\Controllers\Admin\Report\WarrantyReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -326,7 +326,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
-    Route::get('/colabo',  [Template::class, 'colabo'])->name('colabo');
+
+    Route::get('/reports/warranty',  [WarrantyReportController::class, 'index'])->name('warranty_reports');
 });
 
 //All routes regarding clients should be in here
@@ -391,7 +392,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     Route::post('servicesRequest',              [ClientController::class, 'serviceRequest'])->name('services.serviceRequest');
     // add my new contact to DB
-    Route::post('/ajax_contactForm',            [ClientController::class, 'ajax_contactForm'])->name('ajax_contactForm');
+    Route::post('/create-new-client-contact',            [ClientController::class, 'createNewClientContact'])->name('ajax_contactForm');
 
     Route::get('myContactList',                 [ClientController::class, 'myContactList'])->name('service.myContacts');
 
@@ -444,7 +445,7 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
         Route::post('/update_service_request',  [CseController::class, 'update_cse_service_rating'])->name('update_service_request');
     });
 
-    Route::get('/see',  [CseController::class, 'see'])->name('see');
+
     Route::view('/messages/inbox', 'cse.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent', 'cse.messages.sent')->name('messages.sent');
     Route::view('/payments', 'cse.payments')->name('payments');
@@ -588,5 +589,3 @@ Route::prefix('/franchisee')->name('franchisee.')->group(function () {
     Route::view('/profile/edit',        'franchisee.edit_profile')->name('edit_profile');
     Route::view('/location-request',    'franchisee.location_request')->name('location_request');
 });
-
-

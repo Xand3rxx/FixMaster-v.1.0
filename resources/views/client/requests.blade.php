@@ -92,7 +92,6 @@
 
             <tbody>
                 @foreach ($userServiceRequests as $userServiceRequest)
-                {{-- {{ dd($userServiceRequest->serviceRequestDetail->timestamp) }} --}}
                     <tr>
                         <td class="text-center">{{ ++$i }}</td>
                         <td class="font-weight-bold">{{ $userServiceRequest->job_reference }}</td>

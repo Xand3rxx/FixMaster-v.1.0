@@ -1,5 +1,5 @@
 (function($){
-    "use scrict";
+    "use strict";
     $(document).ready(function(){
 
       $(document).on('change','#profile_image', function(){

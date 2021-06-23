@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
-use DB;
-use Auth;
 use File;
 use Image;
 use Session;
 use Carbon\Carbon;
 use App\Models\Cse;
 use App\Models\Lga;
+use App\Models\Rfq;
 use App\Models\Town;
 use App\Models\User;
 use App\Models\Media;
@@ -37,22 +36,26 @@ use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
+use App\Models\RfqSupplierInvoice;
+use Illuminate\Support\Facades\DB;
 use App\Models\ServiceRequestMedia;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Messaging\Message;
-use App\Models\ServiceRequestProgress;
-use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
-
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\Route;
 
+use App\Models\ServiceRequestAssigned;
+
+use App\Models\ServiceRequestProgress;
 use App\Models\ServiceRequestWarranty;
+use Illuminate\Support\Facades\Config;
 use App\Models\ClientLoyaltyWithdrawal;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
 use App\Models\ServiceRequestCancellation;
 use App\Traits\RegisterPaymentTransaction;
+use App\Http\Controllers\Messaging\Message;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Http\Controllers\Payment\PaystackController;
 use App\Http\Controllers\Messaging\MessageController;
@@ -316,48 +319,74 @@ class ClientController extends Controller
             ->with('usercontact')
             ->orderBy('id', 'DESC')
             ->firstOrFail();
-        
+
         $data['displayDescription'] = 'blank';
-        
+
         // dd($data['registeredAccount']);
         return view('client.services.quote', $data);
     }
 
-    function ajax_contactForm(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * This is an ajax call to save a new client contact.
+     * Present on click of Create button from the form.
+     */
+    public function createNewClientContact(Request $request)
     {
+        if ($request->ajax()) {
 
-        $validatedData = $request->validate([
-            'firstName'                   =>   'required',
-            'lastName'                    =>   'required',
-            'phoneNumber'                 =>   'required',
-            'state'                       =>   'required',
-            'lga'                         =>   'required',
-            'town'                        =>   'required',
-            'streetAddress'               =>   'required',
-            'addressLat'                  =>   'required',
-            'addressLng'                  =>   'required',
-        ]);
-
-        $clientContact = new Contact;
-        $clientContact->user_id   = auth()->user()->id;
-        $clientContact->name      = $request->firstName . ' ' . $request->lastName;
-        $clientContact->state_id  = $request->state;
-        $clientContact->lga_id    = $request->lga;
-        $clientContact->town_id   = $request->town;
-        $client  = Client::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->firstOrFail();
-        $clientContact->account_id    = $client->account_id;
-        $clientContact->country_id    = '156';
-        // $clientContact->is_default        = '1';
-        $clientContact->phone_number       = $request->phoneNumber;
-        $clientContact->address            = $request->streetAddress;
-        $clientContact->address_longitude  = $request->addressLat;
-        $clientContact->address_latitude   = $request->addressLng;
-        if ($clientContact->save()) {
-            return view('client.services._contactList', [
-                'myContacts'    => Contact::where('user_id', auth()->user()->id)->get(),
+            //Validate data from ajax request
+            $validatedData = $request->validate([
+                'first_name'        =>   'bail|required|string',
+                'last_name'         =>   'bail|required|string',
+                'phone_number'      =>   'bail|required||unique:contacts,phone_number',
+                'state_id'          =>   'bail|required|integer',
+                'lga_id'            =>   'bail|required|integer',
+                'town_id'           =>   'sometimes|integer',
+                'address'           =>   'bail|required',
+                'user_latitude'     =>   'bail|required',
+                'user_longitude'    =>   'bail|required',
             ]);
-        } else {
-            return back()->with('error', 'sorry!, an error occured please try again');
+
+            //Set `createService` to false before Db transaction
+            (bool) $createContact  = false;
+
+            $actionUrl = Route::currentRouteAction();
+
+            // Set DB to rollback DB transacations if error occurs
+            DB::transaction(function () use ($request, $validatedData, &$createContact) {
+
+                Contact::create([
+                    'user_id'           =>   $request->user()->id,
+                    'account_id'        =>   $request->user()->account->id,
+                    'name'              =>   ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+                    'phone_number'      =>   $validatedData['phone_number'],
+                    'country_id'        =>   156,
+                    'state_id'          =>   $validatedData['state_id'],
+                    'lga_id'            =>   $validatedData['lga_id'],
+                    'town_id'           =>   $validatedData['town_id'],
+                    'address'           =>   $validatedData['address'],
+                    'address_latitude'     =>   $validatedData['user_latitude'],
+                    'address_longitude'    =>   $validatedData['user_longitude'],
+                ]);
+                $createContact  = true;
+            });
+
+            if ($createContact) {
+
+                $this->log('Profile', 'Informational', $actionUrl, $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' successfully created a new contact address');
+
+                return view('client.services._contactList', [
+                    'myContacts'    => $request->user()->contacts,
+                ]);
+            } else {
+
+                $this->log('Errors', 'Error', $actionUrl, 'An error occurred while ' . $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' was trying to create a new contact address');
+
+                return back()->with('error', 'Sorry! An error occurred while to create a new contact address');
+            }
         }
     }
 
@@ -432,27 +461,27 @@ class ClientController extends Controller
      */
     public function customService()
     {
-        $data['bookingFees']  = $this->bookingFees();
-        $data['myContacts'] = Contact::where('user_id', auth()->user()->id)->latest('created_at')->get();
-        $data['discounts']    = $this->clientDiscounts();
-        $data['gateways']     = PaymentGateway::whereStatus(1)->orderBy('id', 'DESC')->get();
-        $data['states'] = State::select('id', 'name')->orderBy('name', 'ASC')->get();
-        $data['balance']      = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->first();
+        $user = Auth::user()->loadMissing('contacts', 'account');
 
-        return view('client.services.service_custom', $data);
+        return view('client.services.service_custom', [
+            'discounts'             => \App\Models\ClientDiscount::ClientServiceRequestsDiscounts()->get(),
+            'bookingFees'           => \App\Models\Price::bookingFees()->get(),
+            'states'                => \App\Models\State::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'gateways'              => PaymentGateway::where('status', PaymentGateway::STATUS['active'])->orderBy('id', 'DESC')->get(),
+            'displayDescription'    => 'blank',
+            'myContacts'            => $user['contacts'],
+            'registeredAccount'     => $user['account']
+        ]);
     }
 
 
     public function myServiceRequest()
     {
-        $myServiceRequests = Client::where('user_id', auth()->user()->id)
-            ->with('service_requests.invoices')
-            ->whereHas('service_requests', function ($query) {
-                $query->orderBy('created_at', 'ASC');
-            })->get();
-
         return view('client.services.list', [
-            'myServiceRequests' =>  $myServiceRequests[0],
+            'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices')
+                ->whereHas('service_requests', function ($query) {
+                    $query->orderBy('created_at', 'ASC');
+                })->first(),
         ]);
     }
 

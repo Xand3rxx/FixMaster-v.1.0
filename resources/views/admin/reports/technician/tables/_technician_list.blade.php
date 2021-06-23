@@ -1,5 +1,4 @@
 
-{{-- {{ dd($results)}} --}}
 <table class="table table-hover mg-b-0" id="basicExample2">
     <thead class="thead-primary">
       <tr>
@@ -17,7 +16,6 @@
     </thead>
     <tbody>
 
-      {{-- @foreach ($results as $result) --}}
       <tr>
         <td class="tx-color-03 tx-center">1</td>
         <td class="tx-medium">Kenneth Ifeanyi</td>
@@ -29,7 +27,6 @@
         <td class="text-center">{{ Carbon\Carbon::now('UTC') }}</td>
         <td class="text-center">8</td>
       </tr>
-      {{-- @endforeach --}}
 
     </tbody>
   </table>
