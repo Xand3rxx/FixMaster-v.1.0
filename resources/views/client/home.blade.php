@@ -2,7 +2,6 @@
 @section('title', 'Home')
 @section('content')
 @include('layouts.partials._messages')
-{{-- {{ dd($user->state) }} --}}
 
 <div class="col-lg-8 col-12">
     <div class="border-bottom pb-4 row">
@@ -12,7 +11,7 @@
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Service Requests</h4>
+                    <h4 class="title mb-0">Total Requests</h4>
                     <p class="text-muted mb-0">{{ $totalRequests }} </p>
                     {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
                 </div>
@@ -24,7 +23,7 @@
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Completed</h4>
+                    <h4 class="title mb-0">Completed Requests</h4>
                 <p class="text-muted mb-0">{{ $completedRequests }}</p>
                     {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
                 </div>
@@ -35,7 +34,7 @@
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Pending</h4>
+                    <h4 class="title mb-0">Pending Requests</h4>
                 <p class="text-muted mb-0">{{ $cancelledRequests }}</p>
                     {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
                 </div>
@@ -130,12 +129,8 @@
                                 </p>
                                 @endif 
                             
-                                {{-- {{dd($userServiceRequest['service_request_assignees']->count())}} --}}
                                 <p class="mb-0"><a href="{{ route('client.request_details', [ 'request'=>$userServiceRequest['uuid'], 'locale'=>app()->getLocale() ]) }}" style="color: #161c2d" title="View Service request details">CSE: <span class="text-muted">
 
-                                    
-
-                                    {{-- {{dd()}} --}}
                                     @if($userServiceRequest['service_request_assignees']->count() > 0)
                                         @foreach ($userServiceRequest['service_request_assignees'] as $item)
                                             @if(($item['user']['roles'][0]['slug'] == 'cse-user') && ($item['status'] == 'Active'))

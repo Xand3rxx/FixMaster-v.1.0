@@ -319,9 +319,9 @@ class ClientController extends Controller
             ->with('usercontact')
             ->orderBy('id', 'DESC')
             ->firstOrFail();
-        
+
         $data['displayDescription'] = 'blank';
-        
+
         // dd($data['registeredAccount']);
         return view('client.services.quote', $data);
     }
@@ -333,7 +333,7 @@ class ClientController extends Controller
      * This is an ajax call to save a new client contact.
      * Present on click of Create button from the form.
      */
-    function createNewClientContact(Request $request)
+    public function createNewClientContact(Request $request)
     {
         if ($request->ajax()) {
 
@@ -359,8 +359,8 @@ class ClientController extends Controller
             DB::transaction(function () use ($request, $validatedData, &$createContact) {
 
                 Contact::create([
-                    'user_id'           =>   $request->user()->id,    
-                    'account_id'        =>   $request->user()->account->id,    
+                    'user_id'           =>   $request->user()->id,
+                    'account_id'        =>   $request->user()->account->id,
                     'name'              =>   ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
                     'phone_number'      =>   $validatedData['phone_number'],
                     'country_id'        =>   156,
@@ -372,20 +372,18 @@ class ClientController extends Controller
                     'address_longitude'    =>   $validatedData['user_longitude'],
                 ]);
                 $createContact  = true;
-
             });
 
-            if($createContact){
+            if ($createContact) {
 
-                $this->log('Profile', 'Informational', $actionUrl, $request->user()->account->first_name.' '.$request->user()->account->last_name.' successfully created a new contact address');
+                $this->log('Profile', 'Informational', $actionUrl, $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' successfully created a new contact address');
 
                 return view('client.services._contactList', [
                     'myContacts'    => $request->user()->contacts,
                 ]);
+            } else {
 
-            }else{
-
-                $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.$request->user()->account->first_name.' '.$request->user()->account->last_name.' was trying to create a new contact address');
+                $this->log('Errors', 'Error', $actionUrl, 'An error occurred while ' . $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' was trying to create a new contact address');
 
                 return back()->with('error', 'Sorry! An error occurred while to create a new contact address');
             }
@@ -480,14 +478,11 @@ class ClientController extends Controller
 
     public function myServiceRequest()
     {
-        $myServiceRequests = Client::where('user_id', auth()->user()->id)
-            ->with('service_requests.invoices')
-            ->whereHas('service_requests', function ($query) {
-                $query->orderBy('created_at', 'ASC');
-            })->get();
-
         return view('client.services.list', [
-            'myServiceRequests' =>  $myServiceRequests[0],
+            'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices')
+                ->whereHas('service_requests', function ($query) {
+                    $query->orderBy('created_at', 'ASC');
+                })->first(),
         ]);
     }
 

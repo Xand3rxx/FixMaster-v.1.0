@@ -28,7 +28,6 @@ use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
-use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 
@@ -326,9 +325,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
-  
+
     Route::get('/reports/warranty',  [WarrantyReportController::class, 'index'])->name('warranty_reports');
-   
 });
 
 //All routes regarding clients should be in here
@@ -587,5 +585,3 @@ Route::prefix('/franchisee')->name('franchisee.')->group(function () {
     Route::view('/profile/edit',        'franchisee.edit_profile')->name('edit_profile');
     Route::view('/location-request',    'franchisee.location_request')->name('location_request');
 });
-
-

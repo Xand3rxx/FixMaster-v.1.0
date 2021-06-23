@@ -12,13 +12,12 @@
                                     <div class="media">
                                         {{-- <ul class="date text-center text-primary mr-3 mb-0 list-unstyled">
                                         <li class="day font-weight-bold mb-2">{{ date('d') }}</li>
-                                            <li class="month font-weight-bold">{{ date('M') }}</li>
+                                            <li class="πAmonth font-weight-bold">{{ date('M') }}</li>
                                             <li class="month font-weight-bold">{{ date('Y') }}</li>
                                         </ul> --}}
-
                                         <div class="media-body content">
                                             <h4><a href="javascript:void(0)" class="text-dark title">Balance</a></h4>
-                                        <p class="text-muted location-time"><span class="text-dark h6">₦{{ $myWallet[0]['closing_balance'] ?? number_format(0) }}</span></p>
+                                        <p class="text-muted location-time"><span class="text-dark h6">₦{{ number_format($profile['clientWalletBalance']['closing_balance']) ?? '0' }}</span></p>
                                             <a href="{{ route('client.wallet', app()->getLocale()) }}" class="btn btn-sm btn-outline-primary mouse-down">Fund Account</a>
                                         </div>
                                     </div>

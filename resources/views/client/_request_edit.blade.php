@@ -3,7 +3,6 @@
 @section('content')
 @include('layouts.partials._messages')
 
-{{-- {{ dd($service->serviceRequests()->count()) }} --}}
 <div class="col-lg-8 col-12" style="margin-top: 3rem;">
 <form class="p-4" method="POST" action="{{ route('client.update_request', [ 'request'=>$userServiceRequest->uuid, 'locale'=>app()->getLocale() ])}}" enctype="multipart/form-data">
     @csrf 
@@ -24,34 +23,6 @@
                 @enderror
             </div>
         </div><!--end col-->
-
-        <!-- <div class="col-md-6">
-            <div class="form-group position-relative">
-                <label>Your Phone no. :<span class="text-danger">*</span></label>
-                <i data-feather="phone" class="fea icon-sm icons"></i>
-                <input name="phone_number" id="phone_number" type="tel" class="form-control pl-5 @error('phone_number') is-invalid @enderror" placeholder="Your Phone No. :" maxlength="11" value="{{ old('phone_number') ?? $userServiceRequest->address->phone_number }}" autocomplete="off">
-                @error('phone_number')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div> 
-        </div> -->
-        <!--end col-->
-        
-        <!-- <div class="col-md-12">
-            <div class="form-group position-relative">
-                <label>Address</label>
-                <i data-feather="map-pin" class="fea icon-sm icons"></i>
-                <textarea name="address" id="address" rows="3" class="form-control pl-5 @error('address') is-invalid @enderror" placeholder="Address of where the service is required">{{ old('address') ?? $userServiceRequest->address->address }}</textarea>
-                @error('address')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-        </div> -->
-        <!--end col--> 
 
         <div class="col-md-12">
             <div class="form-group position-relative">
@@ -140,10 +111,7 @@ function ValidateSize(file) {
     
  $('body').on('click', '#add-more-file', function () {
         var count = parseInt($('.attachments').find('.custom-file:nth-last-child(1) input').prop('id').split("_")[2]) + 1; 
-        // $('.attachments').append('<div class="custom-file">'+
-        //     '<label class="custom-file-label" for="custom_file_'+count+'">file here</label>'+
-        //     '<input type="file" name="filename[]" accept="application/pdf, image/gif, image/jpeg, image/png" class="custom-file-input" size="20" onchange="ValidateSize(this);" id="custom_file_'+count+'">'+
-        //     '</div>')
+       
             $('.attachments').append('<div class="form-group position-relative custom-file">'+
                 '<input type="file" name="media_file[]" accept="image/*,.txt,.doc,.docx,.pdf" class="form-control-file btn btn-primary btn-sm" onchange="ValidateSize(this);" id="custom_file_'+count+'"  />'+
                 '<small style="font-size: 10px;" class="text-muted">File must not be more than 2MB</small>'+

@@ -133,7 +133,6 @@
             </tbody>
         </table>
     </div><!-- table-responsive -->
-    {{-- {{ dd($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status']) }} --}}
     @if(!empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch'])) 
     @if($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status'] !== 'Delivered'))
     <h5 class="mt-4">Update RFQ Status</h5>

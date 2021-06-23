@@ -56,9 +56,6 @@ class ServiceRequest extends Model
             // Create a Unique Service Request uuid id
             $serviceRequest->uuid = (string) Str::uuid();
 
-            // Create a Unique Service Request reference id
-            $serviceRequest->unique_id = GenerateUniqueIdentity::generate('service_requests', 'REF-');
-
             // Create a Unique Service Request Client Security Code id
             $serviceRequest->client_security_code = GenerateUniqueIdentity::generate('service_requests', 'SEC-');
         });
@@ -178,10 +175,11 @@ class ServiceRequest extends Model
         return $this->hasMany(ClientDiscount::class, 'client_id', 'client_id');
     }
 
-    public function payment_status()
-    {
-        return $this->belongsTo(Payment::class, 'id', 'user_id');
-    }
+    // Very Wrong
+    // public function payment_status()
+    // {
+    //     return $this->belongsTo(Payment::class, 'id', 'user_id');
+    // }
 
     // Wrong, this return just the first assigned person to a request
     // public function cse_service_request()
