@@ -24,8 +24,10 @@
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Job Reference</th>
+                                            <th>Project Manager</th>
                                             <th>Service Name</th>
                                             <th class="text-center">Service Charge(₦)</th>
+                                            <th>Payment Status</th>
                                             <th>Status</th>
                                             <th>Scheduled Date</th>
                                             <th>Date Created </th>
@@ -40,20 +42,26 @@
 
                                                     <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
                                                     <td class="font-weight-bold">{{ $myServiceRequest->unique_id }} </td>
+                                                    <td class="font-weight-bold">
+                                                        @if(collect($myServiceRequest['service_request_assignees'])->isNotEmpty())
+                                                            @foreach ($myServiceRequest['service_request_assignees'] as $cse)
+                                                                @if ($cse['user']['roles'][0]['slug'] == 'cse-user')
+                                                                    {{ Str::title($cse['user']['account']['first_name'].' '.$cse['user']['account']['last_name']) }}
+                                                                @endif
+                                                            @endforeach
+                                                        @else Not Assigned @endif
+                                                    </td>
+
                                                     <td>{{ $myServiceRequest['service']['name'] ?? 'Custom Request' }}
                                                     </td>
                                                     <td class="text-center font-weight-bold">
                                                         {{ $myServiceRequest->bookingFee->amount }}</td>
+                                                    <td class="txt-medium">
+                                                        <span class="badge {{ (($myServiceRequest['payment']['status'] == 'pending') ? 'badge-warning' : (($myServiceRequest['payment']['status'] == 'success') ? 'badge-success' : ($myServiceRequest['payment']['status'] == 'failed' ? 'badge-danger' : 'badge-danger'))) }} rounded">{{ ucfirst($myServiceRequest['payment']['status']) }}</span>
+                                                    </td>
+
                                                     <td class="tx-medium">
-                                                        @if ($myServiceRequest->status_id == 1)
-                                                            <span class="badge badge-warning rounded">Pending</span>
-                                                        @elseif($myServiceRequest->status_id == 2)
-                                                            <span class="badge badge-info rounded">Ongoing</span>
-                                                        @elseif($myServiceRequest->status_id == 3)
-                                                            <span class="badge badge-danger rounded">Cancelled</span>
-                                                        @elseif($myServiceRequest->status_id == 4)
-                                                            <span class="badge badge-success rounded">Completed</span>
-                                                        @endif
+                                                        <span class="badge {{ (($myServiceRequest['status_id'] == 1) ? 'badge-warning' : (($myServiceRequest['status_id'] == 2) ? 'badge-info' : ($myServiceRequest['status_id'] == 3 ? 'badge-danger' : 'badge-success'))) }} rounded">{{ (($myServiceRequest['status_id'] == 1) ? 'Pending' : (($myServiceRequest['status_id'] == 2) ? 'Ongoing' : ($myServiceRequest['status_id'] == 3 ? 'Cancelled' : 'Completed'))) }}</span>
                                                     </td>
                                                     <td class="tx-medium font-weight-bold">
                                                         {{ !empty($myServiceRequest['preferred_time']) ? Carbon\Carbon::parse($myServiceRequest['preferred_time'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') : 'Not Scheduled yet' }}
@@ -76,21 +84,11 @@
                                                                         data-feather="clipboard" class="fea icon-sm"></i>
                                                                     Details</a>
 
-                                                                @if ($myServiceRequest->status_id == 2)
-
-                                                                    <a href="#" id="completed"
-                                                                        data-url="{{ route('client.completed_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
-                                                                        class="dropdown-item details text-success"
-                                                                        title="Mark as completed">
-                                                                        <i data-feather="check" class="fea icon-sm"></i>
-                                                                        Mark as Completed</a>
-                                                                @endif
-
                                                                 @if ($myServiceRequest->status_id < 3)
                                                                     @if ($myServiceRequest->service_request_assignees->count()
                                                                     > 1) <a
                                                                     href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
-                                                                    class="dropdown-item text-primary"><i
+                                                                    class="dropdown-item text-warning"><i
                                                                     data-feather="edit" class="fea
                                                                     icon-sm"></i> Edit Request</a> @endif
                                                                 @endif
@@ -105,6 +103,17 @@
                                                                             data-feather="x" class="fea icon-sm"></i> Cancel
                                                                         Request </a>
                                                                 @endif
+
+                                                                @if ($myServiceRequest->status_id == 2)
+
+                                                                    <a href="#" id="completed"
+                                                                        data-url="{{ route('client.completed_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
+                                                                        class="dropdown-item details text-success"
+                                                                        title="Mark as completed">
+                                                                        <i data-feather="check" class="fea icon-sm"></i>
+                                                                        Mark as Completed</a>
+                                                                @endif
+
                                                                 @if ($myServiceRequest->status_id == 3)
                                                                     <div class="dropdown-divider"></div>
                                                                     <a href="#" id="activate"
@@ -113,6 +122,10 @@
                                                                         title="Reinstate">
                                                                         <i data-feather="corner-up-left"
                                                                             class="fea icon-sm"></i> Reinstate Request</a>
+                                                                @endif
+
+                                                                @if($myServiceRequest['payment']['status'] == 'pending')
+                                                                    <a href="#" class="dropdown-item details text-info"><i data-feather="repeat" class="fea icon-sm"></i>Verify Payment</a>
                                                                 @endif
 
                                                                 @foreach ($myServiceRequest['invoices']->where('service_request_id', $myServiceRequest->id)->whereIn('phase', ['1', '2']) as $invoice)

@@ -18,7 +18,7 @@ class CSESeeder extends Seeder
         
         // CSE User
         $cse = new \App\Models\User;
-        $cse->email = 'cse@fix-master.com';
+        $cse->email = 'cse@9thtest.com.ng';
         $cse->password = bcrypt('admin12345');
         $cse->save();
 

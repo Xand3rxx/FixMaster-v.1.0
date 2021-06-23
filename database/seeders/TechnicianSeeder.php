@@ -16,7 +16,7 @@ class TechnicianSeeder extends Seeder
     {
         // Technician User
         $technician = new \App\Models\User;
-        $technician->email = 'technician@fix-master.com';
+        $technician->email = 'technician@9thtest.com.ng';
         $technician->password = bcrypt('admin12345');
         $technician->save();
 

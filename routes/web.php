@@ -114,11 +114,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     Route::prefix('prospective')->name('prospective.')->group(function () {
-        Route::resource('cse', ProspectiveCSEController::class);
+        Route::resource('cse', \App\Http\Controllers\Admin\Prospective\CSEController::class);
         Route::resource('supplier', ProspectiveSupplierController::class);
-        Route::resource('technician-artisan', ProspectiveTechnicianArtisanController::class);
+        Route::resource('technician-artisan', \App\Http\Controllers\Admin\Prospective\TechnicianArtisanController::class);
         Route::post('supplier-decision', [ProspectiveSupplierController::class, 'decision'])->name('supplier.decision');
-        Route::post('cse-decision', [ProspectiveCSEController::class, 'decision'])->name('cse.decision');
+        Route::post('cse-decision', [\App\Http\Controllers\Admin\Prospective\CSEController::class, 'decision'])->name('cse.decision');
     });
 
     //Routes for estate management
@@ -340,8 +340,8 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('/updatePassword',                       [ClientController::class, 'updatePassword'])->name('updatePassword');
 
     // Route::get('/requests',                              [ClientController::class, 'index'])->name('requests');
-    Route::get('/requests/details/{request:id}',         [ClientController::class, 'clientRequestDetails'])->name('request_details');
-    Route::get('/requests/edit/{request:id}',            [ClientController::class, 'editRequest'])->name('edit_request');
+    Route::get('/requests/details/{request:uuid}',         [ClientController::class, 'clientRequestDetails'])->name('request_details');
+    Route::get('/requests/edit/{request:uuid}',            [ClientController::class, 'editRequest'])->name('edit_request');
     Route::get('/requests/cancel/{request:id}',          [ClientController::class, 'cancelRequest'])->name('cancel_request');
     Route::get('/requests/send-messages',                [ClientController::class, 'sendMessages'])->name('send_messages');
     Route::post('/requests/update-request/{request:id}', [ClientController::class, 'updateRequest'])->name('update_request');
@@ -404,6 +404,9 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     //Client messaging routes
     Route::resource('messages',         ClientMessageController::class);
+
+    Route::post('invoicePayment', [InvoiceController::class, 'invoicePayment'])->name('invoice_payment');
+    Route::get('initialize-invoice-request/{payment:reference_id}', [InvoiceController::class, 'init'])->name('invoice_payment.init');
 
     //Client service request routes
     Route::resource('service-request',  ClientRequestController::class);

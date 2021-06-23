@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 col-12 d-lg-block d-none">
                 <div class="sidebar sticky-bar p-4 rounded shadow">
-                    <h5 class="widget-title">E-Wallet: <strong>WAL-23782382</strong></h5>
+                    <h5 class="widget-title">E-Wallet: <strong>{{ $profile['client']['unique_id'] ?? 'UNAVAILABLE' }}</strong></h5>
                     <div class="widget">
                         <div class="row mt-4  text-center">
                             <div class="card event-schedule rounded border">
@@ -23,7 +23,7 @@
                                     </div>
                                     <div class="mt-1">
                                         <small>Last Login: <br>
-                                            <strong>January 18th 2021, 11:19:56am</strong>
+                                            <strong>{{ !empty($profile['lastActivityLog']['created_at']) ? \Carbon\Carbon::parse($profile['lastActivityLog']['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') : \Carbon\Carbon::now('UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</strong>
                                         </small>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                 </a>
                             </div><!--end col-->
                             <div class="col-6 mt-4 pt-2">
-                                <a href="{{ route('client.service.all', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.service.all', 'client.request_details') ? 'active' : '' }}">
+                                <a href="{{ route('client.service.all', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}">
                                     <span class="pro-icons h3 text-muted"><i class="uil uil-sitemap"></i></span>
                                     <h6 class="title text-dark h6 my-0">Requests</h6>
                                 </a>

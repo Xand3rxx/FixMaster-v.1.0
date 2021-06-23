@@ -36,7 +36,7 @@ trait Invoices
                 'url' => route('invoice', ['locale' => app()->getLocale(), 'invoice' => $invoice_created['uuid']])
             ]);
 //            dd($invoice_created['client']['email']);
-            $messenger->sendNewMessage(null, 'dev@fix-master.com', $invoice_created['client']['email'], $mail_data, $template_feature);
+            $messenger->sendNewMessage(null, 'info@fixmaster.com.ng', $invoice_created['client']['email'], $mail_data, $template_feature);
         }
         return $invoice_created;
     }

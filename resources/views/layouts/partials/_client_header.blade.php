@@ -98,21 +98,23 @@
                 <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details') ? 'active' : '' }}">
                     <a href="javascript:void(0)" class="l-dark l-light">Profile</a><span class="menu-arrow"></span>
                     <ul class="submenu">
-                    <li class="{{ Route::currentRouteNamed('client.index') ? 'active' : '' }}"><a href="{{ route('client.index', app()->getLocale()) }}">Dashboard</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.index') ? 'active' : '' }}"><a href="{{ route('client.index', app()->getLocale()) }}">Dashboard</a></li>
 
-                    <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}"><a href="{{ route('client.services.list', app()->getLocale()) }}">Book a Service</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}"><a href="{{ route('client.services.list', app()->getLocale()) }}">Book a Service</a></li>
 
                         <li class="{{ Route::currentRouteNamed('client.wallet') ? 'active' : '' }}"><a href="{{ route('client.wallet', app()->getLocale()) }}">E-Wallet</a></li>
 
-                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details') ? 'active' : '' }}"><a href="{{route('client.service.all', app()->getLocale()) }}">Requests</a></li>
+                        @if(CustomHelpers::ifLoyaltyExist(auth()->user()->id) == 1)
+                            <li class="{{ Route::currentRouteNamed('client.loyalty') ? 'active' : '' }}"><a href="{{ route('client.loyalty', app()->getLocale()) }}">Loyalty Wallet</a></li>
+                        @endif
 
-                    <li class="{{ Route::currentRouteNamed('client.payments') ? 'active' : '' }}"><a href="{{ route('client.payments', app()->getLocale()) }}">Payments</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}"><a href="{{route('client.service.all', app()->getLocale()) }}">Requests</a></li>
+
+                        <li class="{{ Route::currentRouteNamed('client.payments') ? 'active' : '' }}"><a href="{{ route('client.payments', app()->getLocale()) }}">Payments</a></li>
 
                         <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Messages</a></li> 
 
                         <li class="{{ Route::currentRouteNamed('client.settings') ? 'active' : '' }}"><a href="{{ route('client.settings', app()->getLocale()) }}">Settings</a></li>
-
-                        {{-- <li><a href="{{ route('login') }}">Logout</a></li> --}}
                     </ul>
                 </li>
 

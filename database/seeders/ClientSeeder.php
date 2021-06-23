@@ -16,7 +16,7 @@ class ClientSeeder extends Seeder
     {
         // Client User
         $client = new \App\Models\User;
-        $client->email = 'client@fix-master.com';
+        $client->email = 'client@9thtest.com.ng';
         $client->password = bcrypt('admin12345');
         $client->save();
 
@@ -200,7 +200,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -208,7 +208,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client1->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -216,7 +216,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client2->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -224,7 +224,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client3->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -232,7 +232,7 @@ class ClientSeeder extends Seeder
             'client_id'         =>  $client4->id, 
             'estate_id'         =>  NULL,
             'service_id'        =>  NULL, 
-            'availability'      =>  'unused', 
+            'availability'      =>  'used', 
         ]);
 
         //3 more contacts for client@fix-master.com

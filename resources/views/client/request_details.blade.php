@@ -2,9 +2,12 @@
 @section('title', 'Request Details') 
 @section('content')
 @include('layouts.partials._messages')
+<link rel="stylesheet" href="{{ asset('assets/dashboard/assets/css/lightgallery.css') }}" />
 
-<div class="col-lg-8 col-12">
-    <div class="float-right mt-4">
+<style>.h6 {font-weight: 400 !important;}</style>
+
+<div class="col-lg-8 pt-4 col-12">
+    <div class="float-right pt-4 mb-4">
         <a href="{{ route('client.service.all', app()->getLocale()) }}" class="btn btn-sm btn-primary">Back </a>
         @if($requestDetail->status_id == '1')
         <a href="#editRequest" id="edit-request" data-toggle="modal" data-url="{{ route('client.edit_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ])}}" data-job-reference="{{ $requestDetail->unique_id  }}" class="btn btn-sm btn-warning">Edit Request </a>
@@ -17,16 +20,14 @@
         @endif
     </div>
 
-    <div class="ml-lg-4">
-        <h5 class="mt-4">Service Request: {{ $requestDetail->unique_id  }}</h5>
-
-        <div class="border-bottom pb-4 row">
+    <div class="ml-lg-4 mt-4">
+        <div class="pb-4 row col-md-12">
             <div class="col-md-6">
                 <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                     <img src="{{ asset('assets/images/job/Eslint.svg') }}" class="avatar avatar-ex-sm" alt="" />
                     <div class="media-body content ml-3">
                         <h4 class="title mb-0">Service</h4>
-                        <p class="text-muted mb-0">{{ $requestDetail->service->name ?? 'Custom Request' }}</p>
+                        <p class="text-muted mb-0">{{ $requestDetail['service']['name'] ?? 'Custom Request' }}</p>
                     </div>
                 </div>
             </div>
@@ -37,69 +38,73 @@
                     <div class="media-body content ml-3">
                         <h4 class="title mb-0">Category</h4>
                       
-                        <p class="text-muted mb-0">{{ $requestDetail->service->category->name ?? 'Custom Request'}}</p>
+                        <p class="text-muted mb-0">{{ $requestDetail['service']['category']['name'] ?? 'Custom Request'}}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-       
-        @if(!empty($requestExists->service_request_assignees))
-        @foreach($requestExists->service_request_assignees as $item)
-          @if($item->user->roles[0]->url == 'cse' && $item->status == 'Active')
-        <h5 class="mt-4">CSE Assigned</h5>
-        <div class="col-lg-12 col-12 mt-4">
-            <div class="card rounded bg-light overflow-hidden border-0 m-2">
-                <div class="row align-items-center no-gutters">
-                    <div class="col-md-5">
-                         @if(!empty($item->user->account->avatar) &&
-                        file_exists(public_path().'/assets/user-avatars/'.$item->user->account->avatar))
-                            <img src="{{ asset('assets/user-avatars/'.$item->user->account->avatar) }}" class="img-fluid" alt="" />
-                        @elseif($item->user->account->gender == 'male')
-                            <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="img-fluid" />
-                        @else
-                            <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="img-fluid" />
-                        @endif
-                    </div>
-                    <!--end col-->
+        @if(collect($requestDetail['service_request_assignees'])->isNotEmpty())
+            @foreach($requestDetail['service_request_assignees'] as $item)
+                @if($item->user->roles[0]->slug == 'cse-user' && $item->status == 'Active')
+                    <h5 class="mt-4">CSE Assigned</h5>
+                    <div class="col-lg-12 col-12 mt-4">
+                        <div class="card rounded bg-light overflow-hidden border-0 m-2">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col-md-5">
+                                    @if(!empty($item['user']['account']['avatar']) &&
+                                    file_exists(public_path().'/assets/user-avatars/'.$item['user']['account']['avatar']))
+                                        <img src="{{ asset('assets/user-avatars/'.$item['user']['account']['avatar']) }}" class="img-fluid" alt="" />
+                                    @elseif($item['user']['account']['gender'] == 'male' || $item['user']['account']['gender'] == 'others')
+                                        <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="img-fluid" />
+                                    @else
+                                        <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="img-fluid" />
+                                    @endif
+                                </div>
+                                <!--end col-->
 
-                    <div class="col-md-7">
-                        <div class="card-body">
-                            <h6 class="text-primary font-weight-bold">{{ $item->user->account->first_name.' '.$item->user->account->avatar->last_name }} <small class="text-muted d-block">{{ $requestDetail->cses[0]->roles[0]->name ?? 'Customer Service Executive' }} | FixMaster</small></h6>
-                            <ul class="list-unstyled mb-0">
-                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                            </ul>
-                            <p class="h6 mb-0">Security Code</p>
-                            <p class="text-muted mb-0 font-weight-bold">{{ $requestDetail->client_security_code }}</p>
-                            <div class="mt-4">
-                                {{-- <a href="{{ route('client.technician_profile',app()->getLocale()) }}" class="btn btn-sm btn-outline-primary">View Profile</a> --}}
-                                <a href="#validateSecurityCode" data-toggle="modal" class="btn btn-sm btn-outline-primary">CSE & Technician Profiles</a>
+                                <div class="col-md-7">
+                                    <div class="card-body">
+                                        <h6 class="text-primary font-weight-bold">{{ $item['user']['account']['first_name'].' '.$item['user']['account']['last_name'] }} <small class="text-muted d-block">{{ $requestDetail->roles[0]->name ?? 'Customer Service Executive' }} | FixMaster</small></h6>
+                                        <ul class="list-unstyled mb-0">
+                                            @for ($i = 0; $i < round($item['user']['ratings']->avg('star')); $i++)
+                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
+                                            @endfor
+                                            @for ($x = 0; $x < (5 - round($item['user']['ratings']->avg('star'))); $x++)
+                                                <li class="list-inline-item"><i class="mdi mdi-star text-muted"></i></li>
+                                            @endfor
+                                        </ul>
+                                        <p class="h6 mb-0">Security Code</p>
+                                        <p class="text-muted mb-0 font-weight-bold">{{ $requestDetail->client_security_code }}</p>
+                                        <div class="mt-4">
+                                            {{-- <a href="{{ route('client.technician_profile',app()->getLocale()) }}" class="btn btn-sm btn-outline-primary">View Profile</a> --}}
+                                            <a href="#validateSecurityCode" data-toggle="modal" class="btn btn-sm btn-outline-primary">CSE & Technician Profiles</a>
 
-                                {{-- @if($requestDetail->status_id != '3')
-                                    <a href="#" data-toggle="modal" data-target="#message-modal" class="btn btn-sm btn-primary">Send Message </a>
-                                @endif
-                            </div> --}}
+                                            {{-- @if($requestDetail->status_id != '3')
+                                                <a href="#" data-toggle="modal" data-target="#message-modal" class="btn btn-sm btn-primary">Send Message </a>
+                                            @endif
+                                        </div> --}}
+                                    </div>
+                                </div>
+                                <!--end col-->
+                            </div>
+                            <!--end row-->
                         </div>
                     </div>
-                    <!--end col-->
-                </div>
-                <!--end row-->
-            </div>
-        </div>
-        @endif
-        @endforeach
+                @endif
+            @endforeach
         @endif
        
+        <h5 class="mt-4">Job Reference </h5>
+        <ul class="list-unstyled">
+            <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>{{ $requestDetail['unique_id'] }}</li>
+        </ul>
 
         <h5 class="mt-4">Location & Scheduled Time</h5>
-        <p style="font-size: 10px;" class="text-muted">Location and appointemnt time as specified by you.</p>
+        <p style="font-size: 11px;" class="text-danger">Location and appointment time as specified by you.</p>
         <ul class="list-unstyled">
-            <li class="text-muted"><i data-feather="map-pin" class="fea icon-sm text-primary mr-2"></i>{{ $requestDetail->address->address }}</li>
-            <li class="text-muted"><i data-feather="calendar" class="fea icon-sm text-primary mr-2"></i>{{ Carbon\Carbon::parse($requestDetail->preferred_time, 'UTC')->isoFormat('dddd Do YYYY, h:mm:ssa') }}</li>
+            <li class="text-muted"><i data-feather="map-pin" class="fea icon-sm text-primary mr-2"></i>{{ $requestDetail['address']['address'] }}</li>
+            <li class="text-muted mt-2"><i data-feather="calendar" class="fea icon-sm text-primary mr-2"></i>{{ Carbon\Carbon::parse($requestDetail->preferred_time, 'UTC')->isoFormat('dddd Do YYYY') }}</li>
         </ul>
 
 
@@ -109,19 +114,17 @@
 
             <li class="text-muted">
                 <i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>
-               <del> ₦{{ number_format($requestDetail->total_amount) }} </del> &nbsp;
+               <del> ₦{{ number_format($requestDetail['price']['amount']) }} </del> &nbsp;
                 ₦{{ number_format(CustomHelpers::discountCalculation($requestDetail->clientDiscounts[0]->discount->rate,$requestDetail->price->amount )) }}
                 <sup style="font-size: 10px;" class="text-success">Discount</sup>
             </li>
             @else
             <li class="text-muted">
                 <i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>
-               ₦{{ number_format($requestDetail->total_amount) }} 
+               ₦{{ number_format($requestDetail['price']['amount']) }} 
             </li>
             @endif
         </ul>
-
-
 
         <h5 class="mt-4">Status</h5>
         <ul class="list-unstyled">
@@ -136,20 +139,20 @@
             @endif
         </ul>
 
+        <h5 class="mt-4">Payment Status</h5>
+        <ul class="list-unstyled">
+            <li class="{{ (($requestDetail['payment']['status'] == 'pending') ? 'text-warning' : (($requestDetail['payment']['status'] == 'success') ? 'text-success' : ($requestDetail['payment']['status'] == 'failed' ? 'text-danger' : 'text-danger'))) }}"><i data-feather="arrow-right" class="fea icon-sm mr-2"></i> {{ !empty($requestDetail['payment']['status']) ? ucfirst($requestDetail['payment']['status']) : 'UNAVAILABLE' }}</li>
+        </ul>
+
+
         <h5 class="mt-4">Payment Method</h5>
         <ul class="list-unstyled">
-            <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Payment Method: {{ !empty($requestDetail->payment_statuses->payment_channel) ? ucfirst($requestDetail->payment_statuses->payment_channel) : 'UNAVAILABLE' }}</li>
-            {{--
-            <li class="text-muted">
-                <i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Payment Gateway: PayStack
-                <img src="{{ asset('assets/images/payments/payment/master-card.jpg') }}" class="img-fluid avatar avatar-small mx-2 rounded-circle shadow" />
-            </li>
-            --}}
+            <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm  mr-2"></i> {{ !empty($requestDetail['payment']['payment_channel']) ? ucfirst($requestDetail['payment']['payment_channel']) : 'UNAVAILABLE' }}</li>
         </ul>
 
         <h5>Request Description</h5>
         <ul class="list-unstyled">
-            <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i> {{ $requestDetail->description }}</li>
+            <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i> {{ $requestDetail->description ?? 'UNAVAILABLE' }}</li>
         </ul>
 
         @if(!empty($requestDetail->service_request_cancellation->reason))
@@ -157,6 +160,17 @@
         <ul class="list-unstyled">
             <li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i> {{ $requestDetail->service_request_cancellation->reason }}</li>
         </ul>
+        @endif
+
+        <h5>Uploaded Media Files</h5>
+        @if (count($requestDetail['serviceRequestMedias']) > 0)
+        <div class="row row-xs">
+            @foreach ($requestDetail['serviceRequestMedias'] as $item)
+                @include('client._media_file')
+            @endforeach
+        </div>
+        @else
+        <h6 class="mt-4">Files have not been uploaded for this request.</h6>
         @endif
     </div>
 </div>
@@ -200,7 +214,7 @@
                         <label>Security Code:<span class="text-danger">*</span></label>
                         <i data-feather="lock" class="fea icon-sm icons"></i>
                         <input name="security_code" type="text" class="form-control pl-5" placeholder="Security Code:" id="security_code" value="" required />
-                        <small style="font-size: 10px;" class="text-danger">Security code must be in uppercase.<small>
+                        <small style="font-size: 11px;" class="text-danger">Security code must be in uppercase.<small>
                     </div>
                 </div>
                 <!--end col-->
@@ -255,9 +269,8 @@
     </div><!-- modal-dialog -->
 </div><!-- modal -->
 
-
-@if($requestDetail->service_request_assignees->count() > 0)
-<div class="modal fade" id="cseTechnicianModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+@if(collect($requestDetail['service_request_assignees'])->isNotEmpty())
+<div class="modal fade" id="cseTechnicianModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content rounded shadow border-0">
             <div class="modal-header">
@@ -267,12 +280,10 @@
                 </button>
             </div>
             <div class="modal-body p-4">
-                {{-- CSE Profile --}}
-
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-md-12 mt-4 pt-2 text-center">
                         <ul class="nav nav-pills nav-justified flex-column flex-sm-row rounded" id="pills-tab" role="tablist">
-                            @foreach ($requestDetail->service_request_assignees as $assignee)
+                            @foreach ($requestDetail['service_request_assignees'] as $assignee)
                             @if($assignee['user']['roles'][0]['slug'] != 'admin-user')
 
                                 <li class="nav-item">
@@ -316,28 +327,22 @@
                                         <div class="card-body">
                                             <h6 class="text-primary font-weight-bold">{{ $assignee['user']['account']['first_name'].' '.$assignee['user']['account']['last_name'] }} <small class="text-muted d-block">{{ $assignee['user']['roles'][0]['name'] }} | FixMaster</small></h6>
                                             <ul class="list-unstyled mb-0">
-                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                                                <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
+                                                @for ($i = 0; $i < round($assignee['user']['ratings']->avg('star')); $i++)
+                                                    <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
+                                                @endfor
+                                                @for ($x = 0; $x < (5 - round($assignee['user']['ratings']->avg('star'))); $x++)
+                                                    <li class="list-inline-item"><i class="mdi mdi-star text-muted"></i></li>
+                                                @endfor
                                             </ul>
 
                                             <ul class="list-unstyled">
-                                                {{-- <li class="h6">
-                                                    <i data-feather="activity" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">Completed Jobs :</span> {{ $requestDetail->service_request_assignee['user']->userCompletedJobs()->where('status_id',
+                                                {{-- <li class="h6 text-muted">Completed Jobs :</span> {{ $requestDetail->service_request_assignee['user']->userCompletedJobs()->where('status_id',
                                                     4)->count() }}
                                                 </li> --}}
-                                                <li class="h6"><i data-feather="map-pin" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">State :</span> {{ !empty($assignee['user']['account']['state_id']) ? $assignee['user']['account']->state->name : 'UNAVAILABLE' }}</li>
 
+                                                <li class="h6 text-muted">Address : {{ !empty($assignee['user']['contact']) ? $assignee['user']['contact']['address'] : 'UNAVAILABLE' }}</li>
 
-                                                <li class="h6"><i data-feather="map-pin" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">L.G.A:</span> {{ !empty($assignee['user']['account']['lga_id']) ? $assignee['user']['account']->lga->name : 'UNAVAILABLE' }}</li> 
-
-                                                <li class="h6"><i data-feather="map-pin" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">Town/Ward:</span> {{ !empty($assignee['user']['account']['town_id']) ? $assignee['user']['account']->town->name : 'UNAVAILABLE' }}</li> 
-
-                                                <li class="h6"><i data-feather="home" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">Address :</span> {{ $assignee['user']->contact == null ? '': $assignee['user']->contact->address }}</li>
-
-                                                <li class="h6"><i data-feather="phone" class="fea icon-sm text-warning mr-2"></i><span class="text-muted">Mobile :</span> {{ $assignee['user']->contact == null ? '' : $assignee['user']->contact->phone_number }}</li> 
+                                                <li class="h6 text-muted">Mobile : {{ !empty($assignee['user']['contact']) ? $assignee['user']['contact']['phone_number'] : 'UNAVAILABLE' }}</li> 
                                             </ul>
                                         </div>
                                     </div>
@@ -354,10 +359,17 @@
 </div>
 @endif
 
-@section('scripts')
 
 @push('scripts')
-<script src="{{ asset('assets/client/js/requests/4c676ab8-78c9-4a00-8466-a10220785892.js') }}"></script> 
+    <script src="{{ asset('assets/client/js/requests/4c676ab8-78c9-4a00-8466-a10220785892.js') }}"></script> 
+    <script src="{{ asset('assets/dashboard/assets/js/lightgallery-all.min.js') }}"></script>
+
+    <script>
+    $(function(){
+        //Initiate light gallery plugin
+        $('.lightgallery').lightGallery();
+    });
+    </script>
 @endpush
-@endsection
+
 @endsection
