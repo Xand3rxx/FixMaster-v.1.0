@@ -274,7 +274,6 @@ class InvoiceController extends Controller
 //            dd($totalAmount);
 
         }
-//        dd(\App\Models\Earning::where('role_name', 'QA')->first()->earnings);
         return view('frontend.invoices.invoice')->with([
             'invoice'   => $invoice,
             'labourMarkup' => $labourMarkup,
