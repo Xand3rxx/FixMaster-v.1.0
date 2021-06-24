@@ -131,8 +131,10 @@ class InvoiceController extends Controller
 
             foreach ($sub_services as $sub_service)
             {
-                $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
-                $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                if(!empty($sub_service['uuid'])) {
+                    $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
+                    $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                }
             }
             foreach ($data as $element)
             {
