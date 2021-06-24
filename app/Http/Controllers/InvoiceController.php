@@ -345,6 +345,7 @@ class InvoiceController extends Controller
             "labour_markup"         => ['required', 'numeric'],
             "material_markup"       => ['required', 'numeric'],
             "fixMasterRoyalty"      => ['required', 'numeric'],
+            "warrantyCost"          => ['required', 'numeric'],
             "invoice_type"          => ['required', 'string']
         ]);
 
@@ -388,6 +389,7 @@ class InvoiceController extends Controller
         $technician_assigned = $paymentRecord['technician_assigned'];
         $supplier_assigned = $paymentRecord['supplier_assigned'];
         $qa_assigned = $paymentRecord['qa_assigned'];
+        $warrantyCost = $paymentRecord['warrantyCost'];
 
         $royaltyFee = $paymentRecord['fixMasterRoyalty'];
         $logistics = $paymentRecord['logistics_cost'];
@@ -398,7 +400,7 @@ class InvoiceController extends Controller
         $serviceRequest = ServiceRequest::where('id', $invoice['service_request_id'])->firstOrFail();
 
         (bool)$status = false;
-        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $logistics, $tax, &$status){
+        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $warrantyCost, $logistics, $tax, &$status){
             $this->addCollaboratorPayment($invoice['service_request_id'],$cse_assigned,'Regular',\App\Models\Earning::where('role_name', 'CSE')->first()->earnings,null,null,\App\Models\Earning::where('role_name', 'CSE')->first()->earnings, null, null, null, null, $royaltyFee, $logistics, $tax);
             if($qa_assigned !== null)
             {
@@ -448,6 +450,13 @@ class InvoiceController extends Controller
                     'status' => 'success'
                 ]);
             }
+
+            ServiceRequestWarranty::create([
+                'client_id' => $invoice['client_id'],
+                'warranty_id' => $invoice['warranty_id'],
+                'service_request_id' => $invoice['service_request_id'],
+                'amount' => $warrantyCost,
+            ]);
 
             $invoice->update([
                 'status' => '2',
