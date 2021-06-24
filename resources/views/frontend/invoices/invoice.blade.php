@@ -393,6 +393,7 @@
                                 <input type="hidden" class="d-none" value="{{$labour_markup}}" id="labour_markup" name="labour_markup">
                                 <input type="hidden" class="d-none" value="{{$material_markup}}" id="material_markup" name="material_markup">
                                 <input type="hidden" class="d-none" value="{{$fixMasterRoyalty}}" id="fixMasterRoyalty" name="fixMasterRoyalty">
+                                <input type="hidden" class="d-none" value="{{ $warrantyCost }}" id="warrantyCost" name="warrantyCost">
 
                                 <input type="hidden" class="d-none" value="invoice" id="payment_for" name="payment_for">
                                 <input type="hidden" class="d-none" value="{{ $invoice['unique_id'] }}" id="unique_id" name="unique_id">
