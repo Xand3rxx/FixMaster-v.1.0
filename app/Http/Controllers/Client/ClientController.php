@@ -800,7 +800,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail1 == '0') {
+                if ($mail1) {
                     $mail_data_client = collect([
                         'email' =>  Auth::user()->email,
                         'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
@@ -813,7 +813,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail2 == '0') {
+                if ($mail2) {
                     foreach ($cse as $value) {
                         $mail_data_cse = collect([
                             'email' =>  $value['email'],
@@ -828,7 +828,7 @@ class ClientController extends Controller
                     };
                 }
 
-                if ($mail3 == '0') {
+                if ($mail3) {
                     $mail_data_admin = collect([
                         'email' =>  $supplier->email,
                         'template_feature' => 'SUPPLIER_WARRANTY_CLAIM_NOTIFICATION',

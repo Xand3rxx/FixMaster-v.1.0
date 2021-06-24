@@ -58,8 +58,6 @@ class InvoiceController extends Controller
         $get_qa_assigned = ServiceRequestAssigned::where('service_request_id', $invoice['serviceRequest']['id'])->where('assistive_role', 'Consultant')->first();
         $qa_assigned = $get_qa_assigned ?? null;
 
-//        $root_cause = ServiceRequestReport::where('service_request_id', $invoice['service_request_id'])->where('type', 'Root-Cause')->first()->report;
-//        dd($root_cause);
 
         $getCategory = $invoice['serviceRequest']['service']['category'];
         $labourMarkup = $getCategory['labour_markup'];
@@ -133,8 +131,10 @@ class InvoiceController extends Controller
 
             foreach ($sub_services as $sub_service)
             {
-                $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
-                $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                if(!empty($sub_service['uuid'])) {
+                    $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
+                    $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                }
             }
             foreach ($data as $element)
             {
