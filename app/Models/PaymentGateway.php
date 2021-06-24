@@ -23,6 +23,15 @@ class PaymentGateway extends Model
         });
     }
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'information' => 'array',
+    ];
+
     public function convertAutoData()
     {
         return json_decode($this->information, true);

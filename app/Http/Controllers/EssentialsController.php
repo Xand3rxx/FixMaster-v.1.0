@@ -58,7 +58,7 @@ class EssentialsController extends Controller
 
             $lgaId = $request->get('lga_id');
 
-            $stateExists = LGA::findOrFail($lgaId);
+            $stateExists = Lga::findOrFail($lgaId);
 
             $towns =  $stateExists->towns;
 

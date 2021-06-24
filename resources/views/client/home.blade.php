@@ -2,19 +2,15 @@
 @section('title', 'Home')
 @section('content')
 @include('layouts.partials._messages')
-{{-- {{ dd($user->state) }} --}}
 
 <div class="col-lg-8 col-12">
     <div class="border-bottom pb-4 row">
-        {{-- <h5>Femi Joseph</h5>
-        <p class="text-muted mb-0">I have started my career as a trainee and prove my self and achieve all the milestone with good guidance and reach up to the project manager. In this journey, I understand all the procedure which make me a good developer, team leader, and a project manager.</p>--}}
         <div class="col-md-4 mt-4">
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Service Requests</h4>
+                    <h4 class="title mb-0">Total Requests</h4>
                     <p class="text-muted mb-0">{{ $totalRequests }} </p>
-                    {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
                 </div>
             </div>
 
@@ -24,9 +20,8 @@
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Completed</h4>
-                <p class="text-muted mb-0">{{ $completedRequests }}</p>
-                    {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
+                    <h4 class="title mb-0">Completed Requests</h4>
+                    <p class="text-muted mb-0">{{ $completedRequests }}</p>
                 </div>
             </div>
         </div>
@@ -35,9 +30,8 @@
             <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
                 <img src="{{ asset('assets/images/job/Circleci.svg') }}" class="avatar avatar-ex-sm" alt="">
                 <div class="media-body content ml-3">
-                    <h4 class="title mb-0">Pending</h4>
-                <p class="text-muted mb-0">{{ $cancelledRequests }}</p>
-                    {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}}
+                    <h4 class="title mb-0">Pending Requests</h4>
+                    <p class="text-muted mb-0">{{ $cancelledRequests }}</p>
                 </div>
             </div>
         </div>
@@ -52,37 +46,36 @@
                         <i data-feather="mail" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">Email :</h6>
-                        <a href="javascript:void(0)" class="text-muted">{{ $user->user->email }}</a>
+                        <a href="javascript:void(0)" class="text-muted">{{ $user['email'] }}</a>
                         </div>
                     </div>
                     <div class="media align-items-center mt-3">
                         <i data-feather="phone" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">Phone No :</h6>
-                        <a href="javascript:void(0)" class="text-muted">{{ $client['phone_number'] }}</a>
+                        <a href="javascript:void(0)" class="text-muted">{{ $user['contact']['phone_number'] }}</a>
                         </div>
                     </div>
                     <div class="media align-items-center mt-3">
                         <i data-feather="bookmark" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">Occupation :</h6>
-                        <a href="javascript:void(0)" class="text-muted">{{ $user->profession->name ?? 'Not Selected' }}</a>
+                        <a href="javascript:void(0)" class="text-muted">{{ $user['client']['profession']['name'] ?? 'UNAVAILABLE' }}</a>
                         </div>
                     </div>
                     <div class="media align-items-center mt-3">
                         <i data-feather="map" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">State :</h6>
-                        <p class="text-muted mb-0">{{ $user->state->name ?? 'UNAVAILABLE' }}</p>
+                        <p class="text-muted mb-0">{{ $user['account']['state']['name'] ?? 'UNAVAILABLE' }}</p>
                         </div>
                     </div>
-
 
                     <div class="media align-items-center mt-3">
                         <i data-feather="map-pin" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">L.G.A :</h6>
-                        <p class="text-muted mb-0">{{ $user->lga->name ?? "UNAVAILABLE" }}</p>
+                        <p class="text-muted mb-0">{{ $user['account']['lga']['name'] ?? "UNAVAILABLE" }}</p>
                         </div>
                     </div>
 
@@ -90,14 +83,14 @@
                         <i data-feather="map-pin" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">Town/City :</h6>
-                        <p class="text-muted mb-0">{{ $user->town->name ?? "UNAVAILABLE" }}</p>
+                        <p class="text-muted mb-0">{{ $user['account']['town']['name'] ?? "UNAVAILABLE" }}</p>
                         </div>
                     </div>
                     <div class="media align-items-center mt-3">
                         <i data-feather="map" class="fea icon-ex-md text-muted mr-3"></i>
                         <div class="media-body">
                             <h6 class="text-primary mb-0">Full Address :</h6>
-                        <a href="javascript:void(0)" class="text-muted">{{ $client['address'] }}</a>
+                        <a href="javascript:void(0)" class="text-muted">{{ $user['contact']['address'] }}</a>
                         </div>
                     </div>
                 </div>
@@ -111,7 +104,7 @@
                     @foreach ($userServiceRequests['service_requests'] as $userServiceRequest)
                     @if($count++ < 3)
                         <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
-                            <img src="{{ asset('assets/images/job/Webhooks.svg')}}" class="avatar avatar-ex-sm" alt="">
+                            <img src="{{ asset('assets/images/job/Sketch.svg')}}" class="avatar avatar-ex-sm" alt="">
                             <div class="media-body content ml-3">
                                 <h4 class="title mb-0">{{ $userServiceRequest['service']['name'] }}({{ $userServiceRequest['service']['category']['name'] ?? 'Custom Request'}})</h4>
                             
@@ -130,12 +123,8 @@
                                 </p>
                                 @endif 
                             
-                                {{-- {{dd($userServiceRequest['service_request_assignees']->count())}} --}}
                                 <p class="mb-0"><a href="{{ route('client.request_details', [ 'request'=>$userServiceRequest['uuid'], 'locale'=>app()->getLocale() ]) }}" style="color: #161c2d" title="View Service request details">CSE: <span class="text-muted">
 
-                                    
-
-                                    {{-- {{dd()}} --}}
                                     @if($userServiceRequest['service_request_assignees']->count() > 0)
                                         @foreach ($userServiceRequest['service_request_assignees'] as $item)
                                             @if(($item['user']['roles'][0]['slug'] == 'cse-user') && ($item['status'] == 'Active'))
@@ -172,7 +161,7 @@
         </div><!--end row-->
     </div>
 
-    <h5 class="mt-4 mb-0">Popular Requests :</h5>
+    <h5 class="mt-4 mb-0">This week's Popular Requests :</h5>
     <div class="row">
         
         @foreach ($popularRequests as $popularRequest)
@@ -197,7 +186,7 @@
                     </div>
                 </div>
                 <div class="author">
-                <small class="text-light date"><i class="mdi mdi-calendar"></i> Requests: 12</small><br>
+                <small class="text-light date"><i class="mdi mdi-calendar"></i> Requests: {{ rand(5,17) }}</small><br>
                 <small class="text-light date"><i class="mdi mdi-credit-card"></i> Basic Price: ₦{{ number_format(3500) }}</small>
 
                 </div>

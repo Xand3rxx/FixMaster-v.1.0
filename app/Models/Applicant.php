@@ -68,8 +68,8 @@ class Applicant extends Model
                     'firstname' => $applicant->form_data['first_name'],
                     'email' => $applicant->form_data['email'],
                 ]);
-                $messanger->sendNewMessage('Account Created', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
-                // $messanger->sendNewMessage('email', Str::title(Str::of($template_feature)->replace('_', ' ',)), 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+                $messanger->sendNewMessage('Account Created', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
+                // $messanger->sendNewMessage('email', Str::title(Str::of($template_feature)->replace('_', ' ',)), 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
             }
         });
     }

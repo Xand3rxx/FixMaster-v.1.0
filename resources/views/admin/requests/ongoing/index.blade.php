@@ -65,7 +65,7 @@
                                     <td class="tx-medium"> {{ $request['unique_id'] }} </td>
                                     <td class="tx-medium"> {{ !empty($request['client']['account']['first_name']) ? Str::title($request['client']['account']['first_name'] .' '. $request['client']['account']['last_name']) : 'UNAVAILABLE' }} </td>
                                     <td class="tx-medium">
-                                        @if(!empty($request['service_request_assignees']))
+                                        @if(collect($request['service_request_assignees'])->isNotEmpty())
                                             @foreach ($request['service_request_assignees'] as $cse)
                                                 @if ($cse['user']['roles'][0]['slug'] == 'cse-user')
                                                     {{ Str::title($cse['user']['account']['first_name'].' '.$cse['user']['account']['last_name']) }}

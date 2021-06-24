@@ -38,7 +38,7 @@
         </div><!--end col-->
 
         <div class="form-group position-relative" style="margin-top: 1.91rem !important;">
-            <a class="btn btn-primary btn-sm" id="add-more-file"><i data-feather="plus" class="fea icon-sm"></i></a>
+            <a class="btn btn-primary btn-sm" id="add-more-file" style="font-size: 14px; font-weight: bold;">+</a>
         </div> 
     </div><!--end col-->
 
@@ -118,9 +118,8 @@
         </div>
     </div><!-- payment ends -->
 
-
-    <div class="col-sm-12">
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+    <div class="col-md-12">
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
     </div><!--end col-->
 
     @elseif($displayDescription == 'not-serviced')

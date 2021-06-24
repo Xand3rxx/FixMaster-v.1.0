@@ -260,9 +260,5 @@ class CustomerServiceExecutiveController extends Controller
         }
     }
 
-    public function see()
-    {
-
-        return view('emails.message', ['mail_message' => '<p>nnnnnnnnnnnnnn</p>']);
-    }
+ 
 }

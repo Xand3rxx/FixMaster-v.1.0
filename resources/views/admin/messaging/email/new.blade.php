@@ -83,7 +83,7 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="{{ asset('assets/dashboard/assets/jlistbox/js/jquery.transfer.js') }}"></script>
 <script>
-    var url = window.location.origin
+    var url = "{{config('app.url')}}";
     var selected_recipients = {};
     var user_role = '<?php  echo Auth::user()->type->role_id ?>';
     var settings = {};

@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Client;
 
-use DB;
-use Auth;
 use File;
 use Image;
 use Session;
 use Carbon\Carbon;
-use App\Models\Cse;
 use App\Models\Lga;
 use App\Models\Town;
 use App\Models\User;
@@ -19,39 +16,30 @@ use App\Models\Rating;
 use App\Models\Review;
 use App\Models\Account;
 use App\Models\Contact;
-use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Service;
 use App\Traits\Utility;
-use App\Models\Category;
-use App\Models\Warranty;
 use App\Traits\Loggable;
 use App\Traits\Services;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\ServicedAreas;
 use App\Traits\CancelRequest;
-use App\Models\ClientDiscount;
 use App\Models\PaymentGateway;
 use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
 use App\Models\ServiceRequestMedia;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Messaging\Message;
-use App\Models\ServiceRequestProgress;
-use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
-
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\Route;
 
 use App\Models\ServiceRequestWarranty;
+use Illuminate\Support\Facades\Config;
 use App\Models\ClientLoyaltyWithdrawal;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
-use App\Models\ServiceRequestCancellation;
 use App\Traits\RegisterPaymentTransaction;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Http\Controllers\Payment\PaystackController;
@@ -70,46 +58,28 @@ class ClientController extends Controller
      */
     public function index()
     {
-
-        $myRequest = Client::where('user_id', auth()->user()->id)->with('service_requests')->firstOrFail();
-
         //Get total available serviecs
-        $totalServices = Service::count();
-
-        if ($totalServices < 3) {
-            $popularRequests = Service::select('id', 'uuid', 'name', 'image')->take(10)->get()->random(1);
-        } else {
-            $popularRequests = Service::select('id', 'uuid', 'name', 'image')->take(10)->get()->random(3);
-        }
+        $totalServices = Service::get();
 
         return view('client.home', [
             // data
-            'totalRequests'     => auth()->user()->clientRequests()->count(),
-            'completedRequests' => auth()->user()->clientRequests()->where('status_id', 4)->count(),
-            'cancelledRequests' => auth()->user()->clientRequests()->where('status_id', 3)->count(),
-            'user' => auth()->user()->account,
-            'client' => [
-                'phone_number' => auth()->user()->contact->phone_number ?? 'UNAVAILABLE',
-                'address' => auth()->user()->contact->address ?? 'UNAVAILABLE',
-            ],
-            'popularRequests'  =>  $popularRequests,
-            'userServiceRequests' =>  $myRequest,
-
+            'totalRequests'         => auth()->user()->clientRequests()->count(),
+            'completedRequests'     => auth()->user()->clientRequests()->where('status_id', 4)->count(),
+            'cancelledRequests'     => auth()->user()->clientRequests()->where('status_id', 3)->count(),
+            'user'                  => User::where('id', Auth()->user()->id)->with('client', 'contact', 'account')->firstOrFail(),
+            'popularRequests'       =>  ($totalServices->count() < 3) ? $totalServices->take(10)->random(1) : $totalServices->take(10)->random(3),
+            'userServiceRequests'   =>  Client::where('user_id', auth()->user()->id)->with('service_requests')->first()
         ]);
     }
 
-    public function clientRequestDetails($language, $request)
+    public function clientRequestDetails($language, $uuid)
     {
 
-        $requestDetail = ServiceRequest::where('uuid', $request)->with('service_request_assignees')->firstOrFail();
-
-        // return \App\Models\ServiceRequestAssigned::where('service_request_id', $requestDetail->id)->where('status', 'Active')->firstOrFail()->status;
+        // return $requestDetail = ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail();
 
         return view('client.request_details', [
 
-            'requestDetail'     =>  $requestDetail,
-            'assignedCSE'       =>  \App\Models\ServiceRequestAssigned::where('service_request_id', $requestDetail->id)->where('status', 'Active')->first(),
-
+            'requestDetail'     =>  ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail()
         ]);
     }
 
@@ -316,48 +286,75 @@ class ClientController extends Controller
             ->with('usercontact')
             ->orderBy('id', 'DESC')
             ->firstOrFail();
-        
+
         $data['displayDescription'] = 'blank';
-        
+
         // dd($data['registeredAccount']);
         return view('client.services.quote', $data);
     }
 
-    function ajax_contactForm(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * This is an ajax call to save a new client contact.
+     * Present on click of Create button from the form.
+     */
+    public function createNewClientContact(Request $request)
     {
+        if ($request->ajax()) {
 
-        $validatedData = $request->validate([
-            'firstName'                   =>   'required',
-            'lastName'                    =>   'required',
-            'phoneNumber'                 =>   'required',
-            'state'                       =>   'required',
-            'lga'                         =>   'required',
-            'town'                        =>   'required',
-            'streetAddress'               =>   'required',
-            'addressLat'                  =>   'required',
-            'addressLng'                  =>   'required',
-        ]);
-
-        $clientContact = new Contact;
-        $clientContact->user_id   = auth()->user()->id;
-        $clientContact->name      = $request->firstName . ' ' . $request->lastName;
-        $clientContact->state_id  = $request->state;
-        $clientContact->lga_id    = $request->lga;
-        $clientContact->town_id   = $request->town;
-        $client  = Client::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->firstOrFail();
-        $clientContact->account_id    = $client->account_id;
-        $clientContact->country_id    = '156';
-        // $clientContact->is_default        = '1';
-        $clientContact->phone_number       = $request->phoneNumber;
-        $clientContact->address            = $request->streetAddress;
-        $clientContact->address_longitude  = $request->addressLat;
-        $clientContact->address_latitude   = $request->addressLng;
-        if ($clientContact->save()) {
-            return view('client.services._contactList', [
-                'myContacts'    => Contact::where('user_id', auth()->user()->id)->get(),
+            //Validate data from ajax request
+            $validatedData = $request->validate([
+                'first_name'        =>   'bail|required|string',
+                'last_name'         =>   'bail|required|string',
+                'phone_number'      =>   'bail|required||unique:contacts,phone_number',
+                'state_id'          =>   'bail|required|integer',
+                'lga_id'            =>   'bail|required|integer',
+                'town_id'           =>   'sometimes|integer',
+                'address'           =>   'bail|required',
+                'user_latitude'     =>   'bail|required',
+                'user_longitude'    =>   'bail|required',
             ]);
-        } else {
-            return back()->with('error', 'sorry!, an error occured please try again');
+
+            //Set `createService` to false before Db transaction
+            (bool) $createContact  = false;
+
+            $actionUrl = Route::currentRouteAction();
+
+            // Set DB to rollback DB transacations if error occurs
+            DB::transaction(function () use ($request, $validatedData, &$createContact) {
+
+                Contact::create([
+                    'user_id'           =>   $request->user()->id,
+                    'account_id'        =>   $request->user()->account->id,
+                    'name'              =>   ucwords($validatedData['first_name'] . ' ' . $validatedData['last_name']),
+                    'phone_number'      =>   $validatedData['phone_number'],
+                    'country_id'        =>   156,
+                    'state_id'          =>   $validatedData['state_id'],
+                    'lga_id'            =>   $validatedData['lga_id'],
+                    'town_id'           =>   $validatedData['town_id'],
+                    'address'           =>   $validatedData['address'],
+                    'address_latitude'     =>   $validatedData['user_latitude'],
+                    'address_longitude'    =>   $validatedData['user_longitude'],
+                ]);
+                $createContact  = true;
+            });
+
+            if ($createContact) {
+
+                $this->log('Profile', 'Informational', $actionUrl, $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' successfully created a new contact address');
+
+                return view('client.services._contactList', [
+                    'myContacts'    => $request->user()->contacts,
+                ]);
+            } else {
+
+                $this->log('Errors', 'Error', $actionUrl, 'An error occurred while ' . $request->user()->account->first_name . ' ' . $request->user()->account->last_name . ' was trying to create a new contact address');
+
+                return back()->with('error', 'Sorry! An error occurred while to create a new contact address');
+            }
+
         }
     }
 
@@ -432,27 +429,27 @@ class ClientController extends Controller
      */
     public function customService()
     {
-        $data['bookingFees']  = $this->bookingFees();
-        $data['myContacts'] = Contact::where('user_id', auth()->user()->id)->latest('created_at')->get();
-        $data['discounts']    = $this->clientDiscounts();
-        $data['gateways']     = PaymentGateway::whereStatus(1)->orderBy('id', 'DESC')->get();
-        $data['states'] = State::select('id', 'name')->orderBy('name', 'ASC')->get();
-        $data['balance']      = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->first();
+        $user = Auth::user()->loadMissing('contacts', 'account');
 
-        return view('client.services.service_custom', $data);
+        return view('client.services.service_custom', [
+            'discounts'             => \App\Models\ClientDiscount::ClientServiceRequestsDiscounts()->get(),
+            'bookingFees'           => \App\Models\Price::bookingFees()->get(),
+            'states'                => \App\Models\State::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'gateways'              => PaymentGateway::where('status', PaymentGateway::STATUS['active'])->orderBy('id', 'DESC')->get(),
+            'displayDescription'    => 'blank',
+            'myContacts'            => $user['contacts'],
+            'registeredAccount'     => $user['account']
+        ]);
     }
 
 
     public function myServiceRequest()
     {
-        $myServiceRequests = Client::where('user_id', auth()->user()->id)
-            ->with('service_requests.invoices')
-            ->whereHas('service_requests', function ($query) {
-                $query->orderBy('created_at', 'ASC');
-            })->get();
-
         return view('client.services.list', [
-            'myServiceRequests' =>  $myServiceRequests[0],
+            'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices', 'service_requests.payment')
+                ->whereHas('service_requests', function ($query) {
+                    $query->orderBy('created_at', 'ASC');
+                })->first(),
         ]);
     }
 
@@ -605,7 +602,7 @@ class ClientController extends Controller
                     'email' => $cse['user']['email'],
                     'url'  => (string)$url
                 ]);
-                $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+                $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
             }
         }
 
@@ -633,16 +630,15 @@ class ClientController extends Controller
         return $service_request;
     }
 
-    public function editRequest($language, $request)
+    public function editRequest($language, $uuid)
     {
-        // return $request;
-        $userServiceRequest = ServiceRequest::where('uuid', $request)->with('service_request_medias')->first();
+
+        // return $userServiceRequest = ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail();
 
         $data = [
-            'userServiceRequest'    =>  $userServiceRequest,
+            'userServiceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail(),
         ];
-        // return $data['userServiceRequest']['service_request_medias'][0]['media_files']['unique_name'];
-        // return $data['userServiceRequest']['service_request_medias'][0]['media_files']['unique_name'];
+
         return view('client._request_edit', $data);
     }
 
@@ -804,7 +800,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail1 == '0') {
+                if ($mail1) {
                     $mail_data_client = collect([
                         'email' =>  Auth::user()->email,
                         'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
@@ -817,7 +813,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail2 == '0') {
+                if ($mail2) {
                     foreach ($cse as $value) {
                         $mail_data_cse = collect([
                             'email' =>  $value['email'],
@@ -832,7 +828,7 @@ class ClientController extends Controller
                     };
                 }
 
-                if ($mail3 == '0') {
+                if ($mail3) {
                     $mail_data_admin = collect([
                         'email' =>  $supplier->email,
                         'template_feature' => 'SUPPLIER_WARRANTY_CLAIM_NOTIFICATION',

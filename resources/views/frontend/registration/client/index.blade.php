@@ -202,7 +202,6 @@
                                     <i data-feather="map-pin" class="fea icon-sm icons"></i>
                                     <input type="text" class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria." name="full_address" id="full_address" value="{{ old('full_address') }}" required>
 
-                                    {{-- <textarea class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" rows="2" name="full_address" id="full_address" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria.">{{ old('full_address') }}</textarea> --}}
                                     @error('full_address')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -211,11 +210,10 @@
                                 </div>
                             </div>
 
-
                             <!-- hidden input field for long, and lat -->
-                            <input type="hidden" class="form-control" value="" name="user_address" id="user_address" placeholder="Your Location">
-                            <input type="hidden" value="" name="address_latitude" id="user_latitude">
-                            <input type="hidden" value="" name="address_longitude" id="user_longitude">
+                            <input type="hidden" class="form-control" value="{{ old('user_address') }}" name="user_address" id="user_address" placeholder="Your Location">
+                            <input type="hidden" value="{{ old('address_latitude') }}" name="address_latitude" id="user_latitude">
+                            <input type="hidden" value="{{ old('address_longitude') }}" name="address_longitude" id="user_longitude">
                             <input type="hidden"  name="ref"  value="{{$referralCode}}">
 
 
@@ -271,7 +269,6 @@
 </section>
 
 @push('scripts')
-<script src="{{ asset('assets/js/geolocation.js') }}"></script>
 <script>
     $(document).ready(function() {
         "use strict";

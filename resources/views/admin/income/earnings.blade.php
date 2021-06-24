@@ -52,8 +52,12 @@
                                             <div class="dropdown-file">
                                                 <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a href="{{ route('admin.edit_earnings', ['locale' => app()->getLocale(), 'earning' => $earning['uuid']]) }}" class="dropdown-item details text-warning"><i class="far fa-edit"></i> Edit</a>
-                                                    <a href="{{ route('admin.delete_earnings', ['locale' => app()->getLocale(), 'earning' => $earning['uuid']]) }}" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                                    <form action="{{ route('admin.delete_earnings', ['locale' => app()->getLocale(), 'earning' => $earning['uuid']]) }}" method="post" id="submit-earning-form">
+                                                        <a href="{{ route('admin.edit_earnings', ['locale' => app()->getLocale(), 'earning' => $earning['uuid']]) }}" class="dropdown-item details text-warning"><i class="far fa-edit"></i> Edit</a>
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button id="delete-earning" onclick="return false" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </td>
@@ -98,6 +102,23 @@
                 }
             });
         });
+
+        $('#delete-earning').on('click', function (e){
+            e.preventDefault()
+            Swal.fire({
+                title: 'Are you sure ?',
+                text: "You won't be able to revert this !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    $('#submit-earning-form').submit()
+                }
+            })
+        })
 
     </script>
 @endsection
