@@ -61,9 +61,9 @@
                             <label for="gender">Gender</label>
                             <select class="form-control @error('gender') is-invalid @enderror" name="gender" id="gender" required>
                                 <option selected disabled value="0">Select...</option>
-                                <option value="Male" {{ Str::title($applicant['form_data']['gender']) ?? old('gender') == 'Male' ? 'selected' : ''}}>Male</option>
-                                <option value="Female" {{Str::title($applicant['form_data']['gender']) ?? old('gender') == 'Female' ? 'selected' : ''}}>Female</option>
-                                <option value="Others" {{ Str::title($applicant['form_data']['gender']) ?? old('gender') == 'Others' ? 'selected' : ''}}>Others</option>
+                                <option value="Male" {{ !empty($applicant)? Str::title($applicant['form_data']['gender']) : (old('gender') == 'Male' ? 'selected' : '')}}>Male</option>
+                                <option value="Female" {{!empty($applicant) ? Str::title($applicant['form_data']['gender']) : ( old('gender') == 'Female' ? 'selected' : '')}}>Female</option>
+                                <option value="Others" {{ !empty($applicant) ? Str::title($applicant['form_data']['gender']) : (old('gender') == 'Others' ? 'selected' : '')}}>Others</option>
                             </select>
                             @error('gender')
                             <x-alert :message="$message" />
