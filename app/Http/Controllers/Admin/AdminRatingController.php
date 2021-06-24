@@ -13,7 +13,7 @@ class AdminRatingController extends Controller
         $diagnosisRatings = Rating::where('service_diagnosis_by', '!=', null)
         ->where('ratee_id', null)->with('clientAccount', 'cseAccount','service_request')->get();
         //return dd($cse);
-        return view('admin.ratings.cse_diagnosis_rating', compact('diagnosisRatings'));
+        return view('admin.ratings.job-performance_rating', compact('diagnosisRatings'));
     }
 
     public function getServiceRatings(Request $request)

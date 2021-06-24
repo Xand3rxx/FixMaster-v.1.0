@@ -19,7 +19,7 @@
 
       {{-- @foreach ($results as $result) --}}
       <tr>
-        <td class="tx-medium">Kenneth Ifeanyi</td>
+        <td class="tx-medium">Jamal Diwa</td>
         <td class="tx-medium">Victorial Island</td>
         <td class="text-medium">Electronics</td>
         <td class="text-medium">RQF-009871</td>

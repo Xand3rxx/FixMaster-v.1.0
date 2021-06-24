@@ -335,7 +335,7 @@
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Profit/Loss</h6>
                   {{-- <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4> --}}
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments}}</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments ?? '0.00'}}</h4>
                 </div>
               </div>
             </div>
@@ -383,7 +383,7 @@
               <li class="list-group-item d-flex pd-sm-x-20">
                 <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
                 <div class="pd-sm-l-10">
-                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name']}} for {{$pay['service_request']['unique_id']}}</p>
+                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name'] ?? ''}} for {{$pay['service_request']['unique_id'] ?? ''}}</p>
                   <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($pay['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
                 </div>
                 <div class="mg-l-auto text-right">

@@ -207,13 +207,20 @@
 
     @yield('scripts')
     @stack('scripts')
-
+    {{-- @if (\Request::filled('results'))
+ <script>
+    const res = @json(\Request::get('results'));
+    console.log(res);
+</script>
+@endif --}}
     @if (\Request::filled('results') && \Request::filled('users') && \Request::filled('client') && \Request::filled('serviceRequestId') && \Request::filled('uniqueId'))
-    <script>
+    <script> 
         const data = @json(\Request::get('users'));
         const uniqueId = @json(\Request::get('uniqueId'));
         const client = @json(\Request::get('client'));
         var serviceRequestId = @json(\Request::get('serviceRequestId'));
+        const res = @json(\Request::get('results'));
+        console.log(data);
         // client div to page
         let ratings_row = `<div class="row">
                                 <div class="col-md-4 col-lg-4 col-4">

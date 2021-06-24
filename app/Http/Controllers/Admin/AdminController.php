@@ -16,7 +16,6 @@ class AdminController extends Controller
         'adminPayments' => CollaboratorsPayment::where('user_id', 1)->value(DB::raw("SUM(labour_markup_cost + material_markup_cost + logistics_cost + royalty_fee + tax_fee)")),
         'receivedPayments' => ServiceRequestPayment::where('status','success')->get()->sum('amount'),
         'recentPayments' => ServiceRequestPayment::with('clients', 'service_request')->where('status','success')->latest()->limit(1)->get()
-        //'receivedPayments' => ServiceRequestPayment::where('status','success')->get()->sum('amount')
         ]);
     }
 }

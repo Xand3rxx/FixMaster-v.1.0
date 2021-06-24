@@ -12,6 +12,9 @@ class TechnicianReportController extends Controller
 {
     public function index()
     {
+        // $results = ServiceRequestAssigned::with('service_request', 'service_request.users', 'cses', 'service_request.status', 'service_request.users.account', 'service_request.users.roles')
+        // ->latest('created_at')->get();
+
         $results = ServiceRequestAssigned::with('service_request', 'user')->whereHas('user.roles', function ($query){
               $query->where('slug', 'technician-artisans');
             })->latest('created_at')->get();

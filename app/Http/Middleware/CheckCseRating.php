@@ -34,6 +34,8 @@ class CheckCseRating
                        $response = $role->id;
                     }
                 }
+
+                
                        if ($res == 'Completed' && $out->service_request->has_cse_rated == "No") {
                            $request->merge(['results' => $res, 'users' => $dat, 'client' => $serviceRequestClient, 'serviceRequestId' => $serviceRequestId, 'uniqueId'=> $uniqueId]);
                        }
@@ -44,7 +46,7 @@ class CheckCseRating
 
                    }
 
-        // $request->merge(['results' => $output]);
+        // $request->merge(['results' => 'Kenneth Nwideh']);
         return $next($request);
     }
 }
