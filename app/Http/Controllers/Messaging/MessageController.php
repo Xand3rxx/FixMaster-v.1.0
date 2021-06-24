@@ -230,7 +230,7 @@ class MessageController extends Controller
             'updated_at'        => Carbon::now(),
             'mail_status' => 'Not Sent',
         ]);
-        return ['to' => $parameters['recipient_email'], 'from' => 'dev@fix-master.com', 'subject' => $messageTemplate->title, 'content' => $message_body];;
+        return ['to' => $parameters['recipient_email'], 'from' => 'info@fixmaster.com.ng', 'subject' => $messageTemplate->title, 'content' => $message_body];;
     }
 
     /**
@@ -281,7 +281,7 @@ class MessageController extends Controller
         if ($from != "")
             $sender = DB::table('users')->where('users.email', $from)->first();
         else
-            $from = "dev@fix-master.com";
+            $from = "info@fixmaster.com.ng";
 
         $recipient = DB::table('users')->where('users.email', $to)->first();
 

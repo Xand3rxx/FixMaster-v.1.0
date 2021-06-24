@@ -97,7 +97,7 @@ class RequestController extends Controller
         ]);
         // Instantiate Contoller
         $messanger = new \App\Http\Controllers\Messaging\MessageController();
-        return $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+        return $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
     }
 
     public function getServiceRequestsByTechnician(Request $request)

@@ -15,12 +15,12 @@ class Lga extends Model
 
     public function state()
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(State::class)->orderBy('name','ASC');
     }
 
     public function towns()
     {
-        return $this->hasMany(Town::class, 'lga_id');
+        return $this->hasMany(Town::class, 'lga_id')->orderBy('name','ASC');
     }
 
     public function client()

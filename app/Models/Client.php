@@ -30,11 +30,10 @@ class Client extends Model
         });
     }
 
-    public function ratings(){
-
+    public function ratings()
+    {
         return $this->hasMany(Rating::class,'ratee_id');
-
-        }
+    }
 
     /**
      * Get the user that owns the Account.
@@ -43,8 +42,6 @@ class Client extends Model
     {
         return $this->belongsTo(User::class)->with(['account', 'contact']);
     }
-
-
 
     public function account()
     {
@@ -73,5 +70,9 @@ class Client extends Model
         return round($this->ratings->avg('star'));
     }
 
+    public function profession()
+    {
+        return $this->hasOne(Profession::class, 'id', 'profession_id');
+    }
 }
 

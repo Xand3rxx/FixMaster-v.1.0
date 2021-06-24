@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use App\Models\WalletTransaction;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,8 +29,7 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('layouts.client', function ($view) {
 
             $view->with([
-                'myWallet'  =>  WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get(),
-                'profile'   =>  auth()->user()->account,
+                'profile'   =>  \App\Models\User::where('id', auth()->user()->id)->with('account', 'client', 'lastActivityLog', 'clientWalletBalance')->firstOrFail(),
             ]);
         });
 

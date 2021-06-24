@@ -210,11 +210,10 @@
                                 </div>
                             </div>
 
-
                             <!-- hidden input field for long, and lat -->
-                            <input type="hidden" class="form-control" value="" name="user_address" id="user_address" placeholder="Your Location">
-                            {{-- <input type="hidden" value="" name="address_latitude" id="user_latitude">
-                            <input type="hidden" value="" name="address_longitude" id="user_longitude"> --}}
+                            <input type="hidden" class="form-control" value="{{ old('user_address') }}" name="user_address" id="user_address" placeholder="Your Location">
+                            <input type="hidden" value="{{ old('address_latitude') }}" name="address_latitude" id="user_latitude">
+                            <input type="hidden" value="{{ old('address_longitude') }}" name="address_longitude" id="user_longitude">
                             <input type="hidden"  name="ref"  value="{{$referralCode}}">
 
 

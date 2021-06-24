@@ -6,9 +6,7 @@ use File;
 use Image;
 use Session;
 use Carbon\Carbon;
-use App\Models\Cse;
 use App\Models\Lga;
-use App\Models\Rfq;
 use App\Models\Town;
 use App\Models\User;
 use App\Models\Media;
@@ -18,25 +16,18 @@ use App\Models\Rating;
 use App\Models\Review;
 use App\Models\Account;
 use App\Models\Contact;
-use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Service;
 use App\Traits\Utility;
-use App\Models\Category;
-use App\Models\Warranty;
 use App\Traits\Loggable;
 use App\Traits\Services;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\ServicedAreas;
 use App\Traits\CancelRequest;
-use App\Models\ClientDiscount;
 use App\Models\PaymentGateway;
 use App\Models\ServiceRequest;
 use App\Traits\PasswordUpdator;
 use App\Models\LoyaltyManagement;
 use App\Models\WalletTransaction;
-use App\Models\RfqSupplierInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Models\ServiceRequestMedia;
 use Illuminate\Support\Facades\URL;
@@ -45,17 +36,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceRequestSetting;
 use Illuminate\Support\Facades\Route;
 
-use App\Models\ServiceRequestAssigned;
-
-use App\Models\ServiceRequestProgress;
 use App\Models\ServiceRequestWarranty;
 use Illuminate\Support\Facades\Config;
 use App\Models\ClientLoyaltyWithdrawal;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\RatingController;
-use App\Models\ServiceRequestCancellation;
 use App\Traits\RegisterPaymentTransaction;
-use App\Http\Controllers\Messaging\Message;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Http\Controllers\Payment\PaystackController;
 use App\Http\Controllers\Messaging\MessageController;
@@ -73,46 +58,28 @@ class ClientController extends Controller
      */
     public function index()
     {
-
-        $myRequest = Client::where('user_id', auth()->user()->id)->with('service_requests')->firstOrFail();
-
         //Get total available serviecs
-        $totalServices = Service::count();
-
-        if ($totalServices < 3) {
-            $popularRequests = Service::select('id', 'uuid', 'name', 'image')->take(10)->get()->random(1);
-        } else {
-            $popularRequests = Service::select('id', 'uuid', 'name', 'image')->take(10)->get()->random(3);
-        }
+        $totalServices = Service::get();
 
         return view('client.home', [
             // data
-            'totalRequests'     => auth()->user()->clientRequests()->count(),
-            'completedRequests' => auth()->user()->clientRequests()->where('status_id', 4)->count(),
-            'cancelledRequests' => auth()->user()->clientRequests()->where('status_id', 3)->count(),
-            'user' => auth()->user()->account,
-            'client' => [
-                'phone_number' => auth()->user()->contact->phone_number ?? 'UNAVAILABLE',
-                'address' => auth()->user()->contact->address ?? 'UNAVAILABLE',
-            ],
-            'popularRequests'  =>  $popularRequests,
-            'userServiceRequests' =>  $myRequest,
-
+            'totalRequests'         => auth()->user()->clientRequests()->count(),
+            'completedRequests'     => auth()->user()->clientRequests()->where('status_id', 4)->count(),
+            'cancelledRequests'     => auth()->user()->clientRequests()->where('status_id', 3)->count(),
+            'user'                  => User::where('id', Auth()->user()->id)->with('client', 'contact', 'account')->firstOrFail(),
+            'popularRequests'       =>  ($totalServices->count() < 3) ? $totalServices->take(10)->random(1) : $totalServices->take(10)->random(3),
+            'userServiceRequests'   =>  Client::where('user_id', auth()->user()->id)->with('service_requests')->first()
         ]);
     }
 
-    public function clientRequestDetails($language, $request)
+    public function clientRequestDetails($language, $uuid)
     {
 
-        $requestDetail = ServiceRequest::where('uuid', $request)->with('service_request_assignees')->firstOrFail();
-
-        // return \App\Models\ServiceRequestAssigned::where('service_request_id', $requestDetail->id)->where('status', 'Active')->firstOrFail()->status;
+        // return $requestDetail = ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail();
 
         return view('client.request_details', [
 
-            'requestDetail'     =>  $requestDetail,
-            'assignedCSE'       =>  \App\Models\ServiceRequestAssigned::where('service_request_id', $requestDetail->id)->where('status', 'Active')->first(),
-
+            'requestDetail'     =>  ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail()
         ]);
     }
 
@@ -387,6 +354,7 @@ class ClientController extends Controller
 
                 return back()->with('error', 'Sorry! An error occurred while to create a new contact address');
             }
+
         }
     }
 
@@ -478,7 +446,7 @@ class ClientController extends Controller
     public function myServiceRequest()
     {
         return view('client.services.list', [
-            'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices')
+            'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices', 'service_requests.payment')
                 ->whereHas('service_requests', function ($query) {
                     $query->orderBy('created_at', 'ASC');
                 })->first(),
@@ -634,7 +602,7 @@ class ClientController extends Controller
                     'email' => $cse['user']['email'],
                     'url'  => (string)$url
                 ]);
-                $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+                $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
             }
         }
 
@@ -662,16 +630,15 @@ class ClientController extends Controller
         return $service_request;
     }
 
-    public function editRequest($language, $request)
+    public function editRequest($language, $uuid)
     {
-        // return $request;
-        $userServiceRequest = ServiceRequest::where('uuid', $request)->with('service_request_medias')->first();
+
+        // return $userServiceRequest = ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail();
 
         $data = [
-            'userServiceRequest'    =>  $userServiceRequest,
+            'userServiceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail(),
         ];
-        // return $data['userServiceRequest']['service_request_medias'][0]['media_files']['unique_name'];
-        // return $data['userServiceRequest']['service_request_medias'][0]['media_files']['unique_name'];
+
         return view('client._request_edit', $data);
     }
 
