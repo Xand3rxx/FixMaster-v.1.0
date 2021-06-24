@@ -132,7 +132,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/estate/deactivate/{estate:uuid}',      [EstateController::class, 'deactivate'])->name('deactivate_estate');
     Route::get('/estate/approve/{estate:uuid}',      [EstateController::class, 'approve'])->name('approve_estate');
     Route::get('/estate/decline/{estate:uuid}',      [EstateController::class, 'decline'])->name('decline_estate');
-    Route::get('/estate/delete/{estate:uuid}',      [EstateController::class, 'delete'])->name('delete_estate');
+    Route::delete('/estate/delete/{estate:uuid}',      [EstateController::class, 'delete'])->name('delete_estate');
 
     //Routes for Warranty Management
     Route::get('/warranty',      [WarrantyController::class, 'index'])->name('warranty_list');
@@ -164,11 +164,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/earnings', [EarningController::class, 'index'])->name('earnings');
     Route::get('/edit-earnings/{earning:uuid}', [EarningController::class, 'editEarning'])->name('edit_earnings');
     Route::patch('/update-earnings/{earning:uuid}', [EarningController::class, 'updateEarnings'])->name('update_earnings');
-    Route::get('/delete-earning/{earning:uuid}', [EarningController::class, 'deleteEarning'])->name('delete_earnings');
+    Route::delete('/delete-earning/{earning:uuid}', [EarningController::class, 'deleteEarning'])->name('delete_earnings');
     Route::get('/income', [IncomeController::class, 'index'])->name('income');
     Route::get('/edit-income/{income:uuid}', [IncomeController::class, 'editIncome'])->name('edit_income');
     Route::patch('/update-income/{income:uuid}', [IncomeController::class, 'updateIncome'])->name('update_income');
-    Route::get('/delete-income/{income:uuid}', [IncomeController::class, 'deleteIncome'])->name('delete_income');
+    Route::delete('/delete-income/{income:uuid}', [IncomeController::class, 'deleteIncome'])->name('delete_income');
     Route::get('/income-history', [IncomeController::class, 'history'])->name('income_history');
 
     //Routes for Category Management
