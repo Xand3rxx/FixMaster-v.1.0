@@ -800,7 +800,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail1 == '0') {
+                if ($mail1) {
                     $mail_data_client = collect([
                         'email' =>  Auth::user()->email,
                         'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
@@ -813,7 +813,7 @@ class ClientController extends Controller
 
 
 
-                if ($mail2 == '0') {
+                if ($mail2) {
                     foreach ($cse as $value) {
                         $mail_data_cse = collect([
                             'email' =>  $value['email'],
@@ -828,7 +828,7 @@ class ClientController extends Controller
                     };
                 }
 
-                if ($mail3 == '0') {
+                if ($mail3) {
                     $mail_data_admin = collect([
                         'email' =>  $supplier->email,
                         'template_feature' => 'SUPPLIER_WARRANTY_CLAIM_NOTIFICATION',
@@ -885,23 +885,13 @@ class ClientController extends Controller
         }
     }
 
-    public function markCompletedRequest(Request $request, $language, $id)
+    public function markCompletedRequest($language, $uuid)
     {
 
-        $requestExists = ServiceRequest::where('uuid', $id)->firstOrFail();
+        //Check if uuid exists on `users` table.
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-        $updateMarkasCompleted =  $this->markCompletedRequestTrait(Auth::id(), $id);
-
-        if ($updateMarkasCompleted) {
-
-            $this->log('request', 'Informational', Route::currentRouteAction(), auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ') marked ' . $requestExists->unique_id . ' service request as completed.');
-
-            return redirect()->route('client.service.all', app()->getLocale())->with('success', $requestExists->unique_id . ' was marked as completed successfully.Please check your mail for notification');
-        } else {
-
-            //activity log
-            return back()->with('error', 'An error occurred while trying to mark ' . $requestExists->unique_id . ' service request as completed.');
-        }
+        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark'. $serviceRequest->unique_id.' request as completed.'));
     }
 
 

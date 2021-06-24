@@ -97,7 +97,9 @@
                                 @foreach ($services as $service)
                                 <optgroup label="{{ $service->name }}">
                                     @foreach($service->services as $item)
+                                    @if(!empty($applicant))
                                     <option @if (in_array($item->id, $applicant['form_data']['supplier_category'])) {{'selected'}} @endif  value="{{ $item->id }}"> {{ $item->name }} </option>
+                                   @endif
                                     @endforeach
                                 </optgroup>
                                 @endforeach

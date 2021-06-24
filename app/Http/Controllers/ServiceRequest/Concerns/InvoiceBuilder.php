@@ -110,7 +110,7 @@ class InvoiceBuilder
                 'user_id'              => $request->user()->id,
                 'service_request_id'   => $service_request->id,
                 'stage'                => ServiceRequestReport::STAGES[0],
-                'type'                 => ServiceRequestReport::TYPES[2],
+                'type'                 => ServiceRequestReport::TYPES[1],
                 'report'               => $request->input('other_comments'),
             ]);
         }

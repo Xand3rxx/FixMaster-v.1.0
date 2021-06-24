@@ -58,8 +58,6 @@ class InvoiceController extends Controller
         $get_qa_assigned = ServiceRequestAssigned::where('service_request_id', $invoice['serviceRequest']['id'])->where('assistive_role', 'Consultant')->first();
         $qa_assigned = $get_qa_assigned ?? null;
 
-//        $root_cause = ServiceRequestReport::where('service_request_id', $invoice['service_request_id'])->where('type', 'Root-Cause')->first()->report;
-//        dd($root_cause);
 
         $getCategory = $invoice['serviceRequest']['service']['category'];
         $labourMarkup = $getCategory['labour_markup'];
@@ -133,8 +131,10 @@ class InvoiceController extends Controller
 
             foreach ($sub_services as $sub_service)
             {
-                $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
-                $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                if(!empty($sub_service['uuid'])) {
+                    $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
+                    $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                }
             }
             foreach ($data as $element)
             {
@@ -274,7 +274,6 @@ class InvoiceController extends Controller
 //            dd($totalAmount);
 
         }
-//        dd(\App\Models\Earning::where('role_name', 'QA')->first()->earnings);
         return view('frontend.invoices.invoice')->with([
             'invoice'   => $invoice,
             'labourMarkup' => $labourMarkup,
@@ -346,6 +345,7 @@ class InvoiceController extends Controller
             "labour_markup"         => ['required', 'numeric'],
             "material_markup"       => ['required', 'numeric'],
             "fixMasterRoyalty"      => ['required', 'numeric'],
+            "warrantyCost"          => ['required', 'numeric'],
             "invoice_type"          => ['required', 'string']
         ]);
 
@@ -389,6 +389,7 @@ class InvoiceController extends Controller
         $technician_assigned = $paymentRecord['technician_assigned'];
         $supplier_assigned = $paymentRecord['supplier_assigned'];
         $qa_assigned = $paymentRecord['qa_assigned'];
+        $warrantyCost = $paymentRecord['warrantyCost'];
 
         $royaltyFee = $paymentRecord['fixMasterRoyalty'];
         $logistics = $paymentRecord['logistics_cost'];
@@ -399,7 +400,7 @@ class InvoiceController extends Controller
         $serviceRequest = ServiceRequest::where('id', $invoice['service_request_id'])->firstOrFail();
 
         (bool)$status = false;
-        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $logistics, $tax, &$status){
+        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $warrantyCost, $logistics, $tax, &$status){
             $this->addCollaboratorPayment($invoice['service_request_id'],$cse_assigned,'Regular',\App\Models\Earning::where('role_name', 'CSE')->first()->earnings,null,null,\App\Models\Earning::where('role_name', 'CSE')->first()->earnings, null, null, null, null, $royaltyFee, $logistics, $tax);
             if($qa_assigned !== null)
             {
@@ -449,6 +450,13 @@ class InvoiceController extends Controller
                     'status' => 'success'
                 ]);
             }
+
+            ServiceRequestWarranty::create([
+                'client_id' => $invoice['client_id'],
+                'warranty_id' => $invoice['warranty_id'],
+                'service_request_id' => $invoice['service_request_id'],
+                'amount' => $warrantyCost,
+            ]);
 
             $invoice->update([
                 'status' => '2',
