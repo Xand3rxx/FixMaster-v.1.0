@@ -93,11 +93,8 @@ class Template extends Controller
         return response()->json(["message" => "Template not found!"], 404);
 
     }
-<<<<<<< HEAD
 }
-=======
 
->>>>>>> c82e3be90fb85686e9d491aefce221d3a98207cf
     public function see(){
         return view('emails.message', ['mail_message'=> 'Your job rating counts! Remember to request for a rating and review on all completed diagnosis and job repairs completed.']);
 

@@ -325,20 +325,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/payments/received', [ServiceRequestPaymentController::class, 'getReceivedPayments'])->name('payments.received');
     Route::post('/received_payment_sorting', [ServiceRequestPaymentController::class, 'sortReceivedPayments'])->name('received_payment_sorting');
-<<<<<<< HEAD
   
     Route::get('/reports/warranty',  [WarrantyReportController::class, 'index'])->name('warranty_reports');
     Route::get('/reports/warranty/extended',  [WarrantyReportController::class, 'extended_warranty'])->name('extended_warranty_reports');
-
     Route::post('/reports/warranty/list-sorting',      [WarrantyReportController::class, 'listSorting'])->name('warranty_list_report_sorting');
     Route::post('/reports/warranty/extended/list-sorting',      [WarrantyReportController::class, 'extendedWarrantyListSorting'])->name('extended_warranty_list_report_sorting');
 
     
-   
-=======
 
-    Route::get('/reports/warranty',  [WarrantyReportController::class, 'index'])->name('warranty_reports');
->>>>>>> c82e3be90fb85686e9d491aefce221d3a98207cf
 });
 
 //All routes regarding clients should be in here
