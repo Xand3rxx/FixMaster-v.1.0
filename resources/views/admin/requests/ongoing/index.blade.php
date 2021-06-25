@@ -71,7 +71,7 @@
                                                     {{ Str::title($cse['user']['account']['first_name'].' '.$cse['user']['account']['last_name']) }}
                                                 @endif
                                             @endforeach
-                                        @else UNAVAILABLE @endif
+                                        @else Not Assigned @endif
                                     </td>
                                     
                                     <td class="tx-medium text-center">₦{{ number_format($request['price']['amount']) }}<br><span class="text-success">({{ $request['price']['name'] }})</span></td>
