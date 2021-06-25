@@ -25,7 +25,7 @@ class CheckCseRating
                $res = $out->service_request->status->name;
                $uniqueId = $out->service_request->unique_id;
                $dat = $out->service_request->users;
-               $serviceRequestClient = $out->service_request->clientAccount;
+               $serviceRequestClient = $out->service_request->client;
                $serviceRequestId = $out->service_request->id;
                foreach ($dat as $user) {
                    $data = $user->roles;

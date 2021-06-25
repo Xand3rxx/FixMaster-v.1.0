@@ -21,13 +21,15 @@ class AdminRatingController extends Controller
 
         $cards = Rating::select([
             'service_request_id',
+            'rater_id',
             DB::raw('COUNT(id) as id'),
             DB::raw('AVG(star) as starAvg')
-        ])->with('client', 'account', 'service_request')
+        ])->with('client', 'service_request')
         ->where('service_id', '!=', null)
         ->where('service_diagnosis_by', null)
         ->where('rater_id', '!=', null)
-        ->groupBy('service_request_id')->get();
+        ->groupBy('service_request_id')
+        ->groupBy('rater_id')->get();
 
     return view('admin.ratings.service_rating', compact('cards'));
     }

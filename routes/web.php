@@ -424,7 +424,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
 });
 
-Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
+Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
     //All routes regarding CSE's should be in here
     Route::get('/', [CseController::class, 'index'])->name('index'); //Take me to CSE Dashboard
     Route::post('accept-service-request', [CseController::class, 'setJobAcceptance'])->name('accept-job');

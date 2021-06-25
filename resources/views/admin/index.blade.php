@@ -377,7 +377,7 @@
               <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
             </div> --}}
           </div>
-          {{-- @if($recentPayments->count() > 0)
+           @if($recentPayments->count() > 0)
             @foreach($recentPayments as $pay)
           <ul class="list-group list-group-flush tx-13">
               <li class="list-group-item d-flex pd-sm-x-20">
@@ -398,7 +398,7 @@
           </div><!-- card-footer -->
           @else
             <div>No Payment Currently</div>
-          @endif --}}
+          @endif 
         </div><!-- card -->
       </div>
 
