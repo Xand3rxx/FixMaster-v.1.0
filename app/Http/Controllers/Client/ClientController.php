@@ -789,12 +789,13 @@ class ClientController extends Controller
 
             //send mail 1, admin, 2, client, 3 cse
             if ($initateWarranty) {
+            ,
 
                 $mail_data_admin = collect([
-                    'email' =>  $admin->email,
+                    'email' =>  'info@fixmaster.com.ng',
                     'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
-                    'firstname' =>  $admin->account->first_name,
-                    'lastname' =>  $admin->account->last_name,
+                    'firstname' =>  'FixMaster',
+                    'lastname' =>  'Admin',
                     'job_ref' =>  $requestExists->unique_id
                 ]);
                 $mail1 = $this->mailAction($mail_data_admin);
