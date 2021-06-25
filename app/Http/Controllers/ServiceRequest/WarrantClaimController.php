@@ -294,7 +294,7 @@ class WarrantClaimController extends Controller
                 'manufacturer_name' => $value['manufacturer_name']??'UNAVAILABLE',
                 'size'              => $value['size']?? '0',
                 'unit_of_measurement' => $value['unit_of_measurement']??'0',
-                'image'              => $value['image']
+                'image'              => 'assets/rfq-images/'.$value['image']
                 
                 ]);
                 }
@@ -440,7 +440,8 @@ class WarrantClaimController extends Controller
           
             $rfqInvoice =  \App\Models\RfqSupplierInvoice::where(['rfq_id'=> $request->rfqWarranty_id ])->first();
             $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
-          if($request->approve_invoice == 'Approved'){
+          
+            if($request->approve_invoice == 'Approved'){
 
            $updateInvoiceStatus ='';
             (bool) $approveInvoice = false;
@@ -465,7 +466,7 @@ class WarrantClaimController extends Controller
                 
               ]);
         
-            $mail1 = $this->mailAction($mail_data_supplier);
+            $this->mailAction($mail_data_supplier);
             $approveInvoice = true;
             }); 
           }
@@ -500,7 +501,7 @@ class WarrantClaimController extends Controller
                 
               ]);
         
-            $mail1 = $this->mailAction($mail_data_supplier);
+            $this->mailAction($mail_data_supplier);
 
             $approveInvoice = true;
          }); 
@@ -508,7 +509,7 @@ class WarrantClaimController extends Controller
           }
 
      
-        return  $updateInvoiceStatus;
+        return  '1';
 
         }
 
@@ -561,7 +562,7 @@ class WarrantClaimController extends Controller
                 
               ]);
         
-            $mail1 = $this->mailAction($mail_data_supplier);
+            $this->mailAction($mail_data_supplier);
 
             $$createRfq = true;
         }); 
@@ -610,7 +611,7 @@ class WarrantClaimController extends Controller
                 
               ]);
         
-            $mail1 = $this->mailAction($mail_data_supplier);
+            $this->mailAction($mail_data_supplier);
 
                $$createRfq = true;
             });
