@@ -69,6 +69,12 @@ class ServiceRequestAssigned extends Model
         return $this->belongsTo(User::class, 'user_id')->with('roles', 'account');
     }
 
+    // public function cses()
+    // {
+    //     return $this->belongsTo(Cse::class, 'user_id');
+    // }
+
+
     public function account()
     {
         return $this->belongsTo(Account::class, 'service_request_id', 'user_id');

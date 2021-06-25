@@ -17,7 +17,7 @@
                                         </ul> --}}
                                         <div class="media-body content">
                                             <h4><a href="javascript:void(0)" class="text-dark title">Balance</a></h4>
-                                        <p class="text-muted location-time"><span class="text-dark h6">₦{{ number_format($profile['clientWalletBalance']['closing_balance']) ?? '0' }}</span></p>
+                                        <p class="text-muted location-time"><span class="text-dark h6">₦{{ !empty($profile['clientWalletBalance']['closing_balance']) ? number_format($profile['clientWalletBalance']['closing_balance']) : '0' }}</span></p>
                                             <a href="{{ route('client.wallet', app()->getLocale()) }}" class="btn btn-sm btn-outline-primary mouse-down">Fund Account</a>
                                         </div>
                                     </div>

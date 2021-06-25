@@ -22,18 +22,21 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
+//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
+use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
+use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\CollaboratorsPaymentController;
 use App\Http\Controllers\Admin\Report\SupplierReportController;
 use App\Http\Controllers\Admin\ServiceRequestPaymentController;
@@ -43,6 +46,7 @@ use App\Http\Controllers\ServiceRequest\WarrantClaimController;
 use App\Http\Controllers\Admin\User\TechnicianArtisanController;
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
+use App\Http\Controllers\Admin\Report\TechnicianReportController;
 use App\Http\Controllers\ServiceRequest\ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
 use App\Http\Controllers\ServiceRequest\AssignTechnicianController;
@@ -50,19 +54,19 @@ use App\Http\Controllers\Admin\User\Administrator\SummaryController;
 use App\Http\Controllers\Admin\User\CustomerServiceExecutiveController;
 use App\Http\Controllers\Supplier\RfqController as SupplierRfqController;
 use App\Http\Controllers\QualityAssurance\QualityAssuranceProfileController;
+use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
-use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
 
-use App\Http\Controllers\Client\MessageController as ClientMessageController;
+//use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
-use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
+use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 use App\Http\Controllers\Admin\Report\WarrantyReportController;
 
@@ -91,7 +95,7 @@ use App\Http\Controllers\Admin\Report\WarrantyReportController;
 Route::prefix('admin')->name('admin.')->group(function () {
     //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/ratings/cse-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-performance', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
     Route::get('/activate/{uuid}',      [AdminReviewController::class, 'activate'])->name('activate_review');
@@ -420,7 +424,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
 });
 
-Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
+Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
     //All routes regarding CSE's should be in here
     Route::get('/', [CseController::class, 'index'])->name('index'); //Take me to CSE Dashboard
     Route::post('accept-service-request', [CseController::class, 'setJobAcceptance'])->name('accept-job');
