@@ -413,7 +413,7 @@ trait Utility
    
 
         if($updateRequest AND $recordServiceProgress AND $updateServiceRequestWarranty){
-
+          $mail2="";
            //send mails to 1.admin, 2.client, 3.cse for mark as completed;
 
              //email for admin
@@ -427,7 +427,7 @@ trait Utility
             ]);
             $mail1 = $this->mailAction($mail_data_admin);
       
-            if($mail1 == '0')
+            if($mail1)
             {
 
              $mail_data_client = collect([
@@ -441,7 +441,7 @@ trait Utility
             }
           
         
-            if($mail2 == '0')
+            if($mail2)
             {
             foreach ($cse as $value) {
             $mail_data_cse = collect([
@@ -501,7 +501,7 @@ trait Utility
 
   public function mailAction($data){
       $messanger = new MessageController();
-     return  $jsonResponse = $messanger->sendNewMessage('', 'dev@fix-master.com', $data['email'], $data, $data['template_feature']);
+     return  $jsonResponse = $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $data['email'], $data, $data['template_feature']);
 
 
   }

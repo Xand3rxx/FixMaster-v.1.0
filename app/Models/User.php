@@ -116,6 +116,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Contact::class, 'user_id');
     }
 
+     /**
+     * Get contacts with the user.
+     */
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class, 'user_id', 'id')->orderBy('created_at', 'DESC');
+    }
+
     /**
      * Get the Administrator associated with the user.
      */
@@ -256,4 +264,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Client::class);
     }
+
+    public function lastActivityLog()
+    {
+        return $this->hasOne(ActivityLog::class)->latest('created_at');
+    }
+
+    public function clientWalletBalance()
+    {
+        return $this->hasOne(WalletTransaction::class)->latest('created_at');
+    }
+
+    
 }

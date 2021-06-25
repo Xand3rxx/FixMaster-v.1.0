@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class PaymentGateway extends Model
 {
-    use HasFactory;
 
     protected $fillable = ['name', 'information', 'keyword', 'status'];
+    const STATUS = ['active' => 1, 'inactive' => 0];
 
     /** 
      * The "booted" method of the model.
@@ -24,8 +23,17 @@ class PaymentGateway extends Model
         });
     }
 
-    public function convertAutoData(){
-        return json_decode($this->information,true);
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'information' => 'array',
+    ];
 
+    public function convertAutoData()
+    {
+        return json_decode($this->information, true);
+    }
 }

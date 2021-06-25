@@ -56,7 +56,6 @@ class InvoiceBuilder
         $sub_status = SubStatus::where('uuid', 'f95c31c6-6667-4a64-bee3-8aa4b5b943d3')->firstOrFail();
         $valid['sub_services'] = [];
         foreach ($valid['quantity'] as $key => $quantity) {
-            dd($quantity);
             if (!empty($quantity)) {
                 array_push($valid['sub_services'], [
                     'uuid' => $key,
@@ -111,7 +110,7 @@ class InvoiceBuilder
                 'user_id'              => $request->user()->id,
                 'service_request_id'   => $service_request->id,
                 'stage'                => ServiceRequestReport::STAGES[0],
-                'type'                 => ServiceRequestReport::TYPES[2],
+                'type'                 => ServiceRequestReport::TYPES[1],
                 'report'               => $request->input('other_comments'),
             ]);
         }

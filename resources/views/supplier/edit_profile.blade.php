@@ -41,9 +41,7 @@
                                       <div class="user-img">
                                         @php 
                                           if($profile['account']['gender'] == 'male' || $profile['account']['gender'] == 'others'){
-                                              $genderAvatar = 'default-male-avatar.png';
-                                          }else{
-                                              $genderAvatar = 'default-female-avatar.png';
+                                              $genderAvatar = 'default-male-avatar.png' ?? 'default-female-avatar.png';
                                           }
                                         @endphp
 
@@ -213,7 +211,6 @@
       </div>
     </div>
 </div>
-{{-- {{ dd(config('app.geolocation_api_key')) }} --}}
 @push('scripts')
 <script src="{{ asset('assets/js/geolocation.js') }}"></script>
 <script src="{{ asset('assets/dashboard/assets/js/184a93a1-ca37-44a3-839f-c75344933ed1.js') }}"></script>

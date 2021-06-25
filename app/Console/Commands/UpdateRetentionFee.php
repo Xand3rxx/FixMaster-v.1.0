@@ -42,7 +42,7 @@ class UpdateRetentionFee extends Command
        
         $suppliers = $technicians= [];
         $service_request = \App\Models\ServiceRequest::with('service_request_assignees', 'supplier')->whereHas('service_request_warranty', function (Builder $query) {
-            $query->where('initiated', '=', 'No')->where('expiration_date', '>', Carbon::now() );
+            $query->where('initiated', '=', 'No')->where('expiration_date', '<', Carbon::now() );
         })->get();
         if(collect($service_request)->count() > 0){
         foreach ( $service_request as  $value) {

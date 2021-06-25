@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
 use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class WalletTransactionSeeder extends Seeder
 {
@@ -23,7 +24,7 @@ class WalletTransactionSeeder extends Seeder
                 'payment_id'        =>  8,
                 'amount'            =>  3000,
                 'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'transaction_type'  =>  'credit',
                 'opening_balance'   =>  0,
                 'closing_balance'   =>  3000,
@@ -35,7 +36,7 @@ class WalletTransactionSeeder extends Seeder
                 'payment_id'        =>  2,
                 'amount'            =>  2000,
                 'payment_type'      =>  'service-request',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'transaction_type'  =>  'debit',
                 'opening_balance'   =>  3000,
                 'closing_balance'   =>  2000,
@@ -47,7 +48,7 @@ class WalletTransactionSeeder extends Seeder
                 'payment_id'        =>  9,
                 'amount'            =>  1300,
                 'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'transaction_type'  =>  'credit',
                 'opening_balance'   =>  2000,
                 'closing_balance'   =>  2000,
@@ -55,23 +56,11 @@ class WalletTransactionSeeder extends Seeder
                 'created_at'        =>  \Carbon\Carbon::now('UTC')
             ),
             array(
-                'user_id'           =>  5,
-                'payment_id'        =>  10,
-                'amount'            =>  2800,
-                'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-760BCC86',
-                'transaction_type'  =>  'credit',
-                'opening_balance'   =>  2000,
-                'closing_balance'   =>  2000,
-                'status'            =>  'failed',
-                'created_at'        =>  \Carbon\Carbon::now('UTC')
-            ),
-            array(
-                'user_id'           =>  6,
+                'user_id'           =>  9,
                 'payment_id'        =>  11,
                 'amount'            =>  1200,
                 'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-A3C9FAC4',
+                'unique_id'         =>  Client::where('user_id', 9)->first()->unique_id,
                 'transaction_type'  =>  'credit',
                 'opening_balance'   =>  1200,
                 'closing_balance'   =>  1200,
@@ -79,11 +68,23 @@ class WalletTransactionSeeder extends Seeder
                 'created_at'        =>  \Carbon\Carbon::now('UTC')
             ),
             array(
-                'user_id'           =>  7,
+                'user_id'           =>  6,
                 'payment_id'        =>  12,
                 'amount'            =>  3500,
                 'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-1D61A777',
+                'unique_id'         =>  Client::where('user_id', 6)->first()->unique_id,
+                'transaction_type'  =>  'credit',
+                'opening_balance'   =>  0,
+                'closing_balance'   =>  0,
+                'status'            =>  'failed',
+                'created_at'        =>  \Carbon\Carbon::now('UTC')
+            ),
+            array(
+                'user_id'           =>  7,
+                'payment_id'        =>  13,
+                'amount'            =>  1450,
+                'payment_type'      =>  'funding',
+                'unique_id'         =>  Client::where('user_id', 7)->first()->unique_id,
                 'transaction_type'  =>  'credit',
                 'opening_balance'   =>  0,
                 'closing_balance'   =>  0,
@@ -92,22 +93,10 @@ class WalletTransactionSeeder extends Seeder
             ),
             array(
                 'user_id'           =>  8,
-                'payment_id'        =>  13,
-                'amount'            =>  1450,
-                'payment_type'      =>  'funding',
-                'unique_id'         =>  'WAL-DCE47AD1',
-                'transaction_type'  =>  'credit',
-                'opening_balance'   =>  0,
-                'closing_balance'   =>  0,
-                'status'            =>  'failed',
-                'created_at'        =>  \Carbon\Carbon::now('UTC')
-            ),
-            array(
-                'user_id'           =>  6,
                 'payment_id'        =>  14,
                 'amount'            =>  2000,
                 'payment_type'      =>  'refund',
-                'unique_id'         =>  'WAL-A3C9FAC4',
+                'unique_id'         =>  Client::where('user_id', 8)->first()->unique_id,
                 'transaction_type'  =>  'credit',
                 'opening_balance'   =>  1200,
                 'closing_balance'   =>  3200,

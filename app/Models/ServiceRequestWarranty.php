@@ -62,6 +62,11 @@ class ServiceRequestWarranty extends Model
         return $this->hasMany(ServiceRequestAssigned::class, 'service_request_id')->with('user');
     }
 
+    public function service_request_report(){
+        return $this->hasOne(ServiceRequest::class, 'id', 'service_request_id')->with('service', 'client');
+    }
+
+
     /**
      * Scope a query to only include all pending requests
      *

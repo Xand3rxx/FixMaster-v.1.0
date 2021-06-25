@@ -12,7 +12,7 @@
                 <tr>
                     <td class="tx-medium">Supplier Name</td>
                     @if (!empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']))
-                    <td class="tx-color-03">{{  Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) }} <small class="text-muted">(Business Name: {{ $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] }})</small></td>
+                    <td class="tx-color-03">{{  Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) }} <small class="text-muted">(Business Name: {{ collect($materials_accepted['rfqSupplier'])->isNotEmpty() ? $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] : 'UNAVAILABLE'}})</small></td>
                     @else
                     <td class="tx-color-03"> UNAVAILABLE <small class="text-muted">(Business Name: UNAVAILABLE)</small></td>
                     @endif
@@ -133,7 +133,6 @@
             </tbody>
         </table>
     </div><!-- table-responsive -->
-    {{-- {{ dd($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status']) }} --}}
     @if(!empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch'])) 
     @if($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status'] !== 'Delivered'))
     <h5 class="mt-4">Update RFQ Status</h5>

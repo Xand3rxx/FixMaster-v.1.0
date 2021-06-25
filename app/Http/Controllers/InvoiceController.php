@@ -14,6 +14,7 @@ use App\Models\ServiceRequestWarranty;
 use App\Models\ServiceRequestAssigned;
 use App\Models\ServiceRequestPayment;
 use App\Models\User;
+use App\PaymentProcessor\Concerns\PaymentHandler;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Traits\RegisterPaymentTransaction;
 use Session;
@@ -31,14 +32,10 @@ class InvoiceController extends Controller
 {
     use RegisterPaymentTransaction, Generator, AddCollaboratorPayment;
 
-    public $public_key;
     private $private_key;
 
     public function __construct() {
         $this->middleware('auth:web');
-        $data = PaymentGateway::whereKeyword('flutterwave')->first()->convertAutoData();
-        $this->public_key = $data['public_key'];
-        $this->private_key = $data['private_key'];
     }
 
 
@@ -61,8 +58,6 @@ class InvoiceController extends Controller
         $get_qa_assigned = ServiceRequestAssigned::where('service_request_id', $invoice['serviceRequest']['id'])->where('assistive_role', 'Consultant')->first();
         $qa_assigned = $get_qa_assigned ?? null;
 
-//        $root_cause = ServiceRequestReport::where('service_request_id', $invoice['service_request_id'])->where('type', 'Root-Cause')->first()->report;
-//        dd($root_cause);
 
         $getCategory = $invoice['serviceRequest']['service']['category'];
         $labourMarkup = $getCategory['labour_markup'];
@@ -92,7 +87,7 @@ class InvoiceController extends Controller
         $totalAmount = '';
         $warrantyCost = '';
         $materialsMarkupPrice = '';
-        $actual_labour_cost = '';
+        $actual_labour_cost = 0;
         $newTotal='';
 
 
@@ -136,8 +131,10 @@ class InvoiceController extends Controller
 
             foreach ($sub_services as $sub_service)
             {
-                $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
-                $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                if(!empty($sub_service['uuid'])) {
+                    $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
+                    $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
+                }
             }
             foreach ($data as $element)
             {
@@ -328,7 +325,55 @@ class InvoiceController extends Controller
         }
     }
 
-    public function saveInvoiceRecord($paymentRecord, $paymentDetails) 
+    public function invoicePayment(Request $request)
+    {
+//        dd($request->all());
+        $valid = $this->validate($request, [
+            // List of things needed from the request like
+            'booking_fee'           => 'required|numeric',
+            'payment_channel'       => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
+            'payment_for'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
+            'uuid'                  => ['required', 'uuid'],
+            'cse_assigned'          => ['required', 'integer'],
+            "technician_assigned"   => ['required', 'integer'],
+            "supplier_assigned"     => ['integer', 'nullable'],
+            "qa_assigned"           => ['integer', 'nullable'],
+            "logistics_cost"        => ['required', 'numeric'],
+            "retention_fee"         => ['required', 'numeric'],
+            "tax"                   => ['required', 'numeric'],
+            "actual_labour_cost"    => ['required', 'numeric'],
+            "actual_material_cost"  => ['required', 'numeric'],
+            "labour_markup"         => ['required', 'numeric'],
+            "material_markup"       => ['required', 'numeric'],
+            "fixMasterRoyalty"      => ['required', 'numeric'],
+            "invoice_type"          => ['required', 'string']
+        ]);
+
+        $payment = [
+            'amount'                    => $valid['booking_fee'],
+            'payment_channel'           => $valid['payment_channel'],
+            'payment_for'               => $valid['payment_for'],
+            'unique_id'                 => \App\Traits\GenerateUniqueIdentity::generate('invoices', 'INV-'),
+            'return_route_name'         => 'client.invoice_payment.init',
+            'meta_data'                 => $valid
+        ];
+
+        return PaymentHandler::redirectToGateway($payment);
+    }
+
+    public function init($locale, Payment $payment)
+    {
+        if($payment['status'] == Payment::STATUS['success'])
+        {
+            $paymentRecord = $payment['meta_data'];
+            $saveRecord = $this->saveInvoiceRecord($paymentRecord, $payment);
+            if($saveRecord){
+                return redirect()->route('invoice', [app()->getLocale(), $payment['meta_data']['uuid']])->with('success', 'Invoice payment was successful!');
+            }
+        }
+    }
+
+    protected function saveInvoiceRecord($paymentRecord, $paymentDetails)
     {
         // dd($paymentRecord);
         $booking_fee = $paymentRecord['booking_fee'];
@@ -345,11 +390,11 @@ class InvoiceController extends Controller
         $supplier_assigned = $paymentRecord['supplier_assigned'];
         $qa_assigned = $paymentRecord['qa_assigned'];
 
-        $royaltyFee = $paymentRecord['royalty_fee'];
+        $royaltyFee = $paymentRecord['fixMasterRoyalty'];
         $logistics = $paymentRecord['logistics_cost'];
         $tax = $paymentRecord['tax'];
 
-        $invoice = Invoice::where('uuid', $paymentRecord['invoiceUUID'])->first();
+        $invoice = Invoice::where('uuid', $paymentRecord['uuid'])->first();
 
         $serviceRequest = ServiceRequest::where('id', $invoice['service_request_id'])->firstOrFail();
 
@@ -419,7 +464,7 @@ class InvoiceController extends Controller
                 'invoice_ref' => $invoice['unique_id'],
             ]);
 //            dd($invoice_created['client']['email']);
-            $messenger->sendNewMessage(null, 'dev@fix-master.com', $invoice['client']['email'], $mail_data, $template_feature);
+            $messenger->sendNewMessage(null, 'info@fixmaster.com.ng', $invoice['client']['email'], $mail_data, $template_feature);
 
             $status = true;
 

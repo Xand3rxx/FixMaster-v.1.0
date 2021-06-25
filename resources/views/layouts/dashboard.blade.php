@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="app-alt-name" content="{{ config('app.geolocation_api_key') }}">
 
     <title>@yield('title') | FixMaster.ng - We Fix, You Relax!</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">

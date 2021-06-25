@@ -94,3 +94,11 @@ class Template extends Controller
 
     }
 }
+
+    public function see(){
+        return view('emails.message', ['mail_message'=> 'Your job rating counts! Remember to request for a rating and review on all completed diagnosis and job repairs completed.']);
+
+       
+    }
+
+}

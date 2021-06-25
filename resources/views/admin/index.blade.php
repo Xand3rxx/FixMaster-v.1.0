@@ -377,13 +377,13 @@
               <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
             </div> --}}
           </div>
-          @if($recentPayments->count() > 0)
+          {{-- @if($recentPayments->count() > 0)
             @foreach($recentPayments as $pay)
           <ul class="list-group list-group-flush tx-13">
               <li class="list-group-item d-flex pd-sm-x-20">
                 <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
                 <div class="pd-sm-l-10">
-                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name'] ?? ''}} for {{$pay['service_request']['unique_id'] ?? ''}}</p>
+                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name']}} for {{$pay['service_request']['unique_id']}}</p>
                   <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($pay['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
                 </div>
                 <div class="mg-l-auto text-right">
@@ -398,7 +398,7 @@
           </div><!-- card-footer -->
           @else
             <div>No Payment Currently</div>
-          @endif
+          @endif --}}
         </div><!-- card -->
       </div>
 

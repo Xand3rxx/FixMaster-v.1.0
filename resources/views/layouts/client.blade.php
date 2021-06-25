@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="app-alt-name" content="{{ config('app.geolocation_api_key') }}">
 
     <title>@yield('title') | FixMaster.ng - We Fix, You Relax!</title>
     <meta name="description" content="FixMaster is your best trusted one-call solution for a wide range of home maintenance, servicing and repair needs. Our well-trained & certified uniformed technicians are fully insured professionals with robust experience to provide home services to fully meet your needs with singular objective to make you totally relax while your repair requests are professionally handled." />
@@ -111,8 +112,8 @@
 
           <!-- geolocation asset starts here -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places"></script>
-    <script src="{{asset('assets/js/geolocation.js')}}"></script>
-    <!-- geolocation asset starts here -->
+     <script src="{{asset('assets/js/geolocation.js')}}"></script>
+     <!-- geolocation asset starts here -->
 
     <!-- SLIDER -->
     <script src="{{asset('assets/frontend/js/owl.carousel.min.js')}}"></script>
@@ -124,7 +125,7 @@
     <!-- Main Js -->
     <script src="{{asset('assets/frontend/js/app.js')}}"></script>
     <!-- scroll -->
-    <script src="{{ asset('assets/frontend/js/scroll.js')}}"></script>
+    {{-- <script src="{{ asset('assets/frontend/js/scroll.js')}}"></script> --}}
     <script src="{{ asset('assets/frontend/js/typed/lib/typed.js')}}"></script>
     <script src="{{ asset('assets/client/datatables/dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/client/datatables/dataTables.bootstrap.min.js') }}"></script>

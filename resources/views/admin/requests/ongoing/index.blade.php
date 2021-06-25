@@ -50,6 +50,7 @@
                                     <th class="text-center">#</th>
                                     <th>Job Ref.</th>
                                     <th>Client</th>
+                                    <th>CSE</th>
                                     <th class="text-center">Amount</th>
                                     <th class="text-center">Payment Status</th>
                                     <th>Scheduled Date</th>
@@ -63,9 +64,16 @@
                                     <td class="tx-color-03 tx-center"> {{ $loop->iteration }} </td>
                                     <td class="tx-medium"> {{ $request['unique_id'] }} </td>
                                     <td class="tx-medium"> {{ !empty($request['client']['account']['first_name']) ? Str::title($request['client']['account']['first_name'] .' '. $request['client']['account']['last_name']) : 'UNAVAILABLE' }} </td>
-
-                                    {{ !empty($request['client'][''])}}
-
+                                    <td class="tx-medium">
+                                        @if(collect($request['service_request_assignees'])->isNotEmpty())
+                                            @foreach ($request['service_request_assignees'] as $cse)
+                                                @if ($cse['user']['roles'][0]['slug'] == 'cse-user')
+                                                    {{ Str::title($cse['user']['account']['first_name'].' '.$cse['user']['account']['last_name']) }}
+                                                @endif
+                                            @endforeach
+                                        @else UNAVAILABLE @endif
+                                    </td>
+                                    
                                     <td class="tx-medium text-center">₦{{ number_format($request['price']['amount']) }}<br><span class="text-success">({{ $request['price']['name'] }})</span></td>
                                     <td class="{{ (($request['payment_statuses']['status'] == 'pending') ? 'text-warning' : (($request['payment_statuses']['status'] == 'success') ? 'text-success' : (($request['payment_statuses']['status'] == 'failed') ? 'text-danger' : 'text-danger'))) }}">{{ ucfirst($request['payment_statuses']['status']) }}({{ ucfirst($request['payment_statuses']['payment_channel']) }})
                                     </td>
@@ -76,7 +84,8 @@
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                             <a href="{{ route('admin.requests-ongoing.show', ['requests_ongoing'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
-                                                <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
+                                            <a href="{{ route('admin.request.mark_as_completed', ['request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-success"><i class="fas fa-check"></i>  Mark as Completed</a>
+                                            <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
                                             </div>
                                         </div>
                                     </td>

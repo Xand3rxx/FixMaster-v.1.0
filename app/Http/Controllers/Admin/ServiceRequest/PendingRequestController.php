@@ -118,7 +118,7 @@ class PendingRequestController extends Controller
     public function show($language, $uuid)
     {
         return view('admin.requests.pending.show', [
-            'serviceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'serviceRequestMedias', 'adminAssignedCses'])->firstOrFail(),
+            'serviceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses'])->firstOrFail(),
             'cses'    =>  \App\Models\Cse::where('job_availability', 'Yes')->with('user', 'user.ratings')->get(),
         ]);
     }

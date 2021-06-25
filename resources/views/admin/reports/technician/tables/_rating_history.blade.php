@@ -1,5 +1,4 @@
 
-{{-- {{ dd($results)}} --}}
 <table class="table table-hover mg-b-0" id="basicExample2">
     <thead class="thead-primary">
       <tr>
@@ -16,7 +15,6 @@
     </thead>
     <tbody>
 
-      {{-- @foreach ($results as $result) --}}
       <tr>
         <td class="tx-medium">Jamal Diwa</td>
         <td class="tx-medium">Victorial Island</td>
@@ -27,7 +25,6 @@
         <td class="text-center">REF-EEE7FD14	</td>
         <td class="text-center">3stars</td>
       </tr>
-      {{-- @endforeach --}}
 
     </tbody>
   </table>
