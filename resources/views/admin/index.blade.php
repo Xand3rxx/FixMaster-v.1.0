@@ -335,7 +335,7 @@
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Profit/Loss</h6>
                   {{-- <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4> --}}
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments}}</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments ?? '0.00'}}</h4>
                 </div>
               </div>
             </div>
@@ -377,7 +377,7 @@
               <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
             </div> --}}
           </div>
-          {{-- @if($recentPayments->count() > 0)
+           @if($recentPayments->count() > 0)
             @foreach($recentPayments as $pay)
           <ul class="list-group list-group-flush tx-13">
               <li class="list-group-item d-flex pd-sm-x-20">
@@ -398,7 +398,7 @@
           </div><!-- card-footer -->
           @else
             <div>No Payment Currently</div>
-          @endif --}}
+          @endif 
         </div><!-- card -->
       </div>
 
