@@ -190,7 +190,7 @@ trait Utility
           $unique_id = Cse::where('user_id', $user->id)->first();
           if ($unique_id) {
             $ifReferrals = Referral::select('id')->where('user_id', $user->id)->first();
-            //check if user already has referral code
+            //check if user already has referral code 
             if ($ifReferrals) {
               Referral::where('user_id', $user->id)->update([
                 'referral_code' => $unique_id->unique_id,
@@ -209,6 +209,7 @@ trait Utility
             'referral_id' => $referral,
           ]);
           $account = Account::where('user_id', $user->id)->first();
+             //check if account already has referral code 
           if ($account) {
             User::where('email', $user->email)
               ->update(['email_verified_at' => date("Y-m-d H:i:s"),]);

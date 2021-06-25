@@ -13,7 +13,7 @@ class AdminRatingController extends Controller
         $diagnosisRatings = Rating::where('service_diagnosis_by', '!=', null)
         ->where('ratee_id', null)->with('clientAccount', 'cseAccount','service_request')->get();
         //return dd($cse);
-        return view('admin.ratings.cse_diagnosis_rating', compact('diagnosisRatings'));
+        return view('admin.ratings.job-performance_rating', compact('diagnosisRatings'));
     }
 
     public function getServiceRatings(Request $request)
@@ -21,13 +21,15 @@ class AdminRatingController extends Controller
 
         $cards = Rating::select([
             'service_request_id',
+            'rater_id',
             DB::raw('COUNT(id) as id'),
             DB::raw('AVG(star) as starAvg')
-        ])->with('client', 'account', 'service_request')
+        ])->with('client', 'service_request')
         ->where('service_id', '!=', null)
         ->where('service_diagnosis_by', null)
         ->where('rater_id', '!=', null)
-        ->groupBy('service_request_id')->get();
+        ->groupBy('service_request_id')
+        ->groupBy('rater_id')->get();
 
     return view('admin.ratings.service_rating', compact('cards'));
     }

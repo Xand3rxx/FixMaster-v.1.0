@@ -188,7 +188,7 @@
       const totalAmount = @json(\Request::get('totalAmount'));
       const service_request_id = @json(\Request::get('serviceRequestId'));
       const unique_id = @json(\Request::get('unique_id'));
-      //console.log(totalAmount);
+      //console.log(users);
       //const role = @json(\Request::get('role'));
       //console.log(role);
       let ratings_row = `<div class="row">
