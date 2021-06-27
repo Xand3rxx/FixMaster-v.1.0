@@ -10,11 +10,6 @@
                             <div class="card event-schedule rounded border">
                                 <div class="card-body event-width">
                                     <div class="media">
-                                        {{-- <ul class="date text-center text-primary mr-3 mb-0 list-unstyled">
-                                        <li class="day font-weight-bold mb-2">{{ date('d') }}</li>
-                                            <li class="πAmonth font-weight-bold">{{ date('M') }}</li>
-                                            <li class="month font-weight-bold">{{ date('Y') }}</li>
-                                        </ul> --}}
                                         <div class="media-body content">
                                             <h4><a href="javascript:void(0)" class="text-dark title">Balance</a></h4>
                                         <p class="text-muted location-time"><span class="text-dark h6">₦{{ !empty($profile['clientWalletBalance']['closing_balance']) ? number_format($profile['clientWalletBalance']['closing_balance']) : '0' }}</span></p>

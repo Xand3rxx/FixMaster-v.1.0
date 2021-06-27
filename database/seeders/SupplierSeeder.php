@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class SupplierSeeder extends Seeder
 {
@@ -18,16 +18,19 @@ class SupplierSeeder extends Seeder
         $supplier = new \App\Models\User;
         $supplier->email = 'supplier@9thtest.com.ng';
         $supplier->password = bcrypt('admin12345');
+        $supplier->email_verified_at = now();
         $supplier->save();
 
         $supplier1 = new \App\Models\User;
         $supplier1->email = 'james.godfrey@gmail.com';
         $supplier1->password = bcrypt('admin12345');
+        $supplier1->email_verified_at = now();
         $supplier1->save();
 
         $supplier2 = new \App\Models\User;
         $supplier2->email = 'ezenwa.chinyere@gmail.com';
         $supplier2->password = bcrypt('admin12345');
+        $supplier2->email_verified_at = now();
         $supplier2->save();
 
         // supplier Roles and Permissions

@@ -18,26 +18,31 @@ class ClientSeeder extends Seeder
         $client = new \App\Models\User;
         $client->email = 'client@9thtest.com.ng';
         $client->password = bcrypt('admin12345');
+        $client->email_verified_at = now();
         $client->save();
 
         $client1 = new \App\Models\User;
         $client1->email = 'wisdom.amana@gmail.com';
         $client1->password = bcrypt('admin12345');
+        $client1->email_verified_at = now();
         $client1->save();
 
         $client2 = new \App\Models\User;
         $client2->email = 'debo.williams@gmail.com';
         $client2->password = bcrypt('admin12345');
+        $client2->email_verified_at = now();
         $client2->save();
 
         $client3 = new \App\Models\User;
         $client3->email = 'jennifer.isaac@outlook.co.uk';
         $client3->password = bcrypt('admin12345');
+        $client3->email_verified_at = now();
         $client3->save();
 
         $client4 = new \App\Models\User;
         $client4->email = 'favour.chidera@yahoo.com';
         $client4->password = bcrypt('admin12345');
+        $client4->email_verified_at = now();
         $client4->save();
 
         // Client Roles and Permissions

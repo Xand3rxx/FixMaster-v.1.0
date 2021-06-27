@@ -17,7 +17,7 @@
                     <tr>
                         <td class="tx-medium">Scheduled Date & Time </td>
                         <td class="tx-color-03">
-                            {{ !empty($service_request['preferred_time']) ? Carbon\Carbon::parse($service_request->preferred_time, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') : 'Not Scheduled yet' }}
+                            {{ !empty($service_request['preferred_time']) ? Carbon\Carbon::parse($service_request->preferred_time, 'UTC')->isoFormat('MMMM Do YYYY') : 'Not Scheduled yet' }}
                         </td>
                     </tr>
                     <tr>
