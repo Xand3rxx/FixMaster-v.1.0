@@ -311,7 +311,7 @@ class ClientController extends Controller
                 'phone_number'      =>   'bail|required||unique:contacts,phone_number',
                 'state_id'          =>   'bail|required|integer',
                 'lga_id'            =>   'bail|required|integer',
-                'town_id'           =>   'sometimes|integer',
+                'town_id'           =>   'sometimes',
                 'address'           =>   'bail|required',
                 'user_latitude'     =>   'bail|required',
                 'user_longitude'    =>   'bail|required',
@@ -748,25 +748,34 @@ class ClientController extends Controller
     {
 
         $request->validate([
-            'reason'       =>   'required',
+            'reason'       =>   'bail|required|string',
         ]);
 
-   
-        $admin = User::where('id', 1)->with('account')->first();
-        $requestExists = ServiceRequest::where('uuid', $id)->with('client', 'service_request_assignees')->first();
+        //Verify if service request exists
+        $requestExists = ServiceRequest::where('uuid', $id)->with('client', 'service_request_assignees')->firstOrFail();
+
         if(empty($rfq)){
             return back()->with('error', 'No request for qutotation yet for ' .  $requestExists->unique_id . ' service request.');
 
         }
+
+        //Get RFQ attached to the serice request
         $rfq        = \App\Models\Rfq::where('service_request_id',  $requestExists->id)->first();
+
+        //Get the accepted supplier invoice 
         $rfqInvoice        = \App\Models\RfqSupplierInvoice::where('rfq_id', '=', $rfq->id)->where('accepted', '=', 'Yes')->first();
+
+        //Get the accpeted supplier data 
         $supplier =  \App\Models\User::where('id',   $rfqInvoice->supplier_id)->with('account')->first();
+
+        //Array to hold CSE mail data 
         $cse = [];
+
         $initateWarranty = '';
 
         if ($requestExists->service_request_assignees) {
             foreach ($requestExists->service_request_assignees as $item) {
-                if ($item->user->roles[0]->url == 'cse') {
+                if ($item->user->roles[0]->slug == 'cse-user') {
                     $cse[] = [
                         'email' => $item->user->email,
                         'first_name' => $item->user->account->first_name,
@@ -787,69 +796,70 @@ class ClientController extends Controller
                 'date_initiated'    =>  \Carbon\Carbon::now('UTC'),
             ]);
 
-            //send mail 1, admin, 2, client, 3 cse
             if ($initateWarranty) {
-            ,
 
                 $mail_data_admin = collect([
                     'email' =>  'info@fixmaster.com.ng',
                     'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
-                    'firstname' =>  'FixMaster',
-                    'lastname' =>  'Admin',
+                    'first_name' =>  'FixMaster',
+                    'last_name' =>  'Administrator',
+                    'client_name'   => ucfirst($request->user()->account->first_name.' '.$request->user()->account->last_name),
                     'job_ref' =>  $requestExists->unique_id
                 ]);
-                $mail1 = $this->mailAction($mail_data_admin);
 
+                $mail_data_client = collect([
+                    'email' =>  $request->user()->email,
+                    'template_feature' => 'CUSTOMER_WARRANTY_CLAIM_NOTIFICATION',
+                    'first_name' => $request->user()->account->first_name,
+                    'last_name' => $request->user()->account->last_name,
+                    'job_ref' =>  $requestExists->unique_id
+                ]);
+                
+                //Send mail to FixMaster
+                $this->mailAction($mail_data_admin);
+                //Send mail to Client
+                $this->mailAction($mail_data_client);
 
-
-
-           
-                    $mail_data_client = collect([
-                        'email' =>  Auth::user()->email,
-                        'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
-                        'firstname' => Auth::user()->account->first_name,
-                        'lastname' => Auth::user()->account->last_name,
-                        'job_ref' =>  $requestExists->unique_id
+                foreach ($cse as $value) {
+                    $mail_data_cse = collect([
+                        'email' =>  $value['email'],
+                        'template_feature' => 'CSE_WARRANTY_CLAIM_NOTIFICATION',
+                        'first_name' =>   $value['first_name'],
+                        'last_name' =>   $value['last_name'],
+                        'job_ref' =>  $requestExists->unique_id,
+                        // 'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
+                        // 'customer_email' => Auth::user()->email,
                     ]);
-                 $this->mailAction($mail_data_client);
+                    $this->mailAction($mail_data_cse);
+                };
             
-
-
-
-                    foreach ($cse as $value) {
-                        $mail_data_cse = collect([
-                            'email' =>  $value['email'],
-                            'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
-                            'firstname' =>   $value['first_name'],
-                            'lastname' =>   $value['last_name'],
-                            'job_ref' =>  $requestExists->unique_id,
-                            // 'customer_name' => Auth::user()->account->first_name.' '.Auth::user()->account->last_name,
-                            // 'customer_email' => Auth::user()->email,
-                        ]);
-                       $this->mailAction($mail_data_cse);
-                    };
-            
-
-          
-                    $mail_data_admin = collect([
+                //If suppplier was used in this service request, send mail to the supplier
+                if(!empty($supplier)){
+                    $mail_data_supplier = collect([
                         'email' =>  $supplier->email,
                         'template_feature' => 'SUPPLIER_WARRANTY_CLAIM_NOTIFICATION',
-                        'firstname' =>  $supplier->account->first_name,
-                        'lastname' =>  $supplier->account->last_name,
+                        'first_name' =>  $supplier->account->first_name,
+                        'last_name' =>  $supplier->account->last_name,
                         'job_ref' =>  $requestExists->unique_id
                     ]);
-                   $this->mailAction($mail_data_admin);
+                    $this->mailAction($mail_data_supplier);
+                }
+
                 
-
-
                 $initiate = true;
             }
         });
 
         if ($initiate) {
 
+            $this->log('request', 'Informational', Route::currentRouteAction(), $request->user()->account->first_name.' '.$request->user()->account->last_name. ' initiated a warranty for ' . $requestExists->unique_id . ' service request.');
+
             return redirect()->route('client.service.all', app()->getLocale())->with('success', $requestExists->unique_id . ' warranty was successfully initiated.Please check your mail for notification');
+
         } else {
+
+            $this->log('errors', 'Error', Route::currentRouteAction(), 'An error occurred when '.$request->user()->account->first_name.' '.$request->user()->account->last_name. ' was trying to initiate a warranty for ' . $requestExists->unique_id . ' service request.');
+
             return back()->with('error', 'An error occurred while trying to initiate warranty for' .  $requestExists->unique_id . ' service request.');
         }
     }
@@ -893,7 +903,8 @@ class ClientController extends Controller
         //Check if uuid exists on `users` table.
         $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark'. $serviceRequest->unique_id.' request as completed.'));
+
+        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));
     }
 
 

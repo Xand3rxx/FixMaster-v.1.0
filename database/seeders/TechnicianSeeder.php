@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TechnicianSeeder extends Seeder
 {
@@ -18,16 +18,19 @@ class TechnicianSeeder extends Seeder
         $technician = new \App\Models\User;
         $technician->email = 'technician@9thtest.com.ng';
         $technician->password = bcrypt('admin12345');
+        $technician->email_verified_at = now();
         $technician->save();
 
         $technician1 = new \App\Models\User;
         $technician1->email = 'andrew.nwankwo@gmail.com';
         $technician1->password = bcrypt('admin12345');
+        $technician1->email_verified_at = now();
         $technician1->save();
 
         $technician2 = new \App\Models\User;
         $technician2->email = 'taofeek.adedokun@gmail.com';
         $technician2->password = bcrypt('admin12345');
+        $technician2->email_verified_at = now();
         $technician2->save();
 
         // Technician Roles and Permissions

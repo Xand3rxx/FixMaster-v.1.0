@@ -8,10 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\Utility;
 use App\Models\Warranty;
 use App\Models\ServiceRequestWarranty;
-use App\Models\ServiceRequestWarrantyIssued;
-use Illuminate\Support\Facades\URL;
 use App\Traits\Loggable;
-use App\Models\PaymentDisbursed;
 
 use Auth;
 use Route;

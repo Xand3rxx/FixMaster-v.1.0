@@ -69,7 +69,7 @@ class InvoiceController extends Controller
         $logistics = $get_logistics['amount'];
         $retentionFee = $get_retention_fee['percentage'];
         $bookingFee = $invoice['serviceRequest']['price']['amount'];
-        $warranty = $invoice['warranty_id'] === null ? 0 : Warranty::where('id', $invoice['warranty_id'])->firstOrFail();
+        $warranty = $invoice['warranty_id'] === null ? 0 : Warranty::where('id', $invoice['warranty_id'])->first();
         $warrantyValue = $warranty['percentage']/100;
         $ActiveWarranties = Warranty::orderBy('id', 'ASC')->get();
         $supplierDeliveryFee = $invoice['rfqs']['rfqSupplierInvoice']['delivery_fee'] ?? 0;
@@ -129,10 +129,11 @@ class InvoiceController extends Controller
 
         } else if($invoice->invoice_type == 'Final Invoice') {
 
+            // dd($sub_services);
             foreach ($sub_services as $sub_service)
             {
-                if(!empty($sub_service['uuid'])) {
-                    $subServices = SubService::where('uuid', $sub_service['uuid'])->firstOrFail();
+                if(!empty($sub_service['uuid']) && strlen($sub_service['uuid']) > 5) {
+                    $subServices = SubService::where('uuid', $sub_service['uuid'])->first();
                     $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
                 }
             }
