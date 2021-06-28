@@ -17,6 +17,7 @@ use App\Models\User;
 use App\PaymentProcessor\Concerns\PaymentHandler;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Traits\RegisterPaymentTransaction;
+use App\Traits\Utility;
 use Session;
 
 use App\Models\Income;
@@ -30,7 +31,7 @@ use App\Traits\AddCollaboratorPayment;
 
 class InvoiceController extends Controller
 {
-    use RegisterPaymentTransaction, Generator, AddCollaboratorPayment;
+    use RegisterPaymentTransaction, Generator, AddCollaboratorPayment, Utility;
 
     private $private_key;
 
@@ -128,10 +129,9 @@ class InvoiceController extends Controller
             $totalAmount = $amountDue + $vat;
 
         } else if($invoice->invoice_type == 'Final Invoice') {
-
-            // dd($sub_services);
             foreach ($sub_services as $sub_service)
             {
+
                 if(!empty($sub_service['uuid']) && strlen($sub_service['uuid']) > 5) {
                     $subServices = SubService::where('uuid', $sub_service['uuid'])->first();
                     $data[] = ['sub_service' => $subServices, 'num' => $sub_service];
@@ -346,9 +346,11 @@ class InvoiceController extends Controller
             "labour_markup"         => ['required', 'numeric'],
             "material_markup"       => ['required', 'numeric'],
             "fixMasterRoyalty"      => ['required', 'numeric'],
-            "warrantyCost"          => ['required', 'numeric'],
+            "warrantyCost"          => ['nullable', 'numeric'],
             "invoice_type"          => ['required', 'string']
         ]);
+
+//        dd($valid);
 
         $payment = [
             'amount'                    => $valid['booking_fee'],
@@ -397,11 +399,12 @@ class InvoiceController extends Controller
         $tax = $paymentRecord['tax'];
 
         $invoice = Invoice::where('uuid', $paymentRecord['uuid'])->first();
-
         $serviceRequest = ServiceRequest::where('id', $invoice['service_request_id'])->firstOrFail();
+        $updateServiceRequest = ServiceRequest::where('uuid', $serviceRequest['uuid'])->with('client', 'price', 'payment')->firstOrFail();
 
         (bool)$status = false;
-        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $warrantyCost, $logistics, $tax, &$status){
+        DB::transaction(function () use ($invoice, $paymentDetails, $serviceRequest, $updateServiceRequest, $booking_fee, $cse_assigned, $qa_assigned, $technician_assigned, $supplier_assigned, $paymentRecord, $labour_retention_fee, $material_retention_fee, $actual_labour_cost, $actual_material_cost, $labour_cost_after_retention, $material_cost_after_retention, $labourMarkup, $materialMarkup, $royaltyFee, $warrantyCost, $logistics, $tax, &$status){
+
             $this->addCollaboratorPayment($invoice['service_request_id'],$cse_assigned,'Regular',\App\Models\Earning::where('role_name', 'CSE')->first()->earnings,null,null,\App\Models\Earning::where('role_name', 'CSE')->first()->earnings, null, null, null, null, $royaltyFee, $logistics, $tax);
             if($qa_assigned !== null)
             {
@@ -422,12 +425,21 @@ class InvoiceController extends Controller
                 $paymentType = 'diagnosis-fee';
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', '17e3ce54-2089-4ff7-a2c1-7fea407df479')->firstOrFail()->id);
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', '8936191d-03ad-4bfa-9c71-e412ee984497')->firstOrFail()->id);
+
+                $this->markCompletedRequestTrait($updateServiceRequest);
             }
             elseif ($invoice['invoice_type'] === 'Final Invoice')
             {
                 $paymentType = 'final-invoice-fee';
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', 'c0cce9c8-1fce-47c4-9529-204f403cdb1f')->firstOrFail()->id);
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', 'b82ea1c6-fc12-46ec-8138-a3ed7626e0a4')->firstOrFail()->id);
+
+                ServiceRequestWarranty::create([
+                    'client_id' => $invoice['client_id'],
+                    'warranty_id' => $invoice['warranty_id'],
+                    'service_request_id' => $invoice['service_request_id'],
+                    'amount' => $warrantyCost,
+                ]);
             }
 
             ServiceRequestPayment::create([
@@ -452,13 +464,6 @@ class InvoiceController extends Controller
                 ]);
             }
 
-            ServiceRequestWarranty::create([
-                'client_id' => $invoice['client_id'],
-                'warranty_id' => $invoice['warranty_id'],
-                'service_request_id' => $invoice['service_request_id'],
-                'amount' => $warrantyCost,
-            ]);
-
             $invoice->update([
                 'status' => '2',
                 'phase' => '2'
@@ -472,7 +477,6 @@ class InvoiceController extends Controller
                 'job_ref' => $invoice['serviceRequest']->unique_id,
                 'invoice_ref' => $invoice['unique_id'],
             ]);
-//            dd($invoice_created['client']['email']);
             $messenger->sendNewMessage(null, 'info@fixmaster.com.ng', $invoice['client']['email'], $mail_data, $template_feature);
 
             $status = true;
