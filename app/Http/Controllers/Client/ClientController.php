@@ -445,6 +445,11 @@ class ClientController extends Controller
 
     public function myServiceRequest()
     {
+
+        // return Client::where('user_id', auth()->user()->id)->with('service_requests.invoices', 'service_requests.payment')
+        //         ->whereHas('service_requests', function ($query) {
+        //             $query->orderBy('created_at', 'ASC');
+        //         })->first();
         return view('client.services.list', [
             'myServiceRequests' =>  Client::where('user_id', auth()->user()->id)->with('service_requests.invoices', 'service_requests.payment')
                 ->whereHas('service_requests', function ($query) {
@@ -644,27 +649,17 @@ class ClientController extends Controller
 
     public function updateRequest(Request $request, $language, $id)
     {
-        // return $request->servicereq;
         $requestExist = ServiceRequest::where('uuid', $id)->first();
 
         $request->validate([
-            'timestamp'             =>   'required',
-            // 'phone_number'          =>   'required',
-            // 'address'               =>   'required',
-            'description'           =>   'required',
+            'description'           =>   'bail|required|string',
+            'media_file'                => 'bail|sometimes|array',
+            'media_file.*'              => 'bail|sometimes|file',
         ]);
 
-
-        $timestamp = \Carbon\Carbon::parse($request->input('timestamp'), 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa');
 
         $updateServiceRequest = ServiceRequest::where('uuid', $id)->update([
-            'preferred_time'             =>   $request->input('timestamp'),
             'description'           =>   $request->description,
-        ]);
-
-        $updateContactRequest = Contact::where(['user_id' => auth()->user()->id, 'id' =>   $requestExist->contact_id])->update([
-            'phone_number'          =>   $request->phone_number,
-            'address'               =>   $request->address,
         ]);
 
         // upload multiple media files
@@ -701,7 +696,6 @@ class ClientController extends Controller
 
         return back()->withInput();
     }
-
 
     public function cancelRequest(Request $request, $language, $uuid)
     {
@@ -903,7 +897,7 @@ class ClientController extends Controller
         //Check if uuid exists on `users` table.
         $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-
+        $this->markCompletedRequestTrait($serviceRequest);
         return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));
     }
 
