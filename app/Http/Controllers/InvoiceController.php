@@ -129,7 +129,6 @@ class InvoiceController extends Controller
 
         } else if($invoice->invoice_type == 'Final Invoice') {
 
-            // dd($sub_services);
             foreach ($sub_services as $sub_service)
             {
 
