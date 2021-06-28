@@ -427,6 +427,13 @@ class InvoiceController extends Controller
                 $paymentType = 'final-invoice-fee';
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', 'c0cce9c8-1fce-47c4-9529-204f403cdb1f')->firstOrFail()->id);
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', 'b82ea1c6-fc12-46ec-8138-a3ed7626e0a4')->firstOrFail()->id);
+
+                ServiceRequestWarranty::create([
+                    'client_id' => $invoice['client_id'],
+                    'warranty_id' => $invoice['warranty_id'],
+                    'service_request_id' => $invoice['service_request_id'],
+                    'amount' => $warrantyCost,
+                ]);
             }
 
             ServiceRequestPayment::create([
@@ -450,13 +457,6 @@ class InvoiceController extends Controller
                     'status' => 'success'
                 ]);
             }
-
-            ServiceRequestWarranty::create([
-                'client_id' => $invoice['client_id'],
-                'warranty_id' => $invoice['warranty_id'],
-                'service_request_id' => $invoice['service_request_id'],
-                'amount' => $warrantyCost,
-            ]);
 
             $invoice->update([
                 'status' => '2',
