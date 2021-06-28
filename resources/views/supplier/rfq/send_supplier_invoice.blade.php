@@ -31,11 +31,15 @@
             <thead class="thead-primary">
                 <tr>
                 <th class="text-center">#</th>
-                <th width="30%">Component Name</th>
-                <th width="15%">Model Number</th>
-                <th width="5%" class="text-center">Quantity</th>
-                <th width="25%" class="text-center">Unit Price</th>
-                <th width="25%" class="text-center">Amount</th>
+                <th>Manufacturer Name</th>
+                <th>Component Name</th>
+                <th>Model Number</th>
+                <th class="text-center">Size</th>
+                <th>Unit of Measurement</th>
+                <th class="text-center">Image</th>
+                <th class="text-center">Quantity</th>
+                <th width="40%" class="text-center">Unit Price</th>
+                <th class="text-center">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,8 +52,18 @@
                 <input value="{{ $item->quantity }}" type="hidden" name="quantity[]"> 
                     <tr>
                         <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                        <td class="tx-medium">{{ !empty($item->manufacturer_name) ? $item->manufacturer_name : 'UNAVAILABLE' }}</td>
                         <td class="tx-medium">{{ $item->component_name }}</td>
                         <td>{{ $item->model_number }}</td>
+                        <td class="tx-medium text-center">{{ !empty($item->size) ? number_format($item->size) : '-' }}</td>
+                        <td class="tx-medium">{{ !empty($item->unit_of_measurement) ? $item->unit_of_measurement : 'UNAVAILABLE' }}</td>
+                        <td class="text-center">
+                          @if(!empty($item->image))
+                          <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item->component_name }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('supplier.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
+                          @else
+                                -
+                          @endif
+                        </td>
                         <td class="tx-medium text-center quantity-{{$item->id}}">{{ $item->quantity }}</td>
                         <td class="tx-medium text-center">
                         <input type="number" maxlength="7" min="1" name="unit_price[]" class="form-control @error('unit_price[0]') is-invalid @enderror" id="unit-price-{{$item->id}}" value="{{ old('unit_price[0]') }}" onkeyup="individualAmount({{ $item->id }})" autocomplete="off">
@@ -61,16 +75,18 @@
                         <td class="tx-medium text-center amount-{{$item->id}}">0</td>
                     </tr>
                 @endforeach
+            </tbody>
+            <table class="table table-hover mg-b-0">
                 <thead class="thead-primary">
                     <tr>
-                    <th colspan="2">#</th>
-                    <th width="20%">Delivery Fee</th>
-                    <th width="20%">Delivery Time</th>
+                    <th colspan="6">#</th>
+                    <th width="30%">Delivery Fee</th>
+                    <th width="30%">Delivery Time</th>
                     <th colspan="2"></th>
                     </tr>
                 </thead>
                 <tr>
-                    <td colspan="2">1</td>
+                    <td colspan="6">1</td>
                     <td>
                     <input class="form-control @error('delivery_fee') is-invalid @enderror each-amount" name="delivery_fee" id="delivery_fee" type="number" maxlength="7" min="1" value="{{ old('delivery_fee')}}" autocomplete="off" onkeyup="deliveryFee()">
                     @error('delivery_fee')
@@ -87,7 +103,7 @@
                     <td class="tx-medium delivery-fee">0</td>
                 </tr>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="8">
                         <button type="submit" class="btn btn-primary">Send Invoice</button>
                     </td>
                     <td class="tx-medium text-center">Total</td>
@@ -103,9 +119,7 @@
 
   </div><!-- container -->
 
+  @include('supplier.rfq._rfq_details_modal')
 
-@push('scripts')
-    <script src="{{ asset('assets/dashboard/assets/js/a784c9e7-4015-44df-994d-50ffe4921458.js') }}"></script>
-@endpush
 
 @endsection

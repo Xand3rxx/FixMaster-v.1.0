@@ -103,7 +103,7 @@
                                 @endforeach
                            @else
                                 @foreach ($pendingPayments as $output)
-                                   <option value="{{ $output->service_request_id }}">{{ $output->service_request->unique_id }}</option>
+                                   <option value="{{ $output['service_request_id'] }}">{{ $output['service_request']['unique_id'] ?? 'Una' }}</option>
                                 @endforeach
                            @endif
                         </select>

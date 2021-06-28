@@ -108,9 +108,9 @@ class ActionsController extends Controller
         ]);
 
         //Check if uuid exists on `users` table.
-        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment', 'status')->firstOrFail();
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-        return (($this->initiateCancellation($request, $serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been cancelled.') : back()->with('error', 'An error occurred while trying to to assign cancel '. $serviceRequest->unique_id.' request.'));
+        return (($this->initiateCancellation($request, $serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been cancelled.') : back()->with('error', 'An error occurred while trying to cancel '. $serviceRequest->unique_id.' request.'));
 
     }
 
@@ -120,33 +120,13 @@ class ActionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function markCompletedRequest($language, $uuid, Request $request, ){
+    public function markCompletedRequest($language, $uuid){
 
-        $requestExists =  ServiceRequest::where('uuid', $uuid)->firstOrFail();
+        //Check if uuid exists on `users` table.
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-        $updateMarkasCompleted = $this->markCompletedRequestTrait($request->user()->id, $uuid);
+        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));
 
-        $actionUrl = Route::currentRouteAction();
-
-        if($updateMarkasCompleted ){
-
-            //Record success activity log
-            $this->log('request', 'Informational', $actionUrl, auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ' marked '.$requestExists->unique_id.' service request as completed.');
-
-            //Record service request progress of `Admin marked job as completed`
-            ServiceRequestProgress::storeProgress(auth()->user()->id, $requestExists->id, 4, SubStatus::where('uuid', 'ce316687-62d8-45a9-a1b9-f75da104fc18')->firstOrFail()->id);
-
-            //Return back to view
-            return back()->with('success', $requestExists->unique_id.' was marked as completed successfully.');
-
-        }else{
-            
-            //Record error activity log
-            $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ') tried to mark '.$requestExists->unique_id.' service request as completed.');
-
-            //Return back to view
-            return back()->with('error', 'An error occurred while trying to mark '.$requestExists->unique_id.' service request as completed.');
-        }
     }
 
     

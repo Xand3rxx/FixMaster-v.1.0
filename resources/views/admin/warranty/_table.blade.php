@@ -27,8 +27,10 @@
               <div class="dropdown-menu dropdown-menu-right">
               <a href="{{ route('admin.warranty_summary', ['details'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary"><i class="far fa-clipboard"></i> Details</a>
               <a href="{{ route('admin.edit_warranty', ['details'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-info"><i class="far fa-edit"></i> Edit</a>
-              <a href="{{ route('admin.delete_warranty', ['details'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
-                
+              <a href="#" id="delete" 
+                                                    data-url="{{route('admin.delete_warranty', ['details'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}"
+                                                    class="dropdown-item details text-danger" title="Delete Discount"><i
+                                                        class="fas fa-trash"></i> Delete</a>
               </div>
             </div>
           </td>
@@ -36,3 +38,36 @@
       @endforeach
     </tbody>
   </table>
+
+  
+@push('scripts')
+<script>
+  $(document).ready(function() {
+
+$(document).on('click', '#delete', function(event) {
+    event.preventDefault();
+    let route = $(this).attr('data-url');
+    let url = "<a href='" + route + "'  class='confirm-link'>Yes Delete</a>";
+    displayAlert(url, 'Would you like to detele this Warranty?')
+});
+
+
+function displayAlert(url, message) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: message,
+        showCancelButton: true,
+        confirmButtonColor: '#E97D1F',
+        cancelButtonColor: '#8392a5',
+        confirmButtonText: url
+    })
+
+}
+
+});
+
+
+
+</script>
+
+@endpush

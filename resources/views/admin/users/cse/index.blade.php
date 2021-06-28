@@ -42,6 +42,7 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
+                                    <th>Average Rating</th>
                                     <th>Gender</th>
                                     <th>Requests</th>
                                     <th>Status</th>
@@ -57,6 +58,8 @@
                                     <td class="tx-medium">{{ Str::title($cse['user']['account']['last_name'] ." ". $cse['user']['account']['first_name']) }}</td>
                                     <td class="tx-medium">{{ $cse['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $cse['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
+
+                                    <td class="tx-medium">{{ round($cse->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
 
                                     <td class="tx-medium">{{ Str::title($cse['user']['account']['gender']) }}</td>
 

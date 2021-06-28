@@ -28,7 +28,7 @@ class CreateRfqSupplierDispatchesTable extends Migration
             $table->string('courier_phone_number', 15);
             $table->string('delivery_medium');
             $table->enum('cse_status', RfqSupplierDispatch::CSE_STATUS)->default(RfqSupplierDispatch::CSE_STATUS[0]);
-            $table->enum('cse_material_acceptance', RfqSupplierDispatch::CSE_MATERIAL_ACCEPTANCE)->nullable()->default(null);
+            $table->enum('cse_material_acceptance', RfqSupplierDispatch::CSE_MATERIAL_ACCEPTANCE)->default('Pending');
 
             $table->enum('supplier_status', ['Processing', 'In-Transit', 'Delivered'])->default('Processing');
             $table->text('cse_comment')->nullable();

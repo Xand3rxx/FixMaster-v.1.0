@@ -161,6 +161,7 @@ $(document).ready(function() {
             success: function(data) {
                 if (data) {
                     $('#lga_id').html(data.lgas);
+                    $("#lga_list").html(data.lgas).selectpicker('refresh');
                 } else {
                     var message =
                         'Error occured while trying to get Enity Parameter List`s in ';

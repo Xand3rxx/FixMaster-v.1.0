@@ -103,7 +103,7 @@ table tbody td:nth-child(26) {
                               @endforeach
                          @else
                               @foreach ($disbursedPayments as $output)
-                                 <option value="{{ $output->service_request_id }}">{{ $output->service_request->unique_id }}</option>
+                                 <option value="{{ $output->service_request_id }}">{{ $output['service_request']['unique_id'] ?? 'Unavailable' }}</option>
                               @endforeach
                          @endif
                       </select>

@@ -31,7 +31,7 @@ trait CancelRequest
                 'reason'                => $request->reason
             ]);
 
-            ServiceRequest::where('uuid', $serviceRequest['uuid'])->update(['status_id' => 3]);
+            ServiceRequest::where('uuid', $serviceRequest['uuid'])->update(['status_id' => ServiceRequest::SERVICE_REQUEST_STATUSES['Canceled']]);
 
             //Create a record on `service_request_progresses`, `activity_logs` tables and send mail to either Admin or Client  
             $this->createRecordsAndSendMail($request, $serviceRequest);
@@ -51,7 +51,7 @@ trait CancelRequest
         $actionUrl = Route::currentRouteAction();
 
         //If request is still pending and payment was successful, credit client's wallet with booking fee.
-        if(($serviceRequest['status']['name'] == 'Pending') && ($serviceRequest['payment']['status'] == 'success')){
+        if(($serviceRequest['status_id'] == ServiceRequest::SERVICE_REQUEST_STATUSES['Pending']) && ($serviceRequest['payment']['status'] == \App\Models\Payment::STATUS['success'])){
 
             //Check if this request has been refunded already.
             if(!WalletTransaction::where('payment_id', $serviceRequest['payment']['id'])->exists()){

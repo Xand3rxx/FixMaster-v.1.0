@@ -43,6 +43,7 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
+                                    <th>Average Rating</th>
                                     <th>Gender</th>
                                     <!-- <th>Request <br>Completed</th> -->
                                     <th>Status</th>
@@ -58,6 +59,7 @@
                                     <td class="tx-medium">{{ Str::title($technician_artisan['user']['account']['last_name'] ." ". $technician_artisan['user']['account']['first_name']) }}</td>
                                     <td class="tx-medium">{{ $technician_artisan['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $technician_artisan['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
+                                    <td class="tx-medium">{{ round($technician_artisan->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
                                     <td class="tx-medium">{{ $technician_artisan['user']['account']['gender'] }}</td>
 
                                     <td class="text-medium text-success">{{is_null($technician_artisan['user']['deleted_at']) ? 'Active' : InActive}}</td>
