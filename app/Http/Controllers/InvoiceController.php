@@ -128,7 +128,6 @@ class InvoiceController extends Controller
             $totalAmount = $amountDue + $vat;
 
         } else if($invoice->invoice_type == 'Final Invoice') {
-
             foreach ($sub_services as $sub_service)
             {
 
