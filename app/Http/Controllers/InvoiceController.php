@@ -329,7 +329,6 @@ class InvoiceController extends Controller
     {
 //        dd($request->all());
         $valid = $this->validate($request, [
-            // List of things needed from the request like
             'booking_fee'           => 'required|numeric',
             'payment_channel'       => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
             'payment_for'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
@@ -426,7 +425,6 @@ class InvoiceController extends Controller
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', '17e3ce54-2089-4ff7-a2c1-7fea407df479')->firstOrFail()->id);
                 \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $invoice['service_request_id'], '2', \App\Models\SubStatus::where('uuid', '8936191d-03ad-4bfa-9c71-e412ee984497')->firstOrFail()->id);
 
-                $this->markCompletedRequestTrait($updateServiceRequest);
             }
             elseif ($invoice['invoice_type'] === 'Final Invoice')
             {
@@ -442,7 +440,7 @@ class InvoiceController extends Controller
                 ]);
             }
 
-            ServiceRequestPayment::create([
+            $serviceRequestPayment = ServiceRequestPayment::create([
                 'user_id' => $invoice['client_id'],
                 'payment_id' => $paymentDetails['id'],
                 'service_request_id' => $invoice['service_request_id'],
@@ -452,16 +450,24 @@ class InvoiceController extends Controller
                 'status' => 'success'
             ]);
 
-            if($invoice['rfq_id'] != null){
-                ServiceRequestPayment::create([
-                    'user_id' => $invoice['client_id'],
-                    'payment_id' => $paymentDetails['id'],
-                    'service_request_id' => $invoice['service_request_id'],
-                    'amount' => $actual_material_cost,
-                    'unique_id' => static::generate('invoices', 'REF-'),
-                    'payment_type' => 'rfq',
-                    'status' => 'success'
-                ]);
+            if($serviceRequestPayment['payment_type'] == 'diagnosis-fee')
+            {
+                $this->markCompletedRequestTrait($updateServiceRequest);
+            }
+
+            if($serviceRequestPayment['payment_type'] == 'final-invoice-fee')
+            {
+                if($invoice['rfq_id'] != null){
+                    ServiceRequestPayment::create([
+                        'user_id' => $invoice['client_id'],
+                        'payment_id' => $paymentDetails['id'],
+                        'service_request_id' => $invoice['service_request_id'],
+                        'amount' => $actual_material_cost,
+                        'unique_id' => static::generate('invoices', 'REF-'),
+                        'payment_type' => 'rfq',
+                        'status' => 'success'
+                    ]);
+                }
             }
 
             $invoice->update([
