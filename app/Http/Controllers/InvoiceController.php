@@ -329,7 +329,6 @@ class InvoiceController extends Controller
     {
 //        dd($request->all());
         $valid = $this->validate($request, [
-            // List of things needed from the request like
             'booking_fee'           => 'required|numeric',
             'payment_channel'       => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
             'payment_for'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
