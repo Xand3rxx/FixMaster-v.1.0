@@ -49,7 +49,7 @@ class MaterialAcceptance
         // Update RFQ Table Status colum with $valid['material_status']
 
         // $sub_status = SubStatus::where('uuid', '1abe702c-e6b1-422f-9145-810394f92e1d')->firstOrFail();
-        $service_request->rfq->loadMissing(['rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch']);
+        $service_request->rfq->loadMissing(['rfqBatches', 'rfqSupplierInvoice.supplierDispatch']);
 
         return [
             'update_rfq_supplier_dispatches' => [
@@ -87,7 +87,7 @@ class MaterialAcceptance
         // Update RFQ Table Status colum with $valid['material_status']
 
         $sub_status = SubStatus::where('uuid', $valid['material_accepted'] == 'Yes' ? '73c2b038-4127-4085-a407-f75152a02315' : '1d3baa2b-25ec-4790-937e-90cc6a625178')->firstOrFail();
-        $service_request->rfq->loadMissing(['rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch']);
+        $service_request->rfq->loadMissing(['rfqBatches', 'rfqSupplierInvoice.supplierDispatch']);
 
         return [
             'update_rfq_supplier_dispatches' => [

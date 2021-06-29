@@ -22,18 +22,21 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarrantyController;
 use App\Http\Controllers\Admin\ActivityLogController;
+//use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\AdminRatingController;
 use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Admin\ToolsRequestController;
 use App\Http\Controllers\Admin\ServicedAreasController;
 use App\Http\Controllers\Admin\ToolInventoryController;
 use App\Http\Controllers\Admin\User\SupplierController;
+use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\AdminLocationRequestController;
 use App\Http\Controllers\CSE\CseWarrantyClaimController;
 
 use App\Http\Controllers\Admin\User\FranchiseeController;
 use App\Http\Controllers\Admin\User\AdministratorController;
 use App\Http\Controllers\QualityAssurance\PaymentController;
+use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\CollaboratorsPaymentController;
 use App\Http\Controllers\Admin\Report\SupplierReportController;
 use App\Http\Controllers\Admin\ServiceRequestPaymentController;
@@ -43,6 +46,7 @@ use App\Http\Controllers\ServiceRequest\WarrantClaimController;
 use App\Http\Controllers\Admin\User\TechnicianArtisanController;
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
+use App\Http\Controllers\Admin\Report\TechnicianReportController;
 use App\Http\Controllers\ServiceRequest\ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
 use App\Http\Controllers\ServiceRequest\AssignTechnicianController;
@@ -50,19 +54,19 @@ use App\Http\Controllers\Admin\User\Administrator\SummaryController;
 use App\Http\Controllers\Admin\User\CustomerServiceExecutiveController;
 use App\Http\Controllers\Supplier\RfqController as SupplierRfqController;
 use App\Http\Controllers\QualityAssurance\QualityAssuranceProfileController;
+use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\Report\CustomerServiceExecutiveReportController;
 use App\Http\Controllers\CSE\CustomerServiceExecutiveController as CseController;
 use App\Http\Controllers\Supplier\ProfileController as SupplierProfileController;
 use App\Http\Controllers\Supplier\DispatchController as SupplierDispatchController;
-use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Admin\User\ClientController as AdministratorClientController;
 use App\Http\Controllers\Admin\Prospective\SupplierController as ProspectiveSupplierController;
 use App\Http\Controllers\Technician\ServiceRequestController as TechnicianServiceRequestController;
 
-use App\Http\Controllers\Client\MessageController as ClientMessageController;
+//use App\Http\Controllers\Client\MessageController as ClientMessageController;
 use App\Http\Controllers\Admin\ServiceRequest\ActionsController as AdminServiceRequestActionsController;
-use App\Http\Controllers\Supplier\WarrantyDispatchController;
 use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminOngoingRequestController;
+use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 use App\Http\Controllers\Admin\Report\WarrantyReportController;
 
@@ -91,7 +95,7 @@ use App\Http\Controllers\Admin\Report\WarrantyReportController;
 Route::prefix('admin')->name('admin.')->group(function () {
     //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/ratings/cse-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-performance', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
     Route::get('/activate/{uuid}',      [AdminReviewController::class, 'activate'])->name('activate_review');
@@ -336,7 +340,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 //All routes regarding clients should be in here
-Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
+Route::prefix('client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
     //All routes regarding clients should be in here
     Route::get('/',                                      [ClientController::class, 'index'])->name('index'); //Take me to Supplier Dashboard
 
@@ -479,7 +483,7 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
     Route::get('/warranty/supplier/details/image/{image:id}',            [WarrantClaimController::class, 'rfqDetailsImage'])->name('rfq_waranty_details_image');
 });
 
-Route::prefix('/supplier')->name('supplier.')->group(function () {
+Route::prefix('supplier')->name('supplier.')->group(function () {
     //All routes regarding suppliers should be in here
     Route::get('/',                    [SupplierProfileController::class, 'dashboard'])->name('index'); //Take me to Supplier Dashboard
     Route::view('/messages/inbox',      'supplier.messages.inbox')->name('messages.inbox');
@@ -522,7 +526,7 @@ Route::prefix('/supplier')->name('supplier.')->group(function () {
     Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
 });
 
-Route::prefix('/technician')->name('technician.')->group(function () {
+Route::prefix('technician')->name('technician.')->group(function () {
     //All routes regarding technicians should be in here
     Route::get('/',                                 [TechnicianProfileController::class, 'index'])->name('index');    //Take me to Technician Dashboard
     Route::get('/location-request',                 [TechnicianProfileController::class, 'locationRequest'])->name('location_request');
@@ -554,7 +558,7 @@ Route::prefix('/technician')->name('technician.')->group(function () {
     Route::view('/consultations/completed', 'technician.consultations.completed')->name('consultations.completed');
 });
 
-Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function () {
+Route::prefix('quality-assurance')->name('quality-assurance.')->group(function () {
     //All routes regarding quality_assurance should be in here
     Route::get('/', [ServiceRequestController::class, 'index'])->name('index');
     Route::get('/profile',    [QualityAssuranceProfileController::class, 'view_profile'])->name('view_profile');
@@ -583,7 +587,7 @@ Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function 
     Route::get('/consultations/pending_details/{uuid}',  [ServiceRequestController::class, 'show'])->name('consultations.pending_details');
 });
 
-Route::prefix('/franchisee')->name('franchisee.')->group(function () {
+Route::prefix('franchisee')->name('franchisee.')->group(function () {
     Route::view('/',                'franchisee.index')->name('index'); //Take me to frnahisee Dashboard
     Route::view('/messages/inbox',      'franchisee.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent',       'franchisee.messages.sent')->name('messages.sent');

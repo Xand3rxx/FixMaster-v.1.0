@@ -42,6 +42,7 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
+                                    <th>Average Rating</th>
                                     <th>CAC Number</th>
                                     <!-- <th>Requests</th> -->
                                     <th>Status</th>
@@ -57,7 +58,7 @@
                                     <td class="tx-medium">{{ Str::title($supplier['user']['account']['last_name'] ." ". $supplier['user']['account']['first_name']) }}</td>
                                     <td class="tx-medium">{{ $supplier['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $supplier['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
-
+                                    <td class="tx-medium">{{ round($supplier->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
                                     <td class="tx-medium text-uppercase">{{$supplier['cac_number']}}</td>
 
                                     <td class="text-medium text-success">{{is_null($supplier['user']['deleted_at']) ? 'Active' : InActive}}</td>

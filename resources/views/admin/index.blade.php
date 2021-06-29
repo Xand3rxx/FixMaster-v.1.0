@@ -335,7 +335,7 @@
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Profit/Loss</h6>
                   {{-- <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4> --}}
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments}}</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments ?? '0.00'}}</h4>
                 </div>
               </div>
             </div>
@@ -368,16 +368,13 @@
 
       </div><!-- col -->
 
-      <div class="col-md-6 col-xl-6 mg-t-10">
+      {{-- <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">
           <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mg-b-0">Recent Payments</h6>
-            {{-- <div class="d-flex tx-18">
-              <a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
-              <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
-            </div> --}}
+            
           </div>
-          {{-- @if($recentPayments->count() > 0)
+           @if($recentPayments->count() > 0)
             @foreach($recentPayments as $pay)
           <ul class="list-group list-group-flush tx-13">
               <li class="list-group-item d-flex pd-sm-x-20">
@@ -395,12 +392,12 @@
             @endforeach
           <div class="card-footer text-center tx-13">
           <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
-          </div><!-- card-footer -->
+          </div>
           @else
             <div>No Payment Currently</div>
-          @endif --}}
-        </div><!-- card -->
-      </div>
+          @endif 
+        </div>
+      </div> --}}
 
       <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">

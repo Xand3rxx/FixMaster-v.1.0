@@ -125,7 +125,7 @@ class ActionsController extends Controller
         //Check if uuid exists on `users` table.
         $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
-        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark'. $serviceRequest->unique_id.' request as completed.'));
+        return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));
 
     }
 

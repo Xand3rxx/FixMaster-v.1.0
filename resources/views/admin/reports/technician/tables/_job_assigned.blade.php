@@ -25,14 +25,12 @@
         <td class="tx-medium">{{ !empty($result['service_request']['address']['town']['name']) ? $result['service_request']['address']['town']['name'] : 'UNAVAILABILE' }}</td>
         <td class="text-medium">{{ Carbon\Carbon::parse($result['service_request']['created_at'], 'UTC')->isoFormat('MMMM Do YYYY hh:mm:ssa') }}</td>
         <td class="text-medium">{{ Carbon\Carbon::parse($result['job_acceptance_time'], 'UTC')->isoFormat('MMMM Do YYYY hh:mm:ssa') }}</td>
-        @foreach($result['service_request']['service_request_assignee']['user']['roles'] as $data)
-         @if($data['slug'] == 'cse-user')
-         <td class="text-medium">  {{$result['service_request']['service_request_assignee']['user']['account']['first_name']}}
-           {{$result['service_request']['service_request_assignee']['user']['account']['middle_name']}}
-           {{$result['service_request']['service_request_assignee']['user']['account']['last_name']}}
-        </td>
-         @endif
-        @endforeach
+        {{-- @foreach($result['service_request']['service_request_assignee']['user']['roles'] as $data) --}}
+         {{-- @if($data['slug'] == 'cse-user') --}}
+         {{-- <td class="text-medium">{{$result['user']['account']['first_name'].' '.$result['user']['account']['middle_name'].' '.$result['user']['account']['last_name'] ?? ''}}</td> --}}
+         <td class="text-medium">{{'-'}}</td>
+         {{-- @endif
+        @endforeach --}}
         <td class="text-medium">{{ Carbon\Carbon::parse($result['job_diagnostic_date'], 'UTC')->isoFormat('MMMM Do YYYY hh:mm:ssa') }}</td>
         <td class="text-medium">{{ !empty($result['job_completed_date']) ? Carbon\Carbon::parse($result['job_completed_date'], 'UTC')->isoFormat('MMMM Do YYYY hh:mm:ssa') : 'UNAVAILABLE' }}</td>
         @if($result['service_request']['status']['name'] == 'Pending')

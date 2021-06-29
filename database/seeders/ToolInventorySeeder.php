@@ -24,14 +24,14 @@ class ToolInventorySeeder extends Seeder
                 'user_id'   =>  1,
                 'name'      =>  'Ladder',
                 'quantity'  =>  4,
-                'available' =>  3,
+                'available' =>  4,
             ),
             array(
                 'uuid'      =>  Str::uuid('uuid'),      
                 'user_id'   =>  1,
                 'name'      =>  'Star Screw Driver',
                 'quantity'  =>  7,
-                'available' =>  5,
+                'available' =>  7,
             ),
             array(
                 'uuid'      =>  Str::uuid('uuid'),      

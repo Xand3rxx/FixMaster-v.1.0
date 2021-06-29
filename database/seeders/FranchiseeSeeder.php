@@ -17,16 +17,19 @@ class FranchiseeSeeder extends Seeder
         $franchisee = new \App\Models\User;
         $franchisee->email = 'franchisee@fix-master.com';
         $franchisee->password = bcrypt('admin12345');
+        $franchisee->email_verified_at = now();
         $franchisee->save();
 
         $franchisee1 = new \App\Models\User;
         $franchisee1->email = 'phillip.badmus@gmail.com';
         $franchisee1->password = bcrypt('admin12345');
+        $franchisee1->email_verified_at = now();
         $franchisee1->save();
 
         $franchisee2 = new \App\Models\User;
         $franchisee2->email = 'juliet.ibe@gmail.com';
         $franchisee2->password = bcrypt('admin12345');
+        $franchisee2->email_verified_at = now();
         $franchisee2->save();
 
         // Franchisee Roles and Permissions

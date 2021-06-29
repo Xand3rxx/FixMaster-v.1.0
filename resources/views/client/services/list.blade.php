@@ -85,12 +85,23 @@
                                                                     Details</a>
 
                                                                 @if ($myServiceRequest->status_id < 3)
-                                                                    @if ($myServiceRequest->service_request_assignees->count()
-                                                                    > 1) <a
-                                                                    href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
-                                                                    class="dropdown-item text-warning"><i
-                                                                    data-feather="edit" class="fea
-                                                                    icon-sm"></i> Edit Request</a> @endif
+
+                                                                            <a
+                                                                            href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
+                                                                            class="dropdown-item text-warning"><i
+                                                                            data-feather="edit" class="fea
+                                                                            icon-sm"></i> Edit Request</a>
+                                                                    {{-- @if(collect($myServiceRequest['service_request_assignees'])->isNotEmpty())
+                                                                        @foreach ($myServiceRequest['service_request_assignees'] as $technician)
+                                                                            @if (strcmp($technician['user']['roles'][0]['slug'], 'technician-artisans') !== 0 || strcmp($technician['user']['roles'][0]['slug'], 'quality-assurance-user') !== 0)
+                                                                                <a
+                                                                            href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
+                                                                            class="dropdown-item text-warning"><i
+                                                                            data-feather="edit" class="fea
+                                                                            icon-sm"></i> Edit Request</a>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif --}}
                                                                 @endif
 
                                                                 @if ($myServiceRequest->status_id == 1)
@@ -104,7 +115,7 @@
                                                                         Request </a>
                                                                 @endif
 
-                                                                @if ($myServiceRequest->status_id == 2)
+                                                                @if ($myServiceRequest->status_id == 2 && !empty($myServiceRequest['serviceRequestPayment']['payment_type']) == 'final-invoice-fee')
 
                                                                     <a href="#" id="completed"
                                                                         data-url="{{ route('client.completed_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"

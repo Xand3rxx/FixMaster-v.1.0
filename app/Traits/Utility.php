@@ -369,8 +369,8 @@ trait Utility
     if($serviceRequest['payment']['status'] == \App\Models\Payment::STATUS['success']){
 
       //Validate if warranty already exist on `service_request_warranties` table for this service request.
-      $requestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id']])->with('warranty')->firstOrFail();
-    
+      $requestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id']])->with('warranty')->first();
+
       //Status UUID for marking a job as completed
       $statusUUID = (auth()->user()->roles[0]->slug == 'super-admin' || auth()->user()->roles[0]->slug == 'admin-user') ? 'ce316687-62d8-45a9-a1b9-f75da104fc18' : 'fca5a961-39d4-42e5-be9d-20e4b579d4b1';
 
@@ -383,7 +383,7 @@ trait Utility
         (bool) $markAsCompleted  = false;
 
         //Create new record for CSE on `service_request_cancellations` table.
-        DB::transaction(function () use ($serviceRequest, $requestWarranty, $statusUUID, $actionUrl, &$markAsCompleted) {
+        DB::transaction(function () use ($serviceRequest, $statusUUID, $actionUrl, $requestWarranty, &$markAsCompleted) {
 
             //Update record on `service_requests` table.
             \App\Models\ServiceRequest::where('uuid', $serviceRequest['uuid'])->update([
@@ -391,15 +391,11 @@ trait Utility
                 'date_completed'  =>  now(), 
             ]);
 
-            //Update record on `service_request_warranties` table
-            $requestWarranty->update([
-                'start_date'            =>  now(),
-                'expiration_date'       =>  Carbon::now()->addDay((int)$requestWarranty['warranty']['duration'])->toDateTimeString(),
-                'status'                => 'unused',
-                'initiated'             => 'No',
-                'has_been_attended_to'  => 'No',
-            ]);
-
+            //Validate if client paid for Final Invoice and Update warranty record 
+            if(\App\Models\ServiceRequestPayment::where(['user_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id'], 'payment_type' =>  'final-invoice-fee'])->exists()){
+                $this->issuedWarranty($requestWarranty);
+            }
+            
             //Record service request progress of `Admin marked job as completed`
             \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $serviceRequest['id'], 4, \App\Models\SubStatus::where('uuid', $statusUUID)->firstOrFail()->id);
 
@@ -413,17 +409,27 @@ trait Utility
 
         }, 3);
 
+        if(empty($requestWarranty)){
+
+          $warrantyDetails = '';
+          $warrantyDays = '0';
+        }else{
+
+          $warrantyDetails = '<p style="margin-bottom: 0.28cm; line-height: 108%"><span style="background-color: transparent;"><b><u>WARRANTY DETAILS</u></b></span></p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Warranty Name:&nbsp;</span>'.$requestWarranty['warranty']['name'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Start Date:&nbsp;</span>'.$requestWarranty['start_date'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Expiry Date:&nbsp;</span>'.$requestWarranty['expiration_date'].'</p>';
+
+          $warrantyDays = $requestWarranty['warranty']['duration'];
+        }
+        
+
         //Send mails to Client, CSE, and FixMaster
         $adminEmailData = collect([
           'email'                 =>  'info@fixmaster.com.ng',
           'template_feature'      =>  'ADMIN_CUSTOMER_JOB_COMPLETED_NOTIFICATION',
           'firstname'             =>  'FixMaster',
-          'lastname'              =>  '',
+          'lastname'              =>  'Administrator',
           'job_ref'               =>  $serviceRequest['unique_id'],
-          'warranty_days'         =>  $requestWarranty['warranty']['duration'],
-          'warranty_name'         =>  $requestWarranty['warranty']['name'],
-          'warranty_start_date'   =>  $requestWarranty['start_date'],
-          'warranty_expiry_date'  =>  $requestWarranty['expiration_date'],
+          'warranty_days'         =>  $warrantyDays,
+          'warranty_details'      =>  $warrantyDetails,
           'client_name'           => ucfirst($serviceRequest['client']['client']['account']['first_name'].' '.$serviceRequest['client']['client']['account']['last_name']),
           'url'                   =>  url(app()->getLocale().'/admin/requests-completed/'),
         ]);
@@ -434,10 +440,8 @@ trait Utility
           'firstname'             =>  $serviceRequest['client']['client']['account']['first_name'],
           'lastname'              =>  $serviceRequest['client']['client']['account']['last_name'],
           'job_ref'               =>  $serviceRequest['unique_id'],
-          'warranty_days'         =>  $requestWarranty['warranty']['duration'],
-          'warranty_name'         =>  $requestWarranty['warranty']['name'],
-          'warranty_start_date'   =>  $requestWarranty['start_date'],
-          'warranty_expiry_date'  =>  $requestWarranty['expiration_date'],
+          'warranty_days'         =>  $warrantyDays,
+          'warranty_details'      =>  $warrantyDetails,
           'url'                   =>  url(app()->getLocale().'/client/requests/'),
         ]);
 
@@ -466,14 +470,27 @@ trait Utility
         return $markAsCompleted;
 
       }else{
-          return back()->with('error', 'Sorry! This request must have an Ongoing status.');
+
+          return response()->json(['error' => 'Sorry! This request must have an Ongoing status.']);
       }
+      
     }else{
       return back()->with('error', 'Sorry! Please confirm payment for this request.');
     }
 
   }
 
+  public function issuedWarranty($requestWarranty){
+  
+    //Update record on `service_request_warranties` table
+    $requestWarranty->update([
+        'start_date'            =>  now(),
+        'expiration_date'       =>  Carbon::now()->addDay((int)$requestWarranty['warranty']['duration'])->toDateTimeString(),
+        'status'                => 'unused',
+        'initiated'             => 'No',
+        'has_been_attended_to'  => 'No',
+    ]);
+  }
 
   public function addDiscountToFirstTimeUserTrait($user){
 

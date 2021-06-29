@@ -14,19 +14,7 @@
             @csrf 
             <input type="hidden" value="{{ $userServiceRequest->id ?? '' }}" name="servicereq" >
             <!-- ROW 1 -->
-            <div class="col-md-12">
-                <div class="form-group position-relative">
-                    <label>Scheduled Date & Time :<span class="text-danger">*</span></label>
-                    <i data-feather="calendar" class="fea icon-sm icons"></i>
-                    <input name="timestamp" type="text" class="form-control pl-5 @error('timestamp') is-invalid @enderror" placeholder="Click to select :" id="service-date-time" readonly value="{{ old('timestamp') ?? \Carbon\Carbon::parse($userServiceRequest->preferred_time, 'UTC')->isoFormat('YYYY/MM/DD') }}">
-                    @error('timestamp')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </div><!--end col-->
-
+            
             <div class="col-md-12">
                 <div class="form-group position-relative">
                     <label>Tell us more about the service you need :</label>

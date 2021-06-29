@@ -20,15 +20,18 @@ class CSESeeder extends Seeder
         $cse = new \App\Models\User;
         $cse->email = 'cse@9thtest.com.ng';
         $cse->password = bcrypt('admin12345');
+        $cse->password = bcrypt('admin12345');
         $cse->save();
 
         $cse1 = new \App\Models\User;
         $cse1->email = 'susan.simpson@gmail.com';
         $cse1->password = bcrypt('admin12345');
+        $cse1->password = bcrypt('admin12345');
         $cse1->save();
 
         $cse2 = new \App\Models\User;
         $cse2->email = 'jackson.okoye@gmail.com';
+        $cse2->password = bcrypt('admin12345');
         $cse2->password = bcrypt('admin12345');
         $cse2->save();
 

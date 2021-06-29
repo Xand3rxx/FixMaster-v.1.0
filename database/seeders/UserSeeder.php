@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
         $user1 = new User();
         $user1->email = 'dev@fix-master.com';
         $user1->password = bcrypt('admin12345');
+        $user1->email_verified_at = now();
         $user1->save();
         $user1->roles()->attach($developer);
         $user1->permissions()->attach($manageUsers);
@@ -35,7 +36,7 @@ class UserSeeder extends Seeder
             'user_id'       =>  1,
             'first_name'    => "FixMaster",
             'middle_name'   => "",
-            'last_name'     => "Admin",
+            'last_name'     => "Administrator",
             'gender'        => 'male',
             'avatar'        => 'default-male-avatar.png'
         ]);
