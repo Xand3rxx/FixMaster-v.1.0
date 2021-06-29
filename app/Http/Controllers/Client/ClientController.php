@@ -748,13 +748,15 @@ class ClientController extends Controller
         //Verify if service request exists
         $requestExists = ServiceRequest::where('uuid', $id)->with('client', 'service_request_assignees')->firstOrFail();
 
+
+        //Get RFQ attached to the serice request
+        $rfq        = \App\Models\Rfq::where('service_request_id',  $requestExists->id)->first();
+
+
         if(empty($rfq)){
             return back()->with('error', 'No request for qutotation yet for ' .  $requestExists->unique_id . ' service request.');
 
         }
-
-        //Get RFQ attached to the serice request
-        $rfq        = \App\Models\Rfq::where('service_request_id',  $requestExists->id)->first();
 
         //Get the accepted supplier invoice 
         $rfqInvoice        = \App\Models\RfqSupplierInvoice::where('rfq_id', '=', $rfq->id)->where('accepted', '=', 'Yes')->first();
