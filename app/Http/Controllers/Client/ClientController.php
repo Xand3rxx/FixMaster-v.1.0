@@ -783,7 +783,7 @@ class ClientController extends Controller
 
         (bool)  $initiate = false;
 
-        DB::transaction(function () use ($request, $initateWarranty, $cse, $requestExists, $admin, $supplier, &$initiate) {
+        DB::transaction(function () use ($request, $initateWarranty, $cse, $requestExists, $supplier, &$initiate) {
 
             $initateWarranty = ServiceRequestWarranty::where('service_request_id',  $requestExists->id)->update([
                 'status'            => 'used',
@@ -793,7 +793,6 @@ class ClientController extends Controller
             ]);
 
             if ($initateWarranty) {
-            ,
 
                 $mail_data_admin = collect([
                     'email' =>  'info@fixmaster.com.ng',
