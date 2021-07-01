@@ -10,7 +10,6 @@ use App\Models\PaymentGateway;
 use App\Models\ServiceRequest;
 use App\Http\Controllers\Controller;
 
-
 class ServiceRequestController extends Controller
 {
     use Services;
@@ -39,11 +38,11 @@ class ServiceRequestController extends Controller
 
         //  Validate Request
         (array) $valid = $request->validate([
-            'service_uuid'              => 'bail|required|uuid|exists:services,uuid', // Handle service of custom to 
+            'service_uuid'              => 'bail|sometimes|uuid|exists:services,uuid', // Handle service of custom to 
             'payment_for'               => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
             'price_id'                  => 'bail|required|integer',
             'description'               => 'bail|required|string',
-            'preferred_time'            => 'bail|sometimes|date',
+            'preferred_time'            => 'bail|sometimes',
             'payment_channel'           => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
             'contactme_status'          => 'bail|required|boolean',
             'client_discount_id'        => 'bail|sometimes|integer',
@@ -80,10 +79,17 @@ class ServiceRequestController extends Controller
     {
         // Verify Payment status
         if ($payment['status'] = Payment::STATUS['success']) {
-            $service = \App\Models\Service::where('uuid', $payment['meta_data']['service_uuid'])->first();
+
+            //Check if the request is custom
+            if(!empty($payment['meta_data']['service_uuid'])){
+                $service = \App\Models\Service::where('uuid', $payment['meta_data']['service_uuid'])->first();
+            }else{
+                $service = \App\Models\Service::where('id', '28')->withTrashed()->first();
+            }
+
             $service_request = ServiceRequest::create([
                 'unique_id' => $payment['unique_id'],
-                'service_id' => $service['id'] ?? NULL,
+                'service_id' => $service['id'],
                 'client_id' => request()->user()->id,
                 'client_discount_id' => $payment['meta_data']['client_discount_id'] ?? NULL,  //To be Confirmed from Rade and Joyboy
                 'preferred_time' => $payment['meta_data']['preferred_time'] ?? NULL,
@@ -108,6 +114,18 @@ class ServiceRequestController extends Controller
             if(!empty($payment['meta_data']['client_discount_id'])){
                 \App\Models\ClientDiscount::where('id', $payment['meta_data']['client_discount_id'])->update(['availability' =>  'used']);
             }
+
+            //Create record for on `service_request_payments` table
+            \App\Models\ServiceRequestPayment::create([
+                'user_id'               => request()->user()->id, 
+                'payment_id'            => $payment['id'], 
+                'service_request_id'    => $service_request['id'], 
+                'amount'                => $payment['amount'], 
+                'unique_id'             => $service_request['unique_id'], 
+                'payment_type'          => 'booking-fee', 
+                'status'                => $payment['status']
+            ]);
+
             // Use created service request to trigger notification
             \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');

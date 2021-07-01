@@ -302,6 +302,16 @@ class ServiceSeeder extends Seeder
         $service4->image = '75874a9b-6003-4108-b7f7-9acd07589421.jpg';
         $service4->save();
 
+        $service4 = new Service();
+        $service4->user_id = '1';
+        $service4->category_id = '12';
+        $service4->name = 'Custom Service';
+        $service4->service_charge = 0;
+        $service4->diagnosis_subsequent_hour_charge = 0;
+        $service4->description = 'This is the default service for a Custom request.';
+        $service4->image = '72434862-6ca8-47bc-9c52-6797d6a6eb3e.jpg';
+        $service4->save();
+
 
         $subService = new SubService();
         $subService->user_id = '1';
