@@ -53,7 +53,6 @@ class ServiceRequestController extends Controller
         ->where('user_id', Auth::id())
         ->where('assistive_role', 'Consultant')
         ->get()->count();
-
         $QApayments = CollaboratorsPayment::where('user_id',Auth::id())->get()->sum('amount_to_be_paid');      
         return view('quality-assurance.index', compact('completedJobs', 'ongoingJobs','ongoingConsultations','pendingConsultations','completedConsultations','QApayments'));
     }

@@ -22,6 +22,7 @@ class CreateRatingsTable extends Migration
             $table->foreignId('service_id')->nullable();
             $table->integer('star');
             $table->integer('service_diagnosis_by')->comment('CSE that performed the diagnosis')->nullable();
+            $table->integer('service_performed_by')->comment('CSE that performed the job')->nullable();
 
             $table->timestamps();
         });
