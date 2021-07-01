@@ -95,15 +95,14 @@ use App\Http\Controllers\Admin\Report\WarrantyReportController;
 Route::prefix('admin')->name('admin.')->group(function () {
     //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/ratings/job-performance', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-performance', [AdminRatingController::class, 'servicePerformance'])->name('service_rating');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
     Route::get('/activate/{uuid}',      [AdminReviewController::class, 'activate'])->name('activate_review');
     Route::get('/deactivate/{uuid}',      [AdminReviewController::class, 'deactivate'])->name('deactivate_review');
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
-
-
 
 
     Route::prefix('users')->name('users.')->group(function () {
@@ -405,8 +404,10 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     Route::get('myContactList',                 [ClientController::class, 'myContactList'])->name('service.myContacts');
 
+    //client ratings
     Route::post('/update_service_request',  [ClientController::class, 'update_client_service_rating'])->name('update_service_request');
     Route::post('/submit_ratings',  [ClientController::class, 'client_rating'])->name('handle.ratings');
+   
     Route::get('/discount_mail',  [ClientController::class, 'discount_mail'])->name('discount_mail');
 
     Route::post('available-tool-quantity', [CseController::class, 'getAvailableToolQuantity'])->name('available.tools');

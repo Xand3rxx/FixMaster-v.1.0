@@ -237,6 +237,11 @@ class ServiceRequest extends Model
         return $this->hasOne(Payment::class, 'unique_id', 'unique_id');
     }
 
+    // public function pays()
+    // {
+    //     return $this->hasMany(ServiceRequestPayment::class);//, 'service_request_id', 'id'
+    // }
+
     /**
      * Scope a query to only include all pending requests
      *

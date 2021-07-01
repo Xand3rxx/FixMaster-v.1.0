@@ -40,12 +40,14 @@ class CreateServiceRequestsTable extends Migration
 
             $table->foreignId('service_id')->nullable();
             $table->json('sub_services')->nullable();
-
+            
+            $table->enum('client_diagnosis_rating', ['Yes', 'No', 'Skipped'])->default('No');
             $table->enum('has_client_rated', ['Yes', 'No', 'Skipped'])->default('No');
             $table->enum('has_cse_rated', ['Yes', 'No', 'Skipped'])->default('No');
 
             $table->foreignId('status_id')->default(\App\Models\ServiceRequest::SERVICE_REQUEST_STATUSES['Pending']);
             $table->dateTime('date_completed')->nullable()->default(NULL);
+            $table->dateTime('diagnosis_rated_at')->nullable()->default(NULL);
 
             $table->softDeletes();
             $table->timestamps();
