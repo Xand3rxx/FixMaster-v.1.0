@@ -402,7 +402,7 @@
 =======
         </div>
       </div> --}}
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
+
 
       <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">

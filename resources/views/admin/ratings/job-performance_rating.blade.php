@@ -23,18 +23,8 @@
             <div class="card mg-b-10">
               <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
                 <div>
-<<<<<<< HEAD
                   <h6 class="mg-b-5">Job Performance Ratings as of {{ date('M, d Y') }}</h6>
                   <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of all Job Performance Ratings authored by Clients.</p>
-=======
-<<<<<<< HEAD:resources/views/admin/ratings/job-diagnosis_rating.blade.php
-                  <h6 class="mg-b-5">Job Diagnosis Ratings as of {{ date('M, d Y') }}</h6>
-                  <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of all Job Diagnosis Ratings authored by Clients.</p>
-=======
-                  <h6 class="mg-b-5">Job Performance Ratings as of {{ date('M, d Y') }}</h6>
-                  <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of all Job Performance Ratings authored by Clients.</p>
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6:resources/views/admin/ratings/job-performance_rating.blade.php
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
                 </div>
 
               </div><!-- card-header -->
@@ -49,33 +39,16 @@
                       <th>CSE</th>
                       <th>Service</th>
                       <th class="text-center">Job Reference</th>
-<<<<<<< HEAD
                       <th class="text-center">Job Performance Rating(5)</th>
-=======
-<<<<<<< HEAD:resources/views/admin/ratings/job-diagnosis_rating.blade.php
-                      <th class="text-center">Job Diagnosis Rating(5)</th>
-=======
-                      <th class="text-center">Job Performance Rating(5)</th>
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6:resources/views/admin/ratings/job-performance_rating.blade.php
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
                     </tr>
                   </thead>
                   <tbody>
                     @php $sn = 1; @endphp
-<<<<<<< HEAD
                 @foreach($performanceRatings as $rating)
                     <tr>
                       <td class="tx-color-03 tx-center">{{$sn++}}</td>
                       <td class="tx-medium">{{$rating->clientAccount->first_name.' '.$rating->clientAccount->last_name ?? 'Unavailable'}}</td>
                       <td class="tx-medium">{{$rating->cseAcc->first_name.' '.$rating->cseAcc->last_name ?? 'Unavailable'}}</td>
-=======
-                @foreach($diagnosisRatings as $rating)
-                    <tr>
-                      {{-- {{$rating->service_request->service->name}} --}}
-                      <td class="tx-color-03 tx-center">{{$sn++}}</td>
-                      <td class="tx-medium">{{$rating->clientAccount->first_name.' '.$rating->clientAccount->last_name ?? 'Unavailable'}}</td>
-                      <td class="tx-medium">{{$rating->cseAccount->first_name.' '.$rating->cseAccount->last_name ?? 'Unavailable'}}</td>
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
                       <td class="tx-medium">{{$rating->service_request->service->name ?? 'Unavailable'}}</td>
                       <td class="tx-medium text-center">{{$rating->service_request->unique_id ?? 'Unavailable'}}</td>
                       <td class="text-medium text-center">{{round($rating->star) ?? 'Unavailable'}}</td>
