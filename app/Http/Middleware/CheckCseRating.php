@@ -35,14 +35,25 @@ class CheckCseRating
                     }
                 }
 
-                
-                       if ($res == 'Completed' && $out->service_request->has_cse_rated == "No") {
-                           $request->merge(['results' => $res, 'users' => $dat, 'client' => $serviceRequestClient, 'serviceRequestId' => $serviceRequestId, 'uniqueId'=> $uniqueId]);
-                       }
+                if ($res == 'Completed' && $out->service_request->has_cse_rated == "No") {
+                    $request->merge([
+                        'results' => $res, 
+                        'users' => $dat, 
+                        'client' => $serviceRequestClient, 
+                        'serviceRequestId' => $serviceRequestId, 
+                        'uniqueId'=> $uniqueId
+                    ]);
+                }
 
-                       if ($res == 'Completed' && $out->service_request->has_cse_rated == "Skipped" && $out->service_request->updated_at < Carbon::now()->subMinutes(1)) {
-                        $request->merge(['results' => $res, 'users' => $dat, 'client' => $serviceRequestClient, 'serviceRequestId' => $serviceRequestId, 'uniqueId'=> $uniqueId]);
-                    }
+                if ($res == 'Completed' && $out->service_request->has_cse_rated == "Skipped" && $out->service_request->updated_at < Carbon::now()->subMinutes(1)) {
+                $request->merge([
+                    'results' => $res, 
+                    'users' => $dat, 
+                    'client' => $serviceRequestClient, 
+                    'serviceRequestId' => $serviceRequestId, 
+                    'uniqueId'=> $uniqueId
+                ]);
+            }
 
                    }
 
