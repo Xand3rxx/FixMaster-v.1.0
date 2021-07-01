@@ -514,6 +514,7 @@ trait Utility
             'template_feature' => 'CUSTOMER_WELCOME_DISCOUNT',
             'discount' => $discountDetails->rate,
             'firstname' =>  $userDetails->first_name,
+            'lastname' =>  $userDetails->last_name,
          ]);
       
      

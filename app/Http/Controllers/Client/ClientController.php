@@ -74,11 +74,7 @@ class ClientController extends Controller
 
     public function clientRequestDetails($language, $uuid)
     {
-
-        // return $requestDetail = ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail();
-
         return view('client.request_details', [
-
             'requestDetail'     =>  ServiceRequest::where('uuid', $uuid)->with('price', 'service', 'client', 'serviceRequestMedias', 'service_request_assignees', 'address', 'payment')->firstOrFail()
         ]);
     }
@@ -637,64 +633,80 @@ class ClientController extends Controller
 
     public function editRequest($language, $uuid)
     {
-
-        // return $userServiceRequest = ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail();
-
-        $data = [
+        return view('client._request_edit', [
             'userServiceRequest'    =>  ServiceRequest::where('uuid', $uuid)->with('serviceRequestMedias')->firstOrFail(),
-        ];
-
-        return view('client._request_edit', $data);
+        ]);
     }
 
     public function updateRequest(Request $request, $language, $id)
     {
-        $requestExist = ServiceRequest::where('uuid', $id)->first();
+        $requestExist = ServiceRequest::where('uuid', $id)->firstOrFail();
 
-        $request->validate([
-            'description'           =>   'bail|required|string',
-            'media_file'                => 'bail|sometimes|array',
-            'media_file.*'              => 'bail|sometimes|file',
+        (array) $valid = $request->validate([
+            'description'   =>  'bail|required|string',
+            'media_file'    =>  'bail|sometimes|array',
+            'media_file.*'  =>  'bail|sometimes|file',
         ]);
 
-
-        $updateServiceRequest = ServiceRequest::where('uuid', $id)->update([
-            'description'           =>   $request->description,
+        $updateServiceRequest = $requestExist->where('uuid', $id)->update([
+            'description'   =>   $request->description,
         ]);
 
         // upload multiple media files
-        foreach ($request->media_file as $key => $file) {
-            $originalName[$key] = $file->getClientOriginalName();
-
-            $fileName = sha1($file->getClientOriginalName() . time()) . '.' . $file->getClientOriginalExtension();
-            $filePath = public_path('assets/service-request-media-files');
-            $file->move($filePath, $fileName);
-            $data[$key] = $fileName;
+        // Check for media files
+        if (!empty($valid['media_file'])) {
+            (array) $files = $this->handle_media_files($valid['media_file']);
+            $valid['media_file'] = $files;
         }
-        $unique_name   = json_encode($data);
-        $original_name = json_encode($originalName);
 
-        $saveToMedia = new Media();
-        $saveToMedia->client_id     = auth()->user()->id;
-        $saveToMedia->original_name = $original_name;
-        $saveToMedia->unique_name   = $unique_name;
-        $saveToMedia->save();
+        if (!empty($valid['media_file'])) {
+            foreach ($valid['media_file'] as $key => $file) {
+                $media = \App\Models\Media::create([
+                    'client_id' =>  $requestExist['client_id'],
+                    'original_name' => $file['original_name'],
+                    'unique_name' => $file['unique_name'],
+                ]);
+                $requestExist->medias()->attach($media);
+            }
+        }
 
-        $saveServiceRequestMedia = new ServiceRequestMedia;
-        $saveServiceRequestMedia->media_id            = $saveToMedia->id;
-        $saveServiceRequestMedia->service_request_id  = $request->servicereq;
-        $saveServiceRequestMedia->save();
+        $actionUrl = Route::currentRouteAction();
 
         if ($updateServiceRequest) {
+            $this->log('request', 'Informational', $actionUrl, $request->user()->account->first_name.' '.$request->user()->account->last_name. ' updated ' . $requestExist->unique_id . ' service request.');
+
             //acitvity log
             return back()->with('success', $requestExist->unique_id . ' was successfully updated.');
         } else {
+
+            $this->log('errors', 'Error', $actionUrl, 'An error occurred when '.$request->user()->account->first_name.' '.$request->user()->account->last_name. ' was trying to update ' . $requestExist->unique_id . ' service request.');
 
             //acitvity log
             return back()->with('error', 'An error occurred while trying to update a ' . $requestExist->unique_id . ' service request.');
         }
 
         return back()->withInput();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  array  $files
+     * @return \Illuminate\Http\Response
+     */
+    protected function handle_media_files(array $files)
+    {
+        (array) $uploadedFiles = [];
+        foreach ($files as $key => $file) {
+            $original = $file->getClientOriginalName();
+            $fileName = sha1($original . time()) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/service-request-media-files'), $fileName);
+            array_push($uploadedFiles, [
+                'original_name' => $original,
+                'unique_name' => $fileName
+            ]);
+        }
+        return $uploadedFiles;
     }
 
     public function cancelRequest(Request $request, $language, $uuid)
@@ -793,7 +805,6 @@ class ClientController extends Controller
             ]);
 
             if ($initateWarranty) {
-            ,
 
                 $mail_data_admin = collect([
                     'email' =>  'info@fixmaster.com.ng',
@@ -862,42 +873,32 @@ class ClientController extends Controller
     }
 
 
-    public function reinstateRequest(Request $request, $language, $id)
+    public function reinstateRequest(Request $request, $language, $uuid)
     {
 
-        $requestExists = ServiceRequest::where('uuid', $id)->firstOrFail();
+        $requestExists = ServiceRequest::where('uuid', $uuid)->firstOrFail();
+
         //service_request_status_id = Pending(1), Ongoing(2), Completed(4), Cancelled(3)
-        $reinstateRequest = ServiceRequest::where('uuid', $id)->update([
-            'status_id' =>  '1',
+        $reinstateRequest = $requestExists->where('uuid', $uuid)->update([
+            'status_id' =>  ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'],
         ]);
 
-        $jobReference = $requestExists->unique_id;
-
-        //Create record in `service_request_progress` table
-        // $recordServiceProgress = ServiceRequestProgress::where(['service_request_id'=> $requestExists->id, 'user_id' => Auth::id()])->update([
-        //     'status_id'                     => '1',
-        //     'sub_status_id'                 => '1'
-        // ]);
-
-        // $recordCancellation = ServiceRequestCancellation::where(['service_request_id'=> $requestExists->id, 'user_id' => Auth::id()])->delete();
-
-        // if($cancelRequest AND $recordServiceProgress AND $recordCancellation){
         if ($reinstateRequest) {
 
-            $this->log('request', 'Informational', Route::currentRouteAction(), auth()->user()->account->last_name . ' ' . auth()->user()->account->first_name  . ') reinstated ' . $jobReference . ' service request.');
+            $this->log('request', 'Informational', Route::currentRouteAction(), $request->user()->account->last_name . ' ' . $request->user()->account->first_name  . ') reinstated ' . $requestExists['unique_id'] . ' service request.');
 
-            return back()->with('success', $jobReference . ' service request was reinstated successfully.');
+            return back()->with('success', $requestExists['unique_id'] . ' service request was reinstated successfully.');
         } else {
             //Record Unauthorized user activity
             //activity log
-            return back()->with('error', 'An error occurred while trying to cancel ' . $jobReference . ' service request.');
+            return back()->with('error', 'An error occurred while trying to cancel ' . $requestExists['unique_id'] . ' service request.');
         }
     }
 
-    public function markCompletedRequest(Request $request, $language, $id)
+    public function markCompletedRequest($language, $uuid)
     {
-
-        $requestExists = ServiceRequest::where('uuid', $id)->firstOrFail();
+        //Check if uuid exists on `service_requests` table.
+        $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
         $this->markCompletedRequestTrait($serviceRequest);
         return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));

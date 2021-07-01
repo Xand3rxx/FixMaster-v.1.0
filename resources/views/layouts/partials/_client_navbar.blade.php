@@ -114,19 +114,19 @@
             <ul class="navigation-menu nav-light">
                 <li ><a href="{{ route('frontend.home', app()->getLocale()) }}">FixMaster Home</a></li>
 
-                <li><a class="" href="{{ route('frontend.about', app()->getLocale()) }}">About us</a></li>
+                <li><a class="" href="#">About us</a></li>
                 
                 <li class="has-submenu">
                     <a href="javascript:void(0)">How it works</a><span class="menu-arrow"></span>
                     <ul class="submenu">
-                        <li><a class="" href="{{ route('frontend.how_it_works', app()->getLocale()) }}">How It Works</a></li>
-                        <li><a class="" href="{{ route('frontend.faq', app()->getLocale()) }}">FAQ</a></li>
+                        <li><a class="" href="#">How It Works</a></li>
+                        <li><a class="" href="#">FAQ</a></li>
                     </ul>
                 </li>
                 
                 <li><a class="{{ Route::currentRouteNamed('frontend.contact') ? 'selected' : '' }}" href="{{ route('frontend.contact', app()->getLocale()) }}">Contact</a></li>
 
-                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details') ? 'active' : '' }}">
+                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}">
                     <a href="javascript:void(0)" class="l-dark l-light">Profile</a><span class="menu-arrow"></span>
                     <ul class="submenu">
                         <li class="{{ Route::currentRouteNamed('client.index', app()->getLocale()) ? 'active' : '' }}"><a href="{{ route('client.index') }}">Dashboard</a></li>
@@ -135,7 +135,7 @@
 
                         <li class="{{ Route::currentRouteNamed('client.wallet') ? 'active' : '' }}"><a href="{{ route('client.wallet', app()->getLocale()) }}">E-Wallet</a></li>
 
-                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details') ? 'active' : '' }}"><a href="{{ route('client.requests') }}">Requests</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}"><a href="{{ route('client.requests') }}">Requests</a></li>
 
                         <li class="{{ Route::currentRouteNamed('client.payments') ? 'active' : '' }}"><a href="{{ route('client.payments'), app()->getLocale() }}">Payments</a></li>
 
@@ -143,8 +143,6 @@
 
                         <li class="{{ Route::currentRouteNamed('client.settings') ? 'active' : '' }}"><a href="{{ route('client.settings', app()->getLocale()) }}">Settings</a></li>
 
-
-                        {{-- <li><a href="{{ route('login') }}">Logout</a></li> --}}
                     </ul>
                 </li>
 
