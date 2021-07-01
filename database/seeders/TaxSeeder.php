@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use DB;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TaxSeeder extends Seeder
 {

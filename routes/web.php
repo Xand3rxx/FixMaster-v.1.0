@@ -339,7 +339,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 //All routes regarding clients should be in here
-Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
+Route::prefix('client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
     //All routes regarding clients should be in here
     Route::get('/',                                      [ClientController::class, 'index'])->name('index'); //Take me to Supplier Dashboard
 
@@ -484,7 +484,7 @@ Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.chan
     Route::get('/warranty/supplier/details/image/{image:id}',            [WarrantClaimController::class, 'rfqDetailsImage'])->name('rfq_waranty_details_image');
 });
 
-Route::prefix('/supplier')->name('supplier.')->group(function () {
+Route::prefix('supplier')->name('supplier.')->group(function () {
     //All routes regarding suppliers should be in here
     Route::get('/',                    [SupplierProfileController::class, 'dashboard'])->name('index'); //Take me to Supplier Dashboard
     Route::view('/messages/inbox',      'supplier.messages.inbox')->name('messages.inbox');
@@ -527,7 +527,7 @@ Route::prefix('/supplier')->name('supplier.')->group(function () {
     Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
 });
 
-Route::prefix('/technician')->name('technician.')->group(function () {
+Route::prefix('technician')->name('technician.')->group(function () {
     //All routes regarding technicians should be in here
     Route::get('/',                                 [TechnicianProfileController::class, 'index'])->name('index');    //Take me to Technician Dashboard
     Route::get('/location-request',                 [TechnicianProfileController::class, 'locationRequest'])->name('location_request');
@@ -559,7 +559,7 @@ Route::prefix('/technician')->name('technician.')->group(function () {
     Route::view('/consultations/completed', 'technician.consultations.completed')->name('consultations.completed');
 });
 
-Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function () {
+Route::prefix('quality-assurance')->name('quality-assurance.')->group(function () {
     //All routes regarding quality_assurance should be in here
     Route::get('/', [ServiceRequestController::class, 'index'])->name('index');
     Route::get('/profile',    [QualityAssuranceProfileController::class, 'view_profile'])->name('view_profile');
@@ -588,7 +588,7 @@ Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function 
     Route::get('/consultations/pending_details/{uuid}',  [ServiceRequestController::class, 'show'])->name('consultations.pending_details');
 });
 
-Route::prefix('/franchisee')->name('franchisee.')->group(function () {
+Route::prefix('franchisee')->name('franchisee.')->group(function () {
     Route::view('/',                'franchisee.index')->name('index'); //Take me to frnahisee Dashboard
     Route::view('/messages/inbox',      'franchisee.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent',       'franchisee.messages.sent')->name('messages.sent');

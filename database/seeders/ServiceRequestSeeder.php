@@ -110,7 +110,7 @@ class ServiceRequestSeeder extends Seeder
             array(
                 'uuid'                  => Str::uuid('uuid'),      
                 'client_id'             => 6, 
-                'service_id'            => 2, 
+                'service_id'            => 10, 
                 'unique_id'             => 'REF-EEE7FD14', 
                 'contactme_status'     => 1,
                 'price_id'              => 2, 
@@ -179,44 +179,6 @@ class ServiceRequestSeeder extends Seeder
         );
 
         $serviceRequestAssignee = array(
-            // array(
-            //     'user_id'               => '22', 
-            //     'service_request_id'    => '1',
-            //     'job_accepted'          =>  NULL, 
-            //     'job_acceptance_time'   => NULL,
-            //     'job_diagnostic_date'   =>  NULL,
-            //     'job_declined_time'     =>  NULL,
-            //     'job_completed_date'    =>  NULL,
-            //     'status'                =>  NULL,
-            //     'assistive_role'        =>  NULL,
-            //     'created_at'            => NULL, 
-            // ),
-            // array(
-            //     'user_id'               => '2', 
-            //     'service_request_id'    => '1',
-            //     'job_accepted'          =>  NULL, 
-            //     // 'job_acceptance_time'   => '2020-12-14 15:08:52',
-            //     // 'job_diagnostic_date'   =>  '2020-12-14 17:34:25',
-            //     'job_acceptance_time'   => NULL,
-            //     'job_diagnostic_date'   =>  NULL,
-            //     'job_declined_time'     =>  NULL,
-            //     'job_completed_date'    =>  NULL,
-            //     'status'                =>  'Active',
-            //     'assistive_role'        =>  NULL,
-            //     'created_at'            => '2020-12-14 13:43:14',
-            // ),
-            // array(
-            //     'user_id'               => '10', 
-            //     'service_request_id'    => '1',
-            //     'job_accepted'          =>  NULL, 
-            //     'job_acceptance_time'   => NULL,
-            //     'job_diagnostic_date'   =>  NULL,
-            //     'job_declined_time'     =>  NULL,
-            //     'job_completed_date'    =>  NULL,
-            //     'status'                =>  NULL,
-            //     'assistive_role'        =>  'Consultant',
-            //     'created_at'            => NULL, 
-            // ),
             array(
                 'user_id'               => '22', 
                 'service_request_id'    => '2',

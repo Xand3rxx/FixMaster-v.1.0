@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
-use App\Models\Lga;
+use Illuminate\Support\Facades\DB;
 
 class LgaSeeder extends Seeder
 {

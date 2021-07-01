@@ -11,10 +11,11 @@ use DB;
 use App\Traits\Loggable;
 use App\Traits\GenerateUniqueIdentity;
 use App\Models\RfqSupplierDispatch;
+use App\Traits\Utility;
 
 class WarrantyDispatchController extends Controller
 {
-    use Loggable, GenerateUniqueIdentity;
+    use Loggable, GenerateUniqueIdentity, Utility;
 
     /**
      * Display a listing of the resource.

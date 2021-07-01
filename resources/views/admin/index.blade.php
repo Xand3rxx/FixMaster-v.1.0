@@ -368,14 +368,11 @@
 
       </div><!-- col -->
 
-      <div class="col-md-6 col-xl-6 mg-t-10">
+      {{-- <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">
           <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mg-b-0">Recent Payments</h6>
-            {{-- <div class="d-flex tx-18">
-              <a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
-              <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
-            </div> --}}
+            
           </div>
            @if($recentPayments->count() > 0)
             @foreach($recentPayments as $pay)
@@ -395,12 +392,17 @@
             @endforeach
           <div class="card-footer text-center tx-13">
           <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
-          </div><!-- card-footer -->
+          </div>
           @else
             <div>No Payment Currently</div>
           @endif 
+<<<<<<< HEAD
         </div><!-- card -->
       </div>
+=======
+        </div>
+      </div> --}}
+>>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
 
       <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">

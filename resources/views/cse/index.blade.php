@@ -43,7 +43,7 @@
             </div>
             <div class="col-md-6">
               <div class="card-body pd-t-10 pd-b-15 pd-x-20 mt-2">
-                <h6 class="lh-5 mg-b-5">Your current Earnings is:<h1 class="tx-normal tx-rubik mg-b-0 mg-r-5"> ₦20,000 </h1>
+                <h6 class="lh-5 mg-b-5">Your current Earnings is:<h1 class="tx-normal tx-rubik mg-b-0 mg-r-5"> ₦0.00 </h1>
                 </h6>
               </div>
             </div>
