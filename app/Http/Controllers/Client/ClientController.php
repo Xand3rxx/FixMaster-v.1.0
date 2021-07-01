@@ -793,7 +793,6 @@ class ClientController extends Controller
             ]);
 
             if ($initateWarranty) {
-            ,
 
                 $mail_data_admin = collect([
                     'email' =>  'info@fixmaster.com.ng',
