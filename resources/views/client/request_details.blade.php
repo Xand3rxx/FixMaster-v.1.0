@@ -10,10 +10,12 @@
     <div class="float-right pt-4 mb-4">
         <a href="{{ route('client.service.all', app()->getLocale()) }}" class="btn btn-sm btn-primary">Back </a>
         @if($requestDetail->status_id == '1')
-        <a href="#editRequest" id="edit-request" data-toggle="modal" data-url="{{ route('client.edit_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ])}}" data-job-reference="{{ $requestDetail->unique_id  }}" class="btn btn-sm btn-warning">Edit Request </a>
 
+        @if(collect($requestDetail['service_request_assignees'])->count() < 2)
+            <a href="{{ route('client.edit_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ])}}" class="btn btn-sm btn-warning">Edit Request </a>
+        @endif
         <a href="#cancelRequest" id="cancel-request" data-toggle="modal" data-url="{{ route('client.cancel_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ]) }}" data-job-reference="{{ $requestDetail->unique_id  }}" class="btn btn-sm btn-danger">Cancel Request </a>
-        @elseif($requestDetail->status_id == '3')
+        @elseif($requestDetail->status_id == '4')
         <a href="#" id="activate"
         data-url="{{ route('client.reinstate_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ]) }}" 
         class="btn btn-sm btn-warning" title="Reinstate">Reinstate Request </a>
@@ -175,28 +177,6 @@
     </div>
 </div>
 <!--end col-->
-
-<div class="modal fade" id="editRequest" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content rounded shadow border-0">
-            <div class="modal-header">
-                {{--
-                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
-                --}}
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="modal-edit-request">
-                <!-- Modal displays here -->
-                <div id="spinner-icon"></div>
-            </div>
-        </div>
-        <!-- modal-body -->
-    </div>
-    <!-- modal-content -->
-</div>
-<!-- modal-dialog -->
 
 <div class="modal fade" id="validateSecurityCode" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">

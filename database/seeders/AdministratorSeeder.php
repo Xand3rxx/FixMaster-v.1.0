@@ -17,16 +17,19 @@ class AdministratorSeeder extends Seeder
         $admin = new \App\Models\User;
         $admin->email = 'admin@fix-master.com';
         $admin->password = bcrypt('admin12345');
+        $admin->email_verified_at = now();
         $admin->save();
 
         $admin1 = new \App\Models\User;
         $admin1->email = 'david.akinsola@gmail.com';
         $admin1->password = bcrypt('admin12345');
+        $admin1->email_verified_at = now();
         $admin1->save();
 
         $admin2 = new \App\Models\User;
         $admin2->email = 'obuchi.omotosho@gmail.com';
         $admin2->password = bcrypt('admin12345');
+        $admin2->email_verified_at = now();
         $admin2->save();
 
 

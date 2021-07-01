@@ -95,15 +95,14 @@ use App\Http\Controllers\Admin\Report\WarrantyReportController;
 Route::prefix('admin')->name('admin.')->group(function () {
     //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/ratings/job-performance', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-performance', [AdminRatingController::class, 'servicePerformance'])->name('service_rating');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
     Route::get('/activate/{uuid}',      [AdminReviewController::class, 'activate'])->name('activate_review');
     Route::get('/deactivate/{uuid}',      [AdminReviewController::class, 'deactivate'])->name('deactivate_review');
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
-
-
 
 
     Route::prefix('users')->name('users.')->group(function () {
@@ -340,7 +339,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 //All routes regarding clients should be in here
-Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
+Route::prefix('client')->name('client.')->middleware('verified', 'monitor.clientservice.request.changes')->group(function () {
     //All routes regarding clients should be in here
     Route::get('/',                                      [ClientController::class, 'index'])->name('index'); //Take me to Supplier Dashboard
 
@@ -357,7 +356,7 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
     Route::post('/requests/update-request/{request:id}', [ClientController::class, 'updateRequest'])->name('update_request');
     Route::post('/requests/technician_profile',          [ClientController::class, 'technicianProfile'])->name('technician_profile');
     Route::get('/requests/warranty/{request:id}',          [ClientController::class, 'warrantyInitiate'])->name('warranty_initiate');
-    Route::get('/requests/reinstate/{request:id}',          [ClientController::class, 'reinstateRequest'])->name('reinstate_request');
+    Route::get('/requests/reinstate/{request:uuid}',          [ClientController::class, 'reinstateRequest'])->name('reinstate_request');
     Route::get('/requests/completed-request/{request:id}',          [ClientController::class, 'markCompletedRequest'])->name('completed_request');
 
     //Profile and password update
@@ -405,8 +404,10 @@ Route::prefix('/client')->name('client.')->middleware('verified', 'monitor.clien
 
     Route::get('myContactList',                 [ClientController::class, 'myContactList'])->name('service.myContacts');
 
+    //client ratings
     Route::post('/update_service_request',  [ClientController::class, 'update_client_service_rating'])->name('update_service_request');
     Route::post('/submit_ratings',  [ClientController::class, 'client_rating'])->name('handle.ratings');
+   
     Route::get('/discount_mail',  [ClientController::class, 'discount_mail'])->name('discount_mail');
 
     Route::post('available-tool-quantity', [CseController::class, 'getAvailableToolQuantity'])->name('available.tools');
@@ -476,14 +477,14 @@ Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.chan
     Route::get('/warranty/claims/details/{warranty:uuid}',      [CseController::class, 'warranty_details'])->name('warranty_details');
     Route::get('/warranty/resolved/claims/details/{warranty:id}',          [WarrantyController::class, 'warranty_resolved_details'])->name('warranty_resolved_details');
     Route::get('/mark/warrant/claims/resolved/{warranty:uuid}',      [WarrantyController::class, 'resolvedWarranty'])->name('mark_warranty_resolved');
-    Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
+    Route::get('/requests-for-quote/details/image/{image:id}',            [RequestController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     Route::get('/sub-service-dynamic-feilds',  [CseController::class, 'subServiceDynamicFields'])->name('sub_service_dynamic_fields');
     Route::get('/tools-request/details/{tool_request:uuid}',           [RequestController::class, 'toolRequestDetails'])->name('tool_request_details');
     Route::get('/warranty/supplier/details/image/{image:id}',            [WarrantClaimController::class, 'rfqDetailsImage'])->name('rfq_waranty_details_image');
 });
 
-Route::prefix('/supplier')->name('supplier.')->group(function () {
+Route::prefix('supplier')->name('supplier.')->group(function () {
     //All routes regarding suppliers should be in here
     Route::get('/',                    [SupplierProfileController::class, 'dashboard'])->name('index'); //Take me to Supplier Dashboard
     Route::view('/messages/inbox',      'supplier.messages.inbox')->name('messages.inbox');
@@ -526,7 +527,7 @@ Route::prefix('/supplier')->name('supplier.')->group(function () {
     Route::get('/requests-for-quote/warranty/details/{rfq:uuid}',            [SupplierRfqController::class, 'rfqDetails'])->name('rfq_warranty_details');
 });
 
-Route::prefix('/technician')->name('technician.')->group(function () {
+Route::prefix('technician')->name('technician.')->group(function () {
     //All routes regarding technicians should be in here
     Route::get('/',                                 [TechnicianProfileController::class, 'index'])->name('index');    //Take me to Technician Dashboard
     Route::get('/location-request',                 [TechnicianProfileController::class, 'locationRequest'])->name('location_request');
@@ -558,7 +559,7 @@ Route::prefix('/technician')->name('technician.')->group(function () {
     Route::view('/consultations/completed', 'technician.consultations.completed')->name('consultations.completed');
 });
 
-Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function () {
+Route::prefix('quality-assurance')->name('quality-assurance.')->group(function () {
     //All routes regarding quality_assurance should be in here
     Route::get('/', [ServiceRequestController::class, 'index'])->name('index');
     Route::get('/profile',    [QualityAssuranceProfileController::class, 'view_profile'])->name('view_profile');
@@ -587,7 +588,7 @@ Route::prefix('/quality-assurance')->name('quality-assurance.')->group(function 
     Route::get('/consultations/pending_details/{uuid}',  [ServiceRequestController::class, 'show'])->name('consultations.pending_details');
 });
 
-Route::prefix('/franchisee')->name('franchisee.')->group(function () {
+Route::prefix('franchisee')->name('franchisee.')->group(function () {
     Route::view('/',                'franchisee.index')->name('index'); //Take me to frnahisee Dashboard
     Route::view('/messages/inbox',      'franchisee.messages.inbox')->name('messages.inbox');
     Route::view('/messages/sent',       'franchisee.messages.sent')->name('messages.sent');

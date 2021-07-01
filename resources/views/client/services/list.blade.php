@@ -83,14 +83,14 @@
                                                                     class="dropdown-item text-primary"><i
                                                                         data-feather="clipboard" class="fea icon-sm"></i>
                                                                     Details</a>
-
                                                                 @if ($myServiceRequest->status_id < 3)
-                                                                    @if ($myServiceRequest->service_request_assignees->count()
-                                                                    > 1) <a
-                                                                    href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
-                                                                    class="dropdown-item text-warning"><i
-                                                                    data-feather="edit" class="fea
-                                                                    icon-sm"></i> Edit Request</a> @endif
+                                                                    @if(collect($myServiceRequest['service_request_assignees'])->count() < 2)
+                                                                        <a
+                                                                            href="{{ route('client.edit_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
+                                                                            class="dropdown-item text-warning"><i
+                                                                            data-feather="edit" class="fea
+                                                                            icon-sm"></i> Edit Request</a>
+                                                                    @endif
                                                                 @endif
 
                                                                 @if ($myServiceRequest->status_id == 1)
@@ -104,7 +104,7 @@
                                                                         Request </a>
                                                                 @endif
 
-                                                                @if ($myServiceRequest->status_id == 2)
+                                                                @if ($myServiceRequest->status_id == 2 && !empty($myServiceRequest['serviceRequestPayment']['payment_type']) == 'final-invoice-fee')
 
                                                                     <a href="#" id="completed"
                                                                         data-url="{{ route('client.completed_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
@@ -114,7 +114,7 @@
                                                                         Mark as Completed</a>
                                                                 @endif
 
-                                                                @if ($myServiceRequest->status_id == 3)
+                                                                @if ($myServiceRequest['status_id'] == 4)
                                                                     <div class="dropdown-divider"></div>
                                                                     <a href="#" id="activate"
                                                                         data-url="{{ route('client.reinstate_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
@@ -137,9 +137,10 @@
                                                                 @endforeach
 
 
-                                                                @if ($myServiceRequest->status_id == 4 && !empty($myServiceRequest['warranty']))
 
-                                                                    @if ($myServiceRequest['warranty']['expiration_date'] > Carbon\Carbon::now())
+                                                                @if ($myServiceRequest->status_id == 4 && !empty($myServiceRequest['warranty']))
+            
+                                                                  @if ($myServiceRequest['warranty']['expiration_date'] < Carbon\Carbon::now())
                                                                         <div class="dropdown-divider"></div>
 
                                                                         @if ($myServiceRequest['warranty']['initiated'] != 'Yes')
