@@ -340,7 +340,6 @@
 
 {{--    <li class='text-muted d-flex justify-content-between'>Subtotal :<span>₦ {{number_format($subTotal, 2)}} </span></li>--}}
     <li class='text-muted d-flex justify-content-between my-2'>Total Job Quotation :<span>₦ {{ number_format($totalQuotation, 2) }}</span></li>
-{{--    <hr>--}}
     <li class='d-flex justify-content-between text-danger my-2'>Less Booking Fee :<span>- ₦ {{ number_format($bookingFee, 2) }}</span></li>
 {{--    <li class='d-flex justify-content-between mt-2'>Amount Due :<span>₦ {{ number_format($amountDue, 2) }}</span></li>--}}
 {{--    <hr>--}}
