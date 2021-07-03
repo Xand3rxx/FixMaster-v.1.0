@@ -377,7 +377,7 @@ class InvoiceController extends Controller
 
     protected function saveInvoiceRecord($paymentRecord, $paymentDetails)
     {
-        // dd($paymentRecord);
+
         $booking_fee = $paymentRecord['booking_fee'];
         $actual_labour_cost = $paymentRecord['actual_labour_cost'];
         $labour_retention_fee = $paymentRecord['retention_fee'] * $paymentRecord['actual_labour_cost'];

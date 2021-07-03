@@ -396,8 +396,13 @@
           @else
             <div>No Payment Currently</div>
           @endif 
+<<<<<<< HEAD
+        </div><!-- card -->
+      </div>
+=======
         </div>
       </div> --}}
+
 
       <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">

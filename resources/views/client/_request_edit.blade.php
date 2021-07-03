@@ -6,6 +6,9 @@
 
 <div class="col-lg-8 col-12" style="margin-top: 3rem;">
 
+    <div class="float-right pt-4 mb-4">
+        <a href="{{ route('client.service.all', app()->getLocale()) }}" class="btn btn-sm btn-primary">Back </a>
+    </div>
 
     <div class="row">
         <h5 class="ml-3">Editing {{ $userServiceRequest->unique_id }} Service request details</h5>

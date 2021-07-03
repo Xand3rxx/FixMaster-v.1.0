@@ -83,19 +83,19 @@
             <ul class="navigation-menu nav-light">
             <li ><a href="{{ route('frontend.index', app()->getLocale()) }}">FixMaster Home</a></li>
 
-                <li><a class="" href="{{ route('frontend.about', app()->getLocale()) }}">About us</a></li>
+                <li><a class="" href="#">About us</a></li>
                 
                 <li class="has-submenu">
                     <a href="javascript:void(0)">How it works</a><span class="menu-arrow"></span>
                     <ul class="submenu">
-                        <li><a href="{{ route('frontend.how_it_works', app()->getLocale()) }}">How It Works</a></li>
+                        <li><a href="#">How It Works</a></li>
                         <li><a href="#">FAQ</a></li>
                     </ul>
                 </li>
                 
                 {{-- <li><a class="" href="#">Contact</a></li> --}}
 
-                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details') ? 'active' : '' }}">
+                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}">
                     <a href="javascript:void(0)" class="l-dark l-light">Profile</a><span class="menu-arrow"></span>
                     <ul class="submenu">
                         <li class="{{ Route::currentRouteNamed('client.index') ? 'active' : '' }}"><a href="{{ route('client.index', app()->getLocale()) }}">Dashboard</a></li>

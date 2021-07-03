@@ -70,10 +70,11 @@ class RequestController extends Controller
             'qaulity_assurances'    => \App\Models\Role::where('slug', 'quality-assurance-user')->with('users', 'users.account')->first(),
             'technicians'           => \App\Models\Technician::with('services', 'user', 'user.contact')->get(),
             'categories'            => \App\Models\Category::where('id', '!=', 1)->get(),
-            'services'              => \App\Models\Service::all(),
+            'services'              => \App\Models\Service::withTrashed()->get(),
             'ongoingSubStatuses'    => \App\Models\SubStatus::where('status_id', 2)->whereBetween('phase', [9, 13])->get(),
             'materials_accepted'    => $service_request['rfq'],
         ];
+
         return view('cse.requests.show', $variables);
     }
 
