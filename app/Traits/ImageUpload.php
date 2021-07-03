@@ -25,9 +25,7 @@ trait ImageUpload
             //Validate image
             if (!$request->file('image')->isValid()) {
 
-                flash('Invalid Image!')->error()->important();
-
-                return redirect()->back()->withInput();
+                return redirect()->back()->with('error', 'Invalid Image selected')->withInput();
             }
 
             //Get image file

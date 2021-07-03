@@ -36,10 +36,10 @@ class RatingController extends Controller
 
     public function handleClientRatings(Request $request)
     {
-        //dd($request->all());
+       $msg = $request->stage == "diagnosis" ? "Thank you for rating this service." : "Thank you for rating this service, you have qualified for a loyalty reward.";
         (array) $valid = $this->validateClientRatingsRequest($request);
         return self::storeClientRating($valid, $request->user()->id) == true
-            ? back()->with('success','Thank you for rating this service, you have qualified for a loyalty reward.')
+            ? back()->with('success', $msg)
             : back()->with('error', 'Sorry! An error occured while recording rating the request.');
     }
 
@@ -56,11 +56,20 @@ class RatingController extends Controller
     public function handleUpdateServiceRatings(Request $request)
     {
         $resp = ServiceRequest::find($request->serviceRequestId);
-        $resp->has_client_rated = "Skipped";
-        $resp->touch();
-        $resp->save();
-
-        return response()->json("Yea, Client Rating is updated");
+        if($request->stage == "diagnosis"){
+            $resp->client_diagnosis_rating = "Skipped"; 
+            $resp->diagnosis_rated_at = now();
+            $resp->timestamps = false;
+            $resp->touch();
+            $resp->save();
+        }elseif($request->stage == "final_rating"){
+            $resp->has_client_rated = "Skipped";
+            $resp->touch();
+            $resp->save();
+        }
+        
+        return response()->json("Yea, Client Rating is updated ");
+       
     }
 
     protected static function store(array $valid, int $user_id)
@@ -108,29 +117,41 @@ class RatingController extends Controller
                     'star' => $valid['users_star'][$key],
                 ]);
             }
-            // Record CSE Diagnosis Rating
-            Rating::create([
+            // Record Service Performance Rating
+            if ($valid['stage'] == "final_rating") {
+                Rating::create([
+                'rater_id' => $user_id,
+                'service_request_id' => $valid['serviceRequestId'],
+                'star' => $valid['diagnosis_star'],
+                'service_performed_by' => $user, 
+            ]);
+            }else{
+                // Record Service Diagnosis Rating
+                Rating::create([
                 'rater_id' => $user_id,
                 'service_request_id' => $valid['serviceRequestId'],
                 'star' => $valid['diagnosis_star'],
                 'service_diagnosis_by' => $user,
             ]);
-
+            }
             //Record Review for Service
-            Review::create([
+            if ($valid['review'] != null) {
+                Review::create([
                 'client_id' => $user_id,
                 //'service_request_id' => $valid['serviceRequestId'],
                 'service_id' => $valid['serviceId'],
                 'reviews' => $valid['review'],
             ]);
+            }
 
-            // Update the service request to indicate rated
-            ServiceRequest::where('id', $valid['serviceRequestId'])->first()->update(['has_client_rated' => 'Yes']);
+            if ($valid['stage'] == "final_rating") {
+                // Update the service request to indicate rated
+                ServiceRequest::where('id', $valid['serviceRequestId'])->first()->update(['has_client_rated' => 'Yes']);
 
-            //Record Loyalty Reward for client
-            $point = 10;
-            $wallet_value = (float)$point/100 * (float)$valid['totalAmount'];
-            $loyalty = LoyaltyManagement::create([
+                //Record Loyalty Reward for client
+                $point = 10;
+                $wallet_value = (float)$point/100 * (float)$valid['totalAmount'];
+                $loyalty = LoyaltyManagement::create([
                 'client_id' => $user_id,
                  'points' => $point,
                  'type' => 'credited',
@@ -147,36 +168,45 @@ class RatingController extends Controller
 
                    ]);
 
-                   //if clientloyalty wallet exist
-               $ifClientLoyalty =  ClientLoyaltyWithdrawal::where('client_id', $user_id)->first();
-               if($ifClientLoyalty){
-                ClientLoyaltyWithdrawal::where(['client_id'=> $user_id])->increment(
-                    'wallet',(float) $wallet_value);
-               }else{
-                ClientLoyaltyWithdrawal::create([
+                //if clientloyalty wallet exist
+                $ifClientLoyalty =  ClientLoyaltyWithdrawal::where('client_id', $user_id)->first();
+                if ($ifClientLoyalty) {
+                    ClientLoyaltyWithdrawal::where(['client_id'=> $user_id])->increment(
+                        'wallet',
+                        (float) $wallet_value
+                    );
+                } else {
+                    ClientLoyaltyWithdrawal::create([
                     'loyalty_mgt_id'=> $loyalty->id,
                     'client_id' => $user_id,
                     'wallet' => $wallet_value
                 ]);
-               }
+                }
 
-               if( $loyalty_history  &&   $loyalty ){
-                //LoyaltyManagement::where(['uuid'=>$request->loyalty_uuid, 'client_id' => $request->edit_client])->delete();
-                //LoyaltyManagementHistory::where(['loyalty_mgt_id'=>$request->loyalty_id,'client_id' => $request->edit_client])->delete();
+                if ($loyalty_history  &&   $loyalty) {
+                    //LoyaltyManagement::where(['uuid'=>$request->loyalty_uuid, 'client_id' => $request->edit_client])->delete();
+                    //LoyaltyManagementHistory::where(['loyalty_mgt_id'=>$request->loyalty_id,'client_id' => $request->edit_client])->delete();
 
-                $type = 'Request';
-                $severity = 'Informational';
-                $actionUrl = Route::currentRouteAction();
-                $message = Auth::user()->email . ' Qualified for loyalty';
-                self::log($type, $severity, $actionUrl, $message);
-            }
-            else
-            {
-                $type = 'Errors';
-                $severity = 'Error';
-                $actionUrl = Route::currentRouteAction();
-                $message = 'An Error Occured while ' . Auth::user()->email. 'was about rating';
-                self::log($type, $severity, $actionUrl, $message);
+                    $type = 'Request';
+                    $severity = 'Informational';
+                    $actionUrl = Route::currentRouteAction();
+                    $message = Auth::user()->email . ' Qualified for loyalty';
+                    self::log($type, $severity, $actionUrl, $message);
+                } else {
+                    $type = 'Errors';
+                    $severity = 'Error';
+                    $actionUrl = Route::currentRouteAction();
+                    $message = 'An Error Occured while ' . Auth::user()->email. 'was about rating';
+                    self::log($type, $severity, $actionUrl, $message);
+                }
+            }else{
+                ServiceRequest::where('id', $valid['serviceRequestId'])->first()->update(['client_diagnosis_rating' => 'Yes']);
+                    
+                    $type = 'Request';
+                    $severity = 'Informational';
+                    $actionUrl = Route::currentRouteAction();
+                    $message = Auth::user()->email . ' Successfully Rated Service Diagnosis Performance';
+                    self::log($type, $severity, $actionUrl, $message);
             }
             // update registered to be true
             $registred = true;
@@ -209,15 +239,16 @@ class RatingController extends Controller
     protected function validateClientRatingsRequest(Request $request)
     {
         return $this->validate($request, [
-            'review' => 'required|max:255',
+            'review' => 'max:255',
+            'stage' => 'required',
             'diagnosis_star' => 'required|numeric|between:1,5',
             'users_id' => 'required|array',
             'users_id.*' => 'required|numeric',
             'users_star' => 'required|array',
             'users_star.*' => 'required|numeric|between:1,5',
             'serviceRequestId' => 'required|numeric',
-            'serviceId' => 'required',
-            'totalAmount' => 'required'
+            'serviceId' => 'numeric',
+            'totalAmount' => 'numeric'
         ]);
     }
 }

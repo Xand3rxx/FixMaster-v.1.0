@@ -2,7 +2,7 @@
 @section('title', 'Join Us')
 @section('contents')
     @include('layouts.partials._messages')
-
+   
     <section class="section bg-light">
         <div class="container" style="margin-top: 3rem;">
             <div class="row justify-content-center">
@@ -597,12 +597,11 @@
     @endpush
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/dashboard/assets/css/bootstrap-multiselect.css') }}">
-
         <style>
-            .invalid-response {
+            .invalid-response{
+                font-size: 11px !important;
                 color: #e43f52;
             }
-
         </style>
     @endpush
 @endsection

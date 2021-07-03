@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+   //get sorting status
+   $status = $('#status').val();
     $('#sort_by_range').on('change', function (){
             let option = $("#sort_by_range").find("option:selected").val();
 
@@ -73,7 +75,7 @@ $(document).ready(function() {
 
       //Get specific Activity Log date
       $date = $('#specific_date').val();
-
+      
       sortTableData($userId, $sortLevel, $type, $date);
 
     });
@@ -109,7 +111,6 @@ $(document).ready(function() {
       $month = $('#sort_by_month').find("option:selected").val();
       //Set month to default
       // $("#sort_by_month").prop('selectedIndex', 0);
-console.log($month);
 
         sortTableData($userId, $sortLevel, $type, $date='', $year='', $month);
       
@@ -144,22 +145,12 @@ console.log($month);
     //   }
     // });
 
-
-    $('#requestExample, #paymentExample').DataTable({
-      'iDisplayLength': 10,
-      language: {
-            searchPlaceholder: 'Search...',
-            sSearch: '',
-            lengthMenu: '_MENU_ items/page',
-          }
-    });
-
   });
 
   function sortTableData($userId, $sortLevel, $type='', $date, $year='', $month='', $dateFrom, $dateTo){
     //Get sorting route
     $route = $('#route').val();
-
+       
     $.ajaxSetup({
         headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -169,12 +160,13 @@ console.log($month);
     $.ajax({
         url: $route,
         method: 'POST',
-        data: {"user": $userId, "sort_level": $sortLevel, "type": $type, "date": $date, "year":$year, "month": $month, "date_from": $dateFrom, "date_to": $dateTo},
+        data: {"user": $userId, "sort_level": $sortLevel, "type": $type, "date": $date, "year":$year, "month": $month, "date_from": $dateFrom, "date_to": $dateTo, "status": $status},
         beforeSend : function(){
             $("#sort_table").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');
         },
         success: function (data){
             if(data){
+              //console.log(data);
               //Replace table with new sorted records
               $('#sort_table').html('');
               $('#sort_table').html(data);

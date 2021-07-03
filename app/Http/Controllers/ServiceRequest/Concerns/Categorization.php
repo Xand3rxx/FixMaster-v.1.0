@@ -66,9 +66,9 @@ class Categorization
                 'status_id'            => $sub_status->status_id,
                 'sub_status_id'        => $sub_status->id,
             ],
-            'notification' => [
-                'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
-            ],
+            // 'notification' => [
+            //     'feature' => 'CUSTOMER_JOB_SCHEDULED_TIME_NOTIFICATION',
+            // ],
             'log' => [
                 'type'                      =>  'request',
                 'severity'                  =>  'informational',
@@ -82,7 +82,7 @@ class Categorization
                     'user_id'              => $request->user()->id,
                     'service_request_id'   => $service_request->id,
                     'stage'                 => ServiceRequestReport::STAGES[0],
-                    'type'                  => ServiceRequestReport::TYPES[1],
+                    'type'                  => ServiceRequestReport::TYPES[2],
                     'report'                => $request->input('other_comments'),
                 ]
             ];

@@ -24,7 +24,7 @@ class CreateClientsTable extends Migration
 
             $table->foreignId('account_id')->index();
             $table->foreignId('estate_id')->index();
-            $table->foreignId('profession_id')->index();
+            $table->foreignId('profession_id')->nullable();
             $table->bigInteger('referral_id')->nullable()->index();
             $table->integer('firsttime')->default(0);
 

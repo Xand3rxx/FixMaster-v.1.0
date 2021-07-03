@@ -1,5 +1,3 @@
-
-{{-- {{ dd($results)}} --}}
 <table class="table table-hover mg-b-0" id="basicExample2">
     <thead class="thead-primary">
       <tr>

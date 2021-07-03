@@ -213,7 +213,7 @@
           </div><!-- card-body -->
         </div><!-- card -->
       </div>
-
+      
       <div class="col-lg-12 col-xl-12 mg-t-10">
         <style>
           canvas {
@@ -304,7 +304,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold tx-nowrap mg-b-5 mg-md-b-8"> Recieved</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦1,200,000</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($receivedPayments,2)}}</h4>
                 </div>
               </div>
               <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
@@ -322,7 +322,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8"> Disbursed</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦150,000</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($disbursedPayments,2)}}</h4>
                 </div>
               </div>
               
@@ -334,7 +334,8 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Profit/Loss</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4>
+                  {{-- <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4> --}}
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments ?? '0.00'}}</h4>
                 </div>
               </div>
             </div>
@@ -367,33 +368,41 @@
 
       </div><!-- col -->
 
-      <div class="col-md-6 col-xl-6 mg-t-10">
+      {{-- <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">
           <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mg-b-0">Recent Payments</h6>
-            {{-- <div class="d-flex tx-18">
-              <a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
-              <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
-            </div> --}}
+            
           </div>
+           @if($recentPayments->count() > 0)
+            @foreach($recentPayments as $pay)
           <ul class="list-group list-group-flush tx-13">
               <li class="list-group-item d-flex pd-sm-x-20">
                 <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
                 <div class="pd-sm-l-10">
-                  <p class="tx-medium mg-b-0">Payment from Charles Famoriyo for JOB-23637269 job</p>
-                  <small class="tx-12 tx-color-03 mg-b-0">Apr 3, 2020, 12:56pm</small>
+                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name']}} for {{$pay['service_request']['unique_id']}}</p>
+                  <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($pay['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
                 </div>
                 <div class="mg-l-auto text-right">
-                  <p class="tx-medium mg-b-0"> ₦10,000</p>
+                  <p class="tx-medium mg-b-0"> ₦{{$pay['amount']}}</p>
                   <small class="tx-12 tx-success mg-b-0">Completed</small>
                 </div>
               </li>
           </ul>
+            @endforeach
           <div class="card-footer text-center tx-13">
-          <a href="#" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
-          </div><!-- card-footer -->
+          <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
+          </div>
+          @else
+            <div>No Payment Currently</div>
+          @endif 
+<<<<<<< HEAD
         </div><!-- card -->
       </div>
+=======
+        </div>
+      </div> --}}
+
 
       <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">

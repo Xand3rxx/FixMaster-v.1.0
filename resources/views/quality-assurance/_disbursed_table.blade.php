@@ -3,14 +3,16 @@
     <thead class="thead-primary">
       <tr>
         <th class="text-center">#</th>
-        <th>Job Reference</th>
-        <th>Reference No</th>
-        <th>Paid By</th>
-        <th>Amount</th>
-        <th>Payment Mode</th>
-        <th>Comment</th>
-        <th class="text-center">Payment Date</th>
-        <th>Action</th>
+            <th>Job ID</th>
+            <th>Service Category</th>
+            <th>Service Type</th>
+            <th>QA Name</th>
+            <th>QA Nuban</th>
+            <th>QA Bank</th>
+            <th>QA Amount</th>
+            <th>Status</th>
+            <th class="text-center">Date of Completion</th>
+            <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -18,14 +20,21 @@
       @foreach ($payments as $result)
         <tr>
         <td class="tx-color-03 tx-center">{{ $sn++ }}</td>
-        <td class="tx-medium">{{$result->service_request->unique_id}}</td>
-          <td class="tx-medium">{{$result->payment_reference}}</td>
-          <td class="tx-medium">{{$result->user->account->first_name}} {{$result->user->account->last_name}}</td>
-          <td class="tx-medium">₦{{ number_format($result->amount)}}</td>
-          <td class="tx-medium">{{$result->mode->name}}</td>
-          <td class="tx-medium">{{$result->comment}}</td>
+          <td class="tx-medium">{{$result['service_request']['unique_id']}}</td>
+              <td class="tx-medium">{{$result['service_request']['service']['name']}}</td>
+              <td class="tx-medium">{{$result['service_type']}}</td>
+              <td class="tx-medium">{{$result['users']['account']['first_name'].' '.$result['users']['account']['middle_name'].' '.$result['users']['account']['last_name'] ?? 'Unavailable'}}</td>
+                 <td class="tx-medium">{{!empty($result['users']['account']['account_number']) ? $result['users']['account']['account_number'] : 'Unavailable'}}</td>
+                 <td class="tx-medium">{{$result['users']['account']['bank']['name']}}</td>
+                 <td class="tx-medium">&#8358;{{number_format($result['amount_to_be_paid'],2)}}</td>
+                 @if($result['status'] == 'Paid')
+                  <td class="tx-medium text-success">Paid</td>
+                 @else
+                  <td class="tx-medium text-warning">Pending</td>
+                 @endif
+
           <td class="text-medium tx-center">{{ Carbon\Carbon::parse($result->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
-          <td><a href="#" data-toggle="modal" data-target="#transactionDetails" data-payment-ref="{{ $result->unique_id }}" data-url="{{ route('quality-assurance.payment_details', ['payment' => $result->id, 'locale' => app()->getLocale()]) }}" id="payment-details" class="btn btn-primary btn-sm ">Details</a></td>
+          <td><a href="#" data-toggle="modal" data-target="#transactionDetails" data-payment-ref="{{ $result['service_request']['unique_id'] }}" data-url="{{ route('quality-assurance.payment_details', ['payment' => $result->id, 'locale' => app()->getLocale()]) }}" id="payment-details" class="btn btn-primary btn-sm ">Details</a></td>
         </tr>
       @endforeach
     </tbody>

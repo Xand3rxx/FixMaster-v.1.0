@@ -89,7 +89,7 @@
         .position-top{
             position:fixed;
             left:0;
-            width:60%;
+            width:100%;
         z-index: 30000;        
         background: #8392a5;;
         border-color: #8392a5;;
@@ -97,9 +97,8 @@
         color:#fff;
             display: flex;
             justify-content: space-evenly;
-            top:0px
+            top:40px
         }
-
 
     </style>
   
@@ -208,17 +207,19 @@
 
     @yield('scripts')
     @stack('scripts')
-
+    
     @if (\Request::filled('results') && \Request::filled('users') && \Request::filled('client') && \Request::filled('serviceRequestId') && \Request::filled('uniqueId'))
-    <script>
+    <script> 
         const data = @json(\Request::get('users'));
         const uniqueId = @json(\Request::get('uniqueId'));
         const client = @json(\Request::get('client'));
         var serviceRequestId = @json(\Request::get('serviceRequestId'));
+        const res = @json(\Request::get('results'));
+        //console.log(client)
         // client div to page
         let ratings_row = `<div class="row">
                                 <div class="col-md-4 col-lg-4 col-4">
-                                    <p id="user0" style="margin-top:20px;">` + client.first_name + " " + client.last_name + " (Client)" + `</p>
+                                    <p id="user0" style="margin-top:20px;">` + client.account.first_name + " " + client.account.last_name + " (Client)" + `</p>
                                 </div>
                                 <div class="col-md-8 col-lg-8 col-8">
                                     <div class="tx-40 text-center rate">
@@ -228,7 +229,7 @@
                                         <i class="icon ion-md-star rates lh-0 tx-gray-300" data-number="4"></i>
                                         <i class="icon ion-md-star rates lh-0 tx-gray-300" data-number="5"></i>
                                         <input type="hidden" name="client_star" class="star" readonly>
-                                        <input type="hidden" name="client_id" value=` + client.id + ` readonly>
+                                        <input type="hidden" name="client_id" value=` + client.account.user_id + ` readonly>
                                     </div>
                                 </div>
                             </div>`;

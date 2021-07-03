@@ -62,8 +62,12 @@
                                         <div class="dropdown-file">
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                <form id="submit-income-form" action="{{ route('admin.delete_income', ['locale' => app()->getLocale(), 'income' => $income['uuid']]) }}" method="post">
                                                 <a href="{{ route('admin.edit_income', ['locale' => app()->getLocale(), 'income' => $income['uuid']]) }}" class="dropdown-item details text-warning"><i class="far fa-edit"></i> Edit</a>
-                                                <a href="{{ route('admin.delete_income', ['locale' => app()->getLocale(), 'income' => $income['uuid']]) }}" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                <button onclick="return false" id="delete-income" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </td>
@@ -108,6 +112,23 @@
                 }
             });
         });
+
+        $('#delete-income').on('click', function (e){
+            e.preventDefault()
+            Swal.fire({
+                title: 'Are you sure ?',
+                text: "You won't be able to revert this !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if(result.isConfirmed){
+                    $('#submit-income-form').submit()
+                }
+            })
+        })
 
     </script>
 @endsection

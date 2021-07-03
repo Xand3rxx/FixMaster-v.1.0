@@ -5,6 +5,7 @@
     <head>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="app-alt-name" content="{{ config('app.geolocation_api_key') }}">
 
         <title>@yield('title') | FixMaster.ng - We Fix, You Relax!</title>
         {{-- <meta name="Author" content="Anthony Joboy (Lagos, Nigeria)" />
@@ -81,12 +82,13 @@
         <script src="{{ asset('assets/client/js/sweetalert2.min.js') }}"></script>
 
         <!-- geolocation asset starts here -->
+
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places"></script>
-        <script src="{{asset('assets/frontend/js/geolocation.js')}}"></script>
-        <!-- geolocation asset starts here -->
+        <script src="{{asset('assets/js/geolocation.js')}}"></script>
         
         <script>
-            //Prevent characters or string asides number in ohone number input field 
+
+            // Prevent characters or string asides number in ohone number input field 
             $("#number, #phone_number").on("keypress keyup blur", function(event) {
                 $(this).val($(this).val().replace(/[^\d].+/, ""));
                 if ((event.which < 48 || event.which > 57)) {

@@ -58,7 +58,7 @@ class FlutterwaveController extends Controller
             // 'myContact_id'    => 'required',
         ]);
 
-        if($request['payment_for'] === 'invoice'){
+        if($request['payment_for'] == 'invoice'){
             $data = [
                 'logistics_cost' => $request['logistics_cost'],
                 'retention_fee' => $request['retention_fee'],
@@ -81,9 +81,9 @@ class FlutterwaveController extends Controller
         }
 
         $selectedContact = Contact::where('id', $request->myContact_id)->first();
-        if($request['payment_for'] === 'service-request'){
+        if($request['payment_for'] == 'service-request'){
              $Serviced_areas = ServicedAreas::where('town_id', '=', $selectedContact['town_id'])->orderBy('id', 'DESC')->first();
-               if ($Serviced_areas === null) {
+               if ($Serviced_areas == null) {
                    return back()->with('error', 'sorry!, this area you selected is not serviced at the moment, please try another area');
                }
 
@@ -255,10 +255,6 @@ class FlutterwaveController extends Controller
                         if($savePayment){
                             return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('success', 'Invoice payment was successful!');
                         }
-                        else
-                        {
-                            return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('error', 'Invoice payment was unsuccessful!');
-                        }
                     }
 
                     if($paymentDetails['payment_for'] == 'service-request')
@@ -277,6 +273,10 @@ class FlutterwaveController extends Controller
                 // NUMBER 3: add more for other payment process
                 if($paymentDetails['payment_for'] == 'service-request' ){
                     return redirect()->route('client.services.list', app()->getLocale() )->with('error', 'Verification not successful, try again!');
+                }
+                else if($paymentDetails['payment_for'] == 'invoice')
+                {
+                    return redirect()->route('invoice', [app()->getLocale(), $paymentRecord['invoiceUUID']])->with('error', 'Invoice payment was unsuccessful!');
                 }
 
             }

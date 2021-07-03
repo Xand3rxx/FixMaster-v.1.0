@@ -38,7 +38,7 @@
                 
             </div>
             <div class="card-body">
-                <h6><a href="" class="link-02">{{ substr($item['unique_name'], 0, 15) }}</a></h6>
+                <h6><a href="" class="link-02">{{ substr($item['unique_name'], 0, 15) }}{{ pathInfo($item['unique_name'], PATHINFO_EXTENSION) }}</a></h6>
             </div>
             <div class="card-footer"><span class="d-none d-sm-inline">Date Created:
                 </span>{{ \Carbon\Carbon::parse($item['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}

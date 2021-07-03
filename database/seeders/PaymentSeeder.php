@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use DB;
+use App\Models\Client;
+use Illuminate\Database\Seeder;
 
 class PaymentSeeder extends Seeder
 {
@@ -100,7 +101,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  3000,
                 'payment_channel'   =>  'paystack',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'reference_id'      =>  'osl3jru8g9qcznp',
                 'transaction_id'    =>  '6vp7h24kefdmyts',
                 'status'            =>  'success',
@@ -111,7 +112,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  1300,
                 'payment_channel'   =>  'flutterwave',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'reference_id'      =>  'wtyev38xz2c5fjh',
                 'transaction_id'    =>  NULL,
                 'status'            =>  'pending',
@@ -122,7 +123,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  2800,
                 'payment_channel'   =>  'flutterwave',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-760BCC86',
+                'unique_id'         =>  Client::where('user_id', 5)->first()->unique_id,
                 'reference_id'      =>  'r1d4yjwqo36fi2g',
                 'transaction_id'    =>  NULL,
                 'status'            =>  'failed',
@@ -133,7 +134,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  1200,
                 'payment_channel'   =>  'flutterwave',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-A3C9FAC4',
+                'unique_id'         =>  Client::where('user_id', 6)->first()->unique_id,
                 'reference_id'      =>  'vdp0s7qy1afubex',
                 'transaction_id'    =>  'oyekfl1hngr80qu',
                 'status'            =>  'success',
@@ -144,7 +145,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  3500,
                 'payment_channel'   =>  'flutterwave',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-1D61A777',
+                'unique_id'         =>  Client::where('user_id', 7)->first()->unique_id,
                 'reference_id'      =>  'bh7ot39i80km64s',
                 'transaction_id'    =>  NULL,
                 'status'            =>  'failed',
@@ -155,7 +156,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  1450,
                 'payment_channel'   =>  'flutterwave',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-DCE47AD1',
+                'unique_id'         =>  Client::where('user_id', 8)->first()->unique_id,
                 'reference_id'      =>  'ryaxpmovkz6bth3',
                 'transaction_id'    =>  NULL,
                 'status'            =>  'pending',
@@ -166,7 +167,7 @@ class PaymentSeeder extends Seeder
                 'amount'            =>  2000,
                 'payment_channel'   =>  'wallet',
                 'payment_for'       =>  'e-wallet',
-                'unique_id'         =>  'WAL-DCE47AD1',
+                'unique_id'         =>  Client::where('user_id', 6)->first()->unique_id,
                 'reference_id'      =>  '2r1gfyujsqbowp6',
                 'transaction_id'    =>  NULL,
                 'status'            =>  'success',

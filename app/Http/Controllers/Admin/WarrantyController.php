@@ -8,10 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\Utility;
 use App\Models\Warranty;
 use App\Models\ServiceRequestWarranty;
-use App\Models\ServiceRequestWarrantyIssued;
-use Illuminate\Support\Facades\URL;
 use App\Traits\Loggable;
-use App\Models\PaymentDisbursed;
 
 use Auth;
 use Route;
@@ -294,7 +291,7 @@ class WarrantyController extends Controller
     public function save_assigned_waranty_cse(Request $request){
    
         $admin = \App\Models\User::where('id', 1)->with('account')->first();
-        $serviceRequest = \App\Models\ServiceRequest::where('id', $request->service_request_id)->with('user.account', 'service_request', 'warranty')->first();
+        $serviceRequest = \App\Models\ServiceRequest::where('id', $request->service_request_id)->with('service_request', 'warranty')->first();
         $csedetails = \App\Models\User::where('id', $request->cse)->with('account')->first();
         $cses  = \App\Models\Cse::with('user', 'user.account', 'user.contact', 'user.roles')->withCount('service_request_assgined')->get();
 
@@ -338,10 +335,12 @@ class WarrantyController extends Controller
              //send cse mail
           $mail_data_cse = collect([
             'email' =>  $csedetails->email,
-            'template_feature' => 'ADMIN_SEND_CSE_WARRANTY_CLAIM_ASSIGN_NOTIFICATION',
-            'cse_name' => $csedetails->account->first_name.' '.$csedetails->account->last_name,
-            'job_ref' =>  $serviceRequest->unique_id,
-            'subject' => 'testing'
+            'template_feature' => 'CSE_NEW_JOB_NOTIFICATION',
+            // 'job_ref' =>  $serviceRequest->unique_id,
+            'firstname' =>   $csedetails->account->first_name,
+            'lastname' =>  $csedetails->account->last_name,
+            'url'   => 'http://127.0.0.1:8000/en/client/requests/',
+          
           ]);
           $mail1 = $this->mailAction($mail_data_cse);
         }else{

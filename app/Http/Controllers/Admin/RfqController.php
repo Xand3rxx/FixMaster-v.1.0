@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\URL;
-use App\Traits\Loggable;
-use Illuminate\Http\Request;
-use Auth;
 use Route;
 use App\Models\Rfq;
 use App\Models\RfqBatch;
-use App\Models\RfqSupplier;
-use App\Models\RfqSupplierInvoice;
-use App\Models\RfqSupplierInvoiceBatch;
-use DB;
 use App\Traits\Invoices;
+use App\Traits\Loggable;
+use App\Models\RfqSupplier;
+use Illuminate\Http\Request;
+use App\Models\RfqSupplierInvoice;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\RfqSupplierInvoiceBatch;
 
 class RfqController extends Controller
 {
@@ -29,16 +29,15 @@ class RfqController extends Controller
     }
 
     public function index(){
-
         return view('admin.rfq.index', [
-            'rfqs'   =>  Rfq::orderBy('created_at', 'DESC')->get(),
+            'rfqs'   =>  Rfq::with('serviceRequest')->orderBy('created_at', 'DESC')->get(),
         ]);
     }
 
     public function rfqDetails($language, $uuid){
 
         return view('admin.rfq._details', [
-            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
+            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('serviceRequest', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
         ]);
     }
 

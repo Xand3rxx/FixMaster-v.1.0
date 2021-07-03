@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
+use App\Traits\GenerateUniqueIdentity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use App\Traits\GenerateUniqueIdentity as Generator;
 
 class ServiceRequest extends Model
 {
-    use SoftDeletes, Generator;
+    use SoftDeletes;
 
     const SERVICE_REQUEST_STATUSES = [
         'Pending'   => 1,
@@ -56,11 +56,8 @@ class ServiceRequest extends Model
             // Create a Unique Service Request uuid id
             $serviceRequest->uuid = (string) Str::uuid();
 
-            // Create a Unique Service Request reference id
-            $serviceRequest->unique_id = static::generate('service_requests', 'REF-');
-
             // Create a Unique Service Request Client Security Code id
-            $serviceRequest->client_security_code = static::generate('service_requests', 'SEC-');
+            $serviceRequest->client_security_code = GenerateUniqueIdentity::generate('service_requests', 'SEC-');
         });
     }
 
@@ -69,7 +66,7 @@ class ServiceRequest extends Model
      */
     public function client()
     {
-        return $this->belongsTo(User::class, 'client_id')->with('account', 'contact');
+        return $this->belongsTo(User::class, 'client_id')->with('client', 'account', 'contact');
     }
 
     /**
@@ -78,6 +75,14 @@ class ServiceRequest extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'service_request_assigned')->with('account', 'roles');
+    }
+
+    /**
+     * Get all media files assigned to the service request
+     */
+    public function medias()
+    {
+        return $this->belongsToMany(Media::class, 'service_request_medias');
     }
 
     /**
@@ -121,7 +126,7 @@ class ServiceRequest extends Model
     }
     public function rfq()
     {
-        return $this->hasOne(Rfq::class, 'service_request_id');
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('rfqBatches', 'rfqSupplier', 'rfqSupplierInvoice');
     }
     public function rfqs()
     {
@@ -137,11 +142,7 @@ class ServiceRequest extends Model
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
 
-    public function service_request()
-    {
-        return $this->hasOne(ServiceRequest::class, 'uuid', 'service_request_id');
-    }
-
+   
     public function address()
     {
         return $this->belongsTo(Contact::class, 'contact_id');
@@ -152,13 +153,6 @@ class ServiceRequest extends Model
         return $this->hasMany(serviceRequestMedia::class)->with('media_files');
     }
 
-    // Wrong, this return just the first assigned person to a request
-    // public function service_request_assignee()
-    // {
-    //     return $this->belongsTo(ServiceRequestAssigned::class, 'id', 'service_request_id');
-    // }
-
-
     public function clientDiscount()
     {
         return $this->belongsTo(ClientDiscount::class, 'client_id');
@@ -168,18 +162,6 @@ class ServiceRequest extends Model
     {
         return $this->hasMany(ClientDiscount::class, 'client_id', 'client_id');
     }
-
-    public function payment_status()
-    {
-        return $this->belongsTo(Payment::class, 'id', 'user_id');
-    }
-
-    // Wrong, this return just the first assigned person to a request
-    // public function cse_service_request()
-    // {
-    //     return $this->belongsTo(ServiceRequestAssigned::class, 'service_request_id')->with('users', 'client');
-    // }
-
 
     public function payment_statuses()
     {
@@ -240,6 +222,25 @@ class ServiceRequest extends Model
         return $this->hasOne(RfqDispatchNotification::class, 'service_request_id', 'id');
     }
 
+    public function adminAssignedCses()
+    {
+        return $this->hasMany(ServiceRequestAssignCse::class, 'service_request_id')->with('user.account');
+    }
+
+    public function supplier()
+    {
+        return $this->hasOne(Rfq::class, 'service_request_id')->with('RfqSupplierInvoice');
+    }
+    
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'unique_id', 'unique_id');
+    }
+    
+    public function serviceRequestPayment()
+    {
+        return $this->hasOne(ServiceRequestPayment::class);
+    }
 
     /**
      * Scope a query to only include all pending requests

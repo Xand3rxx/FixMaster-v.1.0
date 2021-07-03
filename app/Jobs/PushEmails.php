@@ -41,19 +41,19 @@ class PushEmails  implements ShouldQueue
         $to = $message->to;
         $from = $message->from;
         $subject = $message->subject;
-       return  $mailer->send('emails.message', ['mail_message' => $message->content], function ($m) use ($to, $from, $subject) {
+        return  $mailer->send('emails.message', ['mail_message' => $message->content], function ($m) use ($to, $from, $subject) {
             $m->from($from, $subject);
-    
+
             $m->to($to, $to)->subject($subject);
-            });
-        
-         
-            // $headers = "MIME-Version: 1.0" . "\r\n";
-            // $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        });
 
-            // // More headers
-            // $headers .= 'From: <'.$from.'>' . "\r\n";
 
-            // mail($to,$subject,$message->content,$headers);
+        // $headers = "MIME-Version: 1.0" . "\r\n";
+        // $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        // // More headers
+        // $headers .= 'From: <'.$from.'>' . "\r\n";
+
+        // mail($to,$subject,$message->content,$headers);
     }
 }

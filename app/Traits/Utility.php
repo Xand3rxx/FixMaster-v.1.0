@@ -3,28 +3,30 @@
 namespace App\Traits;
 
 
-use DB;
 use Session;
-use Auth;
+use Carbon\Carbon;
+use App\Models\Cse;
 use App\Models\User;
 use App\Models\Client;
-use App\Models\Cse;
 use App\Models\Account;
-use App\Models\Referral;
-use App\Models\ServiceRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\MailNotify;
-use App\Mail\WarrantyNotify;
-use App\Traits\GenerateUniqueIdentity as Generator;
-use App\Models\Warranty;
-use Carbon\Carbon;
 use App\Jobs\PushEmails;
+use App\Mail\MailNotify;
+use App\Models\Referral;
+use App\Models\Warranty;
+use App\Traits\Loggable;
 use Illuminate\Support\Str;
+use App\Mail\WarrantyNotify;
+use App\Models\ServiceRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Http\Controllers\Messaging\MessageController;
 
 trait Utility
 {
-  use Generator;
+  use Generator, Loggable;
 
   public function entityArray()
   {
@@ -188,7 +190,7 @@ trait Utility
           $unique_id = Cse::where('user_id', $user->id)->first();
           if ($unique_id) {
             $ifReferrals = Referral::select('id')->where('user_id', $user->id)->first();
-            //check if user already has referral code
+            //check if user already has referral code 
             if ($ifReferrals) {
               Referral::where('user_id', $user->id)->update([
                 'referral_code' => $unique_id->unique_id,
@@ -207,6 +209,7 @@ trait Utility
             'referral_id' => $referral,
           ]);
           $account = Account::where('user_id', $user->id)->first();
+             //check if account already has referral code 
           if ($account) {
             User::where('email', $user->email)
               ->update(['email_verified_at' => date("Y-m-d H:i:s"),]);
@@ -360,8 +363,9 @@ trait Utility
     }
   }
 
-  public function markCompletedRequestTrait($user, $id){
+  public function markCompletedRequestTrait($serviceRequest){
 
+<<<<<<< HEAD
     $admin = User::where('id', 1)->with('account')->first();
     $requestExists = ServiceRequest::where('uuid', $id)->with('service_request_assignees')->firstOrFail();
     $ifWarrantyExists =  \App\Models\ServiceRequestWarranty::where(['service_request_id'=> $requestExists->id, 'client_id'=> Auth::user()->id])
@@ -409,13 +413,33 @@ trait Utility
         }
       
       }
+=======
+    //Check if the service was paid for successfully.
+    if($serviceRequest['payment']['status'] == \App\Models\Payment::STATUS['success']){
 
-   
+      //Validate if warranty already exist on `service_request_warranties` table for this service request.
+      $requestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id']])->with('warranty')->first();
 
+      //Status UUID for marking a job as completed
+      $statusUUID = (auth()->user()->roles[0]->slug == 'super-admin' || auth()->user()->roles[0]->slug == 'admin-user') ? 'ce316687-62d8-45a9-a1b9-f75da104fc18' : 'fca5a961-39d4-42e5-be9d-20e4b579d4b1';
+>>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
+
+      $actionUrl = Route::currentRouteAction();
+
+<<<<<<< HEAD
         if($updateRequest AND $recordServiceProgress AND $updateServiceRequestWarranty){
+=======
+      //Check if the request is an Ongoing request
+      if($serviceRequest['status_id'] == ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing']){
 
-           //send mails to 1.admin, 2.client, 3.cse for mark as completed;
+        //Set `markAsCompleted` to false before Db transaction
+        (bool) $markAsCompleted  = false;
+>>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
+        //Create new record for CSE on `service_request_cancellations` table.
+        DB::transaction(function () use ($serviceRequest, $statusUUID, $actionUrl, $requestWarranty, &$markAsCompleted) {
+
+<<<<<<< HEAD
              //email for admin
             $mail_data_admin = collect([
               'email' =>  $admin->email,
@@ -438,9 +462,44 @@ trait Utility
                 'url'   => 'http://127.0.0.1:8000/en/client/requests/',
               ]);
             $mail2 = $this->mailAction($mail_data_client);
+=======
+            //Update record on `service_requests` table.
+            \App\Models\ServiceRequest::where('uuid', $serviceRequest['uuid'])->update([
+                'status_id'       => ServiceRequest::SERVICE_REQUEST_STATUSES['Completed'],
+                'date_completed'  =>  now(), 
+            ]);
+
+            //Validate if client paid for Final Invoice and Update warranty record 
+            if(\App\Models\ServiceRequestPayment::where(['user_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id'], 'payment_type' =>  'final-invoice-fee'])->exists()){
+                $this->issuedWarranty($requestWarranty);
+>>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
             }
-          
+            
+            //Record service request progress of `Admin marked job as completed`
+            \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $serviceRequest['id'], 4, \App\Models\SubStatus::where('uuid', $statusUUID)->firstOrFail()->id);
+
+            //Log this action
+            (auth()->user()->roles[0]->slug == 'client-user') ? 
+              $this->log('Request', 'Informational', $actionUrl, $serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' marked '.$serviceRequest['unique_id'].' job request as completed.') 
+            : 
+              $this->log('Request', 'Informational', $actionUrl, auth()->user()->email.' marked '.$serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' '.$serviceRequest['unique_id'].' service request as completed.');
+
+            $markAsCompleted = true;
+
+        }, 3);
+
+        if(empty($requestWarranty)){
+
+          $warrantyDetails = '';
+          $warrantyDays = '0';
+        }else{
+
+          $warrantyDetails = '<p style="margin-bottom: 0.28cm; line-height: 108%"><span style="background-color: transparent;"><b><u>WARRANTY DETAILS</u></b></span></p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Warranty Name:&nbsp;</span>'.$requestWarranty['warranty']['name'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Start Date:&nbsp;</span>'.$requestWarranty['start_date'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Expiry Date:&nbsp;</span>'.$requestWarranty['expiration_date'].'</p>';
+
+          $warrantyDays = $requestWarranty['warranty']['duration'];
+        }
         
+<<<<<<< HEAD
             if($mail2 == '0')
             {
             foreach ($cse as $value) {
@@ -453,16 +512,85 @@ trait Utility
               'url'   => 'http://127.0.0.1:8000/en/client/requests/',
             ]);
             $mail3 = $this->mailAction($mail_data_cse);
+=======
+>>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
-            }
+        //Send mails to Client, CSE, and FixMaster
+        $adminEmailData = collect([
+          'email'                 =>  'info@fixmaster.com.ng',
+          'template_feature'      =>  'ADMIN_CUSTOMER_JOB_COMPLETED_NOTIFICATION',
+          'firstname'             =>  'FixMaster',
+          'lastname'              =>  'Administrator',
+          'job_ref'               =>  $serviceRequest['unique_id'],
+          'warranty_days'         =>  $warrantyDays,
+          'warranty_details'      =>  $warrantyDetails,
+          'client_name'           => ucfirst($serviceRequest['client']['client']['account']['first_name'].' '.$serviceRequest['client']['client']['account']['last_name']),
+          'url'                   =>  url(app()->getLocale().'/admin/requests-completed/'),
+        ]);
 
+        $clientEmailData = collect([
+          'email'                 =>  $serviceRequest['client']['email'],
+          'template_feature'      =>  'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
+          'firstname'             =>  $serviceRequest['client']['client']['account']['first_name'],
+          'lastname'              =>  $serviceRequest['client']['client']['account']['last_name'],
+          'job_ref'               =>  $serviceRequest['unique_id'],
+          'warranty_days'         =>  $warrantyDays,
+          'warranty_details'      =>  $warrantyDetails,
+          'url'                   =>  url(app()->getLocale().'/client/requests/'),
+        ]);
+
+        //Send mail to Admin
+        $this->mailAction($adminEmailData);
+        //Send mail to Client
+        $this->mailAction($clientEmailData);
+        //Send mail to CSE
+        if(collect($serviceRequest['service_request_assignees'])->isNotEmpty()){
+          foreach($serviceRequest['service_request_assignees'] as $item){
+            if($item['user']['roles'][0]['slug'] == 'cse-user'){
+              $cseEmailData = collect([
+                'email'             =>  $item['user']['email'],
+                'template_feature'  =>  'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
+                'first_name'        =>  ucfirst($item['user']['account']['first_name']),
+                'last_name'         =>  ucfirst($item['user']['account']['last_name']),
+                'job_ref'           =>  $serviceRequest['unique_id'],
+                'url'               =>  url(app()->getLocale().'/cse/requests/status?status=Completed'),
+              ]);
+
+              $this->mailAction($cseEmailData);
             }
+<<<<<<< HEAD
             return '1';
          }else{
            return false;
          }
+=======
+          }
+        }
+>>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
-   
+        return $markAsCompleted;
+
+      }else{
+
+          return response()->json(['error' => 'Sorry! This request must have an Ongoing status.']);
+      }
+      
+    }else{
+      return back()->with('error', 'Sorry! Please confirm payment for this request.');
+    }
+
+  }
+
+  public function issuedWarranty($requestWarranty){
+  
+    //Update record on `service_request_warranties` table
+    $requestWarranty->update([
+        'start_date'            =>  now(),
+        'expiration_date'       =>  Carbon::now()->addDay((int)$requestWarranty['warranty']['duration'])->toDateTimeString(),
+        'status'                => 'unused',
+        'initiated'             => 'No',
+        'has_been_attended_to'  => 'No',
+    ]);
   }
 
   public function addDiscountToFirstTimeUserTrait($user){
@@ -487,6 +615,7 @@ trait Utility
             'template_feature' => 'CUSTOMER_WELCOME_DISCOUNT',
             'discount' => $discountDetails->rate,
             'firstname' =>  $userDetails->first_name,
+            'lastname' =>  $userDetails->last_name,
          ]);
       
      
@@ -500,7 +629,7 @@ trait Utility
 
   public function mailAction($data){
       $messanger = new MessageController();
-     return  $jsonResponse = $messanger->sendNewMessage('', 'dev@fix-master.com', $data['email'], $data, $data['template_feature']);
+     return  $jsonResponse = $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $data['email'], $data, $data['template_feature']);
 
 
   }

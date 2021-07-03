@@ -7,8 +7,7 @@
                 class="form-control custom-select @error('category_uuid') is-invalid @enderror" name="category_uuid">
                 <option selected disabled value="0" selected>Select Category</option>
                 @foreach ($categories as $key => $category)
-                    <option {{ $service_request['service']['category']['id'] == $category['id'] ? 'selected' : '' }}
-                        value="{{ $category['uuid'] }}">{{ $category['name'] }} </option>
+                    <option {{ $service_request['service']['category']['id'] == $category['id'] ? 'selected' : '' }} value="{{ $category['uuid'] }}">{{ $category['name'] }} </option>
                 @endforeach
             </select>
             @error('category_uuid')

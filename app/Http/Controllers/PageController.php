@@ -54,7 +54,7 @@ class PageController extends Controller
         $messanger = new \App\Http\Controllers\Messaging\MessageController();
         // // $user this is the instance of the created applicant
         // $mail_data = "<h1> Hello, " . $account['first_name'] . " " . $account['last_name'] . "</h1> <br> <p> Thank you for registering with us, Kind use this link " . $url . " to verify your account. </p>";
-        // return $messanger->sendNewMessage('email', 'Verify Email Address', 'dev@fix-master.com', $account->user->email, $mail_data);
+        // return $messanger->sendNewMessage('email', 'Verify Email Address', 'info@fixmaster.com.ng', $account->user->email, $mail_data);
         $template_feature = 'USER_EMAIL_VERIFICATION';
         $mail_data = collect([
             'lastname' => 'dana',
@@ -62,7 +62,7 @@ class PageController extends Controller
             'email' => 'woorad7@gmail.com',
             'url' => $url
         ]);
-        $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+        $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
 
     }
 

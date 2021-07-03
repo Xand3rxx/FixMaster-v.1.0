@@ -83,36 +83,38 @@
             <ul class="navigation-menu nav-light">
             <li ><a href="{{ route('frontend.index', app()->getLocale()) }}">FixMaster Home</a></li>
 
-                <li><a class="" href="{{ route('frontend.about', app()->getLocale()) }}">About us</a></li>
+                <li><a class="" href="#">About us</a></li>
                 
                 <li class="has-submenu">
                     <a href="javascript:void(0)">How it works</a><span class="menu-arrow"></span>
                     <ul class="submenu">
-                        <li><a href="{{ route('frontend.how_it_works', app()->getLocale()) }}">How It Works</a></li>
+                        <li><a href="#">How It Works</a></li>
                         <li><a href="#">FAQ</a></li>
                     </ul>
                 </li>
                 
                 {{-- <li><a class="" href="#">Contact</a></li> --}}
 
-                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details') ? 'active' : '' }}">
+                <li class="has-submenu {{ Route::currentRouteNamed('client.index', 'client.services.list', 'client.services.details', 'client.services.quote', 'client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}">
                     <a href="javascript:void(0)" class="l-dark l-light">Profile</a><span class="menu-arrow"></span>
                     <ul class="submenu">
-                    <li class="{{ Route::currentRouteNamed('client.index') ? 'active' : '' }}"><a href="{{ route('client.index', app()->getLocale()) }}">Dashboard</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.index') ? 'active' : '' }}"><a href="{{ route('client.index', app()->getLocale()) }}">Dashboard</a></li>
 
-                    <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote') ? 'active' : '' }}"><a href="{{ route('client.services.list', app()->getLocale()) }}">Book a Service</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.services.list', 'client.services.details', 'client.services.quote', 'client.services.custom') ? 'active' : '' }}"><a href="{{ route('client.services.list', app()->getLocale()) }}">Book a Service</a></li>
 
                         <li class="{{ Route::currentRouteNamed('client.wallet') ? 'active' : '' }}"><a href="{{ route('client.wallet', app()->getLocale()) }}">E-Wallet</a></li>
 
-                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details') ? 'active' : '' }}"><a href="{{route('client.service.all', app()->getLocale()) }}">Requests</a></li>
+                        @if(CustomHelpers::ifLoyaltyExist(auth()->user()->id) == 1)
+                            <li class="{{ Route::currentRouteNamed('client.loyalty') ? 'active' : '' }}"><a href="{{ route('client.loyalty', app()->getLocale()) }}">Loyalty Wallet</a></li>
+                        @endif
 
-                    <li class="{{ Route::currentRouteNamed('client.payments') ? 'active' : '' }}"><a href="{{ route('client.payments', app()->getLocale()) }}">Payments</a></li>
+                        <li class="{{ Route::currentRouteNamed('client.service.all', 'client.request_details', 'client.edit_request') ? 'active' : '' }}"><a href="{{route('client.service.all', app()->getLocale()) }}">Requests</a></li>
+
+                        <li class="{{ Route::currentRouteNamed('client.payments') ? 'active' : '' }}"><a href="{{ route('client.payments', app()->getLocale()) }}">Payments</a></li>
 
                         <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Messages</a></li> 
 
                         <li class="{{ Route::currentRouteNamed('client.settings') ? 'active' : '' }}"><a href="{{ route('client.settings', app()->getLocale()) }}">Settings</a></li>
-
-                        {{-- <li><a href="{{ route('login') }}">Logout</a></li> --}}
                     </ul>
                 </li>
 
@@ -153,10 +155,10 @@
                             <div class="col-lg-2 col-md-3 text-md-left text-center">
                        
                                 {{-- <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="avatar avatar-large rounded-circle shadow d-block mx-auto" alt=""> --}}
-                                @if(!empty($profile->avatar) && file_exists(public_path().'/assets/user-avatars/'.$profile->avatar))
-                                    <img src="{{ asset('assets/user-avatars/'.$profile->avatar) }}" class="avatar avatar-large rounded-circle shadow d-block mx-auto" alt="Client avatar" />
+                                @if(!empty($profile['account']['avatar']) && file_exists(public_path().'/assets/user-avatars/'.$profile['account']['avatar']))
+                                    <img src="{{ asset('assets/user-avatars/'.$profile['account']['avatar']) }}" class="avatar avatar-large rounded-circle shadow d-block mx-auto" alt="Client avatar" />
                                 @else
-                                    @if($profile->gender == 'male')
+                                    @if($profile['account']['gender'] == 'male' || $profile['account']['gender'] == 'others')
                                         <img src="{{ asset('assets/images/default-male-avatar.png') }}" alt="Default male profile avatar" class="avatar avatar-large rounded-circle shadow d-block mx-auto" />
                                     @else
                                         <img src="{{ asset('assets/images/default-female-avatar.png') }}" alt="Default female profile avatar" class="avatar avatar-large rounded-circle shadow d-block mx-auto" />
@@ -166,12 +168,9 @@
                             <div class="col-lg-10 col-md-9">
                                 <div class="row align-items-end">
                                     <div class="col-md-7 text-md-left text-center mt-4 mt-sm-0">
-                                    <h3 class="title mb-0">{{ !empty($profile->first_name || $profile->last_name) ? $profile->first_name.' '.$profile->last_name : 'UNAVAILABLE' }}</h3>
-                                    <small class="text-muted h6 mr-2">Occupation: {{ $profile->profession->name ?? 'Accountant' }}</small>
-                                        {{-- <ul class="list-inline mb-0 mt-3">
-                                            <li class="list-inline-item mr-2"><a href="javascript:void(0)" class="text-muted" title="Instagram"><i data-feather="instagram" class="fea icon-sm mr-2"></i>Femi_joseph</a></li>
-                                            <li class="list-inline-item"><a href="javascript:void(0)" class="text-muted" title="Linkedin"><i data-feather="linkedin" class="fea icon-sm mr-2"></i>Femi Joseph</a></li>
-                                        </ul> --}}
+                                    <h3 class="title mb-0">{{ !empty($profile['account']['first_name'] || $profile['account']['last_name']) ? $profile['account']['first_name'].' '.$profile['account']['last_name'] : 'UNAVAILABLE' }}</h3>
+                                    <small class="text-muted h6 mr-2">Occupation: {{ $profile['client']['profession']['name'] ?? 'UNAVAILABLE' }}</small>
+                                        
                                     </div><!--end col-->
                                     <div class="col-md-5 text-md-right text-center">
                                         <ul class="list-unstyled social-icon social mb-0 mt-4">

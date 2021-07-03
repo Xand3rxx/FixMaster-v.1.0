@@ -61,7 +61,6 @@
                         </div>
                         @php
                             $paystackInfo = json_decode($paystack->information, true);
-                            // dd($paystackInfo);
                         @endphp
                         <div class="form-group">
                           <label>Paystack Public Key</label>
@@ -112,7 +111,6 @@
                          {{ csrf_field() }}
                         @php
                             $flutterInfo = json_decode($flutter->information, true);
-                            // dd($flutterInfo);
                         @endphp
                         <div class="form-group">
                             <label>Flutter</label>

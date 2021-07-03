@@ -56,7 +56,7 @@ tr.bd-warning {
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
-                        <li class="breadcrumb-item"><a href="{{ route('quality-assurance.index', app()->getLocale()) }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
                         <li class="breadcrumb-item" aria-current="page">Service Requests</li>
                         <li class="breadcrumb-item active" aria-current="page">Pending Requests</li>
                     </ol>
@@ -117,7 +117,7 @@ tr.bd-warning {
                                     <td class="tx-medium"> {{ $request['unique_id'] }} </td>
                                     <td class="tx-medium"> {{ !empty($request['client']['account']['first_name']) ? Str::title($request['client']['account']['first_name'] .' '. $request['client']['account']['last_name']) : 'UNAVAILABLE' }} </td>
 
-                                    <td class="tx-medium text-center">₦{{ number_format($request['total_amount']) }}<br><span class="text-success">({{ $request['price']['name'] }})</span></td>
+                                    <td class="tx-medium text-center">₦{{ number_format($request['price']['amount']) }}<br><span class="text-success">({{ $request['price']['name'] }})</span></td>
                                     <td class="{{ (($request['payment_statuses']['status'] == 'pending') ? 'text-warning' : (($request['payment_statuses']['status'] == 'success') ? 'text-success' : (($request['payment_statuses']['status'] == 'failed') ? 'text-danger' : 'text-danger'))) }}">{{ ucfirst($request['payment_statuses']['status']) }}({{ ucfirst($request['payment_statuses']['payment_channel']) }})
                                     </td>
                                     <td class="text-medium">{{ !empty($request['preferred_time']) ? Carbon\Carbon::parse($request['preferred_time'])->isoFormat('MMMM Do YYYY, hh:mm:ssa') : 'Not Scheduled'}}</td>
@@ -126,8 +126,8 @@ tr.bd-warning {
                                         <div class="dropdown-file">
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="{{ route('admin.requests.show', ['request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
-                                                <a href="#" class="dropdown-item text-danger"><i class="fas fa-times"></i> Cancel Request</a>
+                                            <a href="{{ route('admin.requests-pending.show', ['requests_pending'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item text-primary"><i class="far fa-clipboard"></i> Details</a>
+                                                <a href="#" class="dropdown-item text-danger" id="cancel-request" data-url="{{ route('admin.requests.cancel_request', ['cancel_request'=>$request['uuid'], 'locale'=>app()->getLocale()]) }}" title="Cancel {{ $request['unique_id'] }} request"><i class="fas fa-times"></i> Cancel Request</a>
                                             </div>
                                         </div>
                                     </td>
@@ -146,10 +146,9 @@ tr.bd-warning {
 </div>
 
 
-
+@include('admin.requests.includes._cancel_request')
 
 @push('scripts')
-
-<script src="{{ asset('assets/client/js/requests/4c676ab8-78c9-4a00-8466-a10220785892.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/assets/js/admin/requests/8d8b554f-1f44-4e07-bf3c-9267b3c62cb9.js') }}"></script>
 @endpush
 @endsection

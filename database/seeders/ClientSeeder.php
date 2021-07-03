@@ -16,28 +16,33 @@ class ClientSeeder extends Seeder
     {
         // Client User
         $client = new \App\Models\User;
-        $client->email = 'client@fix-master.com';
+        $client->email = 'client@9thtest.com.ng';
         $client->password = bcrypt('admin12345');
+        $client->email_verified_at = now();
         $client->save();
 
         $client1 = new \App\Models\User;
         $client1->email = 'wisdom.amana@gmail.com';
         $client1->password = bcrypt('admin12345');
+        $client1->email_verified_at = now();
         $client1->save();
 
         $client2 = new \App\Models\User;
         $client2->email = 'debo.williams@gmail.com';
         $client2->password = bcrypt('admin12345');
+        $client2->email_verified_at = now();
         $client2->save();
 
         $client3 = new \App\Models\User;
         $client3->email = 'jennifer.isaac@outlook.co.uk';
         $client3->password = bcrypt('admin12345');
+        $client3->email_verified_at = now();
         $client3->save();
 
         $client4 = new \App\Models\User;
         $client4->email = 'favour.chidera@yahoo.com';
         $client4->password = bcrypt('admin12345');
+        $client4->email_verified_at = now();
         $client4->save();
 
         // Client Roles and Permissions
@@ -126,8 +131,8 @@ class ClientSeeder extends Seeder
         $clientAccount3 = \App\Models\Account::create([
             'user_id'       =>  $client3->id,
             'state_id'         =>  24,
-            'lga_id'           =>  513,
-            'town_id'           =>  193,
+            'lga_id'           =>  505,
+            'town_id'           =>  80,
             'first_name'    => "Jennifer",
             'middle_name'   => "Ifeyinwa",
             'last_name'     => "Isaac",
@@ -153,7 +158,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-760BCC86';
         $clientTable->account_id = $clientAccount->id;
         $clientTable->estate_id = '1';
-        $clientTable->profession_id = '18';
+        // $clientTable->profession_id = '18';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -161,7 +166,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-A3C9FAC4';
         $clientTable->account_id = $clientAccount1->id;
         $clientTable->estate_id = '1';
-        $clientTable->profession_id = '12';
+        // $clientTable->profession_id = '12';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -169,7 +174,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-1D61A777';
         $clientTable->account_id = $clientAccount2->id;
         $clientTable->estate_id = '2';
-        $clientTable->profession_id = '3';
+        // $clientTable->profession_id = '3';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -177,7 +182,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-DCE47AD1';
         $clientTable->account_id = $clientAccount3->id;
         $clientTable->estate_id = '3';
-        $clientTable->profession_id = '14';
+        // $clientTable->profession_id = '14';
         $clientTable->save();
 
         $clientTable = new \App\Models\Client();
@@ -185,7 +190,7 @@ class ClientSeeder extends Seeder
         $clientTable->unique_id = 'WAL-19362ADF';
         $clientTable->account_id = $clientAccount4->id;
         $clientTable->estate_id = '3';
-        $clientTable->profession_id = '22';
+        // $clientTable->profession_id = '22';
         $clientTable->save();
 
         // Sample Implementation for storing Contact Details of a user
@@ -200,7 +205,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -208,7 +213,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client1->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -216,7 +221,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client2->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -224,7 +229,7 @@ class ClientSeeder extends Seeder
             'client_id'        =>  $client3->id, 
             'estate_id'        =>  NULL,
             'service_id'       =>  NULL, 
-            'availability'     =>  'unused', 
+            'availability'     =>  'used', 
         ]);
 
         $clientDiscount = \App\Models\ClientDiscount::create([
@@ -232,7 +237,7 @@ class ClientSeeder extends Seeder
             'client_id'         =>  $client4->id, 
             'estate_id'         =>  NULL,
             'service_id'        =>  NULL, 
-            'availability'      =>  'unused', 
+            'availability'      =>  'used', 
         ]);
 
         //3 more contacts for client@fix-master.com
@@ -246,8 +251,8 @@ class ClientSeeder extends Seeder
                 'account_id'        =>  $clientAccount->id,
                 'country_id'        =>  156,
                 'state_id'          =>  24,
-                'lga_id'            =>  505,
-                'town_id'           =>  80,
+                'lga_id'            =>  498,
+                'town_id'           =>  3,
                 'name'              =>  'Yinka Odumosu',
                 'phone_number'      =>  '08086717489',
                 'address'           => 'C99 Rd 27, Victoria Garden City, Lekki',
@@ -260,8 +265,8 @@ class ClientSeeder extends Seeder
                 'account_id'        =>  $clientAccount->id,
                 'country_id'        =>  156,
                 'state_id'          =>  24,
-                'lga_id'            =>  505,
-                'town_id'           =>  94,
+                'lga_id'            =>  517,
+                'town_id'           =>  237,
                 'name'              =>  'Adewale Daniel',
                 'phone_number'      =>  '08085517815',
                 'address'           => 'Holly Ave, Eti-Osa, Lekki',
