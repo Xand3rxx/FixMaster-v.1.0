@@ -296,7 +296,6 @@ class MessageController extends Controller
                 'updated_at'        => Carbon::now(),
                 'mail_status' => 'Not Sent',
             ];
-<<<<<<< Updated upstream
 
             Message::insert($mail_objects);
         }
@@ -308,10 +307,6 @@ class MessageController extends Controller
 
         return $mail;
 
-
-<<<<<<< HEAD
-
-=======
           
         Message::insert($mail_objects);
      
@@ -323,9 +318,6 @@ class MessageController extends Controller
          return $mail = $this->dispatch(new PushEmails($message_array));
 
     
->>>>>>> Stashed changes
-=======
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
         // }
@@ -342,14 +334,6 @@ class MessageController extends Controller
         // }
 
         // return $messageTemp;
-<<<<<<< HEAD
-      
-        foreach ($variables as $key => $value) {
-        if($key == 'url'){
-            $messageTemp = str_replace('{'.$key.'}', '<a href="'.$value.'" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);  
-        }else{
-            $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
-=======
 
         foreach ($variables as $key => $value) {
             if ($key == 'url') {
@@ -357,26 +341,10 @@ class MessageController extends Controller
             } else {
                 $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
             }
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
         }
     }
 
         return $messageTemp;
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-        //     foreach ($variables as $key => $value) {
-        //     if($key == '{url}'){
-        //         $messageTemp = str_replace('{'.$key.'}', '<button style="background-color:red">'.$value.'<button>', $messageTemp);  
-        //     }else{
-        //         $messageTemp = str_replace('{'.$key.'}', $value, $messageTemp);
-        //     }
-        // }
-
-        //     return $messageTemp;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
     }
 
     private function getUser($userId)

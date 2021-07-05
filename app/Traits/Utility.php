@@ -365,55 +365,6 @@ trait Utility
 
   public function markCompletedRequestTrait($serviceRequest){
 
-<<<<<<< HEAD
-    $admin = User::where('id', 1)->with('account')->first();
-    $requestExists = ServiceRequest::where('uuid', $id)->with('service_request_assignees')->firstOrFail();
-    $ifWarrantyExists =  \App\Models\ServiceRequestWarranty::where(['service_request_id'=> $requestExists->id, 'client_id'=> Auth::user()->id])
-     ->first();
-     $cse = [];
-
-     if(!$ifWarrantyExists){
-       return false;
-     }
-     
-     $newDateTime = Carbon::now()->addDay((int)$ifWarrantyExists->warranty->duration);
-    //ask for how warranties are assigned to client
-
-       $updateServiceRequestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'=> $requestExists->client_id, 'service_request_id'=> $requestExists->id])
-       ->update([
-            'start_date'                    =>  Carbon::now()->toDateTimeString(),
-            'expiration_date'               => $newDateTime->toDateTimeString(),
-             'amount'                      =>   $requestExists->total_amount
-          
-         ]);
-
-  
-        $updateRequest = ServiceRequest::where('uuid', $id)->update([
-             'status_id' =>  '4',
-        ]);
-
-        $recordServiceProgress = \App\Models\ServiceRequestProgress::create([
-          'user_id'                       =>  $requestExists->client_id, 
-          'service_request_id'            =>  $requestExists->id, 
-          'status_id'                     => '4',
-          'sub_status_id'                 =>  Auth::user()->type == 'admin'? '36':'35'
-      ]);
-      
-
-      if($requestExists->service_request_assignees){
-        foreach($requestExists->service_request_assignees as $item){
-          if($item->user->roles[0]->url == 'cse'){
-            $cse[] = [
-              'email'=>$item->user->email,
-               'first_name'=>$item->user->account->first_name,
-               'last_name'=>$item->user->account->last_name
-            ];
-           
-          }
-        }
-      
-      }
-=======
     //Check if the service was paid for successfully.
     if($serviceRequest['payment']['status'] == \App\Models\Payment::STATUS['success']){
 
@@ -422,47 +373,18 @@ trait Utility
 
       //Status UUID for marking a job as completed
       $statusUUID = (auth()->user()->roles[0]->slug == 'super-admin' || auth()->user()->roles[0]->slug == 'admin-user') ? 'ce316687-62d8-45a9-a1b9-f75da104fc18' : 'fca5a961-39d4-42e5-be9d-20e4b579d4b1';
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
       $actionUrl = Route::currentRouteAction();
 
-<<<<<<< HEAD
-        if($updateRequest AND $recordServiceProgress AND $updateServiceRequestWarranty){
-=======
       //Check if the request is an Ongoing request
       if($serviceRequest['status_id'] == ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing']){
 
         //Set `markAsCompleted` to false before Db transaction
         (bool) $markAsCompleted  = false;
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
         //Create new record for CSE on `service_request_cancellations` table.
         DB::transaction(function () use ($serviceRequest, $statusUUID, $actionUrl, $requestWarranty, &$markAsCompleted) {
 
-<<<<<<< HEAD
-             //email for admin
-            $mail_data_admin = collect([
-              'email' =>  $admin->email,
-              'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
-              'firstname' =>  $admin->account->first_name,
-              'lastname' =>  $admin->account->last_name,
-              'job_ref' =>  $requestExists->unique_id,
-              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
-            ]);
-            $mail1 = $this->mailAction($mail_data_admin);
-      
-            if($mail1 == '0')
-            {
-
-             $mail_data_client = collect([
-                'email' =>  Auth::user()->email,
-                'template_feature' => 'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
-                'firstname' =>   Auth::user()->account->first_name,
-                'lastname' =>  Auth::user()->account->last_name,
-                'url'   => 'http://127.0.0.1:8000/en/client/requests/',
-              ]);
-            $mail2 = $this->mailAction($mail_data_client);
-=======
             //Update record on `service_requests` table.
             \App\Models\ServiceRequest::where('uuid', $serviceRequest['uuid'])->update([
                 'status_id'       => ServiceRequest::SERVICE_REQUEST_STATUSES['Completed'],
@@ -472,7 +394,6 @@ trait Utility
             //Validate if client paid for Final Invoice and Update warranty record 
             if(\App\Models\ServiceRequestPayment::where(['user_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id'], 'payment_type' =>  'final-invoice-fee'])->exists()){
                 $this->issuedWarranty($requestWarranty);
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
             }
             
             //Record service request progress of `Admin marked job as completed`
@@ -499,21 +420,6 @@ trait Utility
           $warrantyDays = $requestWarranty['warranty']['duration'];
         }
         
-<<<<<<< HEAD
-            if($mail2 == '0')
-            {
-            foreach ($cse as $value) {
-            $mail_data_cse = collect([
-              'email' =>  $value['email'],
-              'template_feature' => 'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
-              'firstname' =>   $value['first_name'],
-              'lastname' =>   $value['last_name'],
-              'job_ref' =>  $requestExists->unique_id,
-              'url'   => 'http://127.0.0.1:8000/en/client/requests/',
-            ]);
-            $mail3 = $this->mailAction($mail_data_cse);
-=======
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
         //Send mails to Client, CSE, and FixMaster
         $adminEmailData = collect([
@@ -558,15 +464,8 @@ trait Utility
 
               $this->mailAction($cseEmailData);
             }
-<<<<<<< HEAD
-            return '1';
-         }else{
-           return false;
-         }
-=======
           }
         }
->>>>>>> 565b7535bc419fde768534e2a35895a85c8641d0
 
         return $markAsCompleted;
 
