@@ -148,7 +148,8 @@
         <a href="" class="nav-link"><i data-feather="star"></i> <span>Rating</span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.category') ? 'active' : '' }}"><a href="{{ route('admin.category',  app()->getLocale()) }}">Service Diagnosis Ratings</a></li>
-          <li class="{{ Route::currentRouteNamed('admin.service_rating') ? 'active' : '' }}"><a href="{{ route('admin.service_rating',  app()->getLocale()) }}">Service Performance Ratings</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.service_rating') ? 'active' : '' }}"><a href="{{ route('admin.service_rating',  app()->getLocale()) }}">Service Ratings</a></li>
+
           <li class="{{ Route::currentRouteNamed('admin.job') ? 'active' : '' }}"><a href="{{ route('admin.job',  app()->getLocale()) }}">Service Ratings</a></li>
           <li class="{{ Route::currentRouteNamed('admin.category_reviews') ? 'active' : '' }}"><a href="{{ route('admin.category_reviews',  app()->getLocale()) }}">Service Reviews</a></li>
         </ul>

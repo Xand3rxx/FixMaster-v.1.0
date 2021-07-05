@@ -307,7 +307,17 @@ class MessageController extends Controller
 
         return $mail;
 
+          
+        Message::insert($mail_objects);
+     
+         }
+            
 
+        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
+
+         return $mail = $this->dispatch(new PushEmails($message_array));
+
+    
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
         // }
@@ -332,6 +342,7 @@ class MessageController extends Controller
                 $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
             }
         }
+    }
 
         return $messageTemp;
     }
