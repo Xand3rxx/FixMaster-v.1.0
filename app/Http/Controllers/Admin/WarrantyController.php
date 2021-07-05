@@ -9,7 +9,7 @@ use App\Traits\Utility;
 use App\Models\Warranty;
 use App\Models\ServiceRequestWarranty;
 use App\Traits\Loggable;
-
+use Carbon\Carbon;
 use Auth;
 use Route;
 use DB;
@@ -210,22 +210,32 @@ class WarrantyController extends Controller
      
         $serviceRequest = ServiceRequestWarranty::where('uuid', $uuid)->with('user.account', 'service_request', 'warranty')->first();
         $warrantyExist = Warranty::where('id',  $serviceRequest->warranty_id)->first();
-        $updateWarranty='';
+        $update='';
    
 
            //Update ServiceRequestWarranty
-           DB::transaction(function () use ($request, &$updateWarranty, $uuid) {
+           DB::transaction(function () use ($request, $serviceRequest, &$update, $uuid) {
                $updateWarranty= ServiceRequestWarranty::where('uuid', $uuid)->update([
                    'has_been_attended_to'          =>  'Yes',
+                   'date_resolved'          =>  Carbon::now()->toDateTimeString(),
                ]);
+
+               $updateWarrantyIssued = \App\Models\ServiceRequestWarrantyIssued::where(['service_request_warranty_id' => $serviceRequest->id ])
+               ->update([
+                'completed_by'          =>  Auth::id(),
+                'date_resolved'          =>  Carbon::now()->toDateTimeString(),
+                'cse_comment'   => Auth::user()->type->role->name === 'Customer Service Executive'? $request->comment: '',
+                'admin_comment' => Auth::user()->type->role->name !== 'Customer Service Executive'? $request->comment: ''
+               ]);
+
    
-               $updateWarranty = true;
+               $update = true;
            });
 
          
         
      
-        if (  $updateWarranty){
+        if (  $update){
             $type = 'Others';
             $severity = 'Informational';
             $actionUrl = Route::currentRouteAction();
@@ -295,32 +305,6 @@ class WarrantyController extends Controller
         $csedetails = \App\Models\User::where('id', $request->cse)->with('account')->first();
         $cses  = \App\Models\Cse::with('user', 'user.account', 'user.contact', 'user.roles')->withCount('service_request_assgined')->get();
 
-    
-
-            // $updateOldCseAssigned = \App\Models\ServiceRequestAssigned::where([
-            //     'service_request_id'=>  $request->service_request_id, 
-            //     'user_id'=> $request->cse_old, 'status'=> 'Active'])->update([
-            //     'status'                    => 'Inactive'
-            // ]);
-            
-            // if($updateOldCseAssigned ){
-            // $createNewCseAssigned = \App\Models\ServiceRequestAssigned::create([
-            //     'user_id'                   => $request->cse,
-            //     'service_request_id'        => $request->service_request_id,
-            //     'job_accepted'              => null,
-            //     'job_acceptance_time'       => null,
-            //     'job_diagnostic_date'       => null,
-            //     'job_declined_time'         => null,
-            //     'job_completed_date'        => null,
-            //     'status'                    => 'Active'
-            // ]);
-            // }
-
-            // if($createNewCseAssigned  AND   $updateOldCseAssigned ){
-            //     $updateOldCseAssigned = \App\Models\Cse::where([
-            //         'user_id'=> $request->cse])->update([
-            //         'job_availability'        => 'Yes'
-            //     ]);
                 
 
           $ifCsesAccept = \App\Models\ServiceRequestWarrantyIssued::where(['service_request_warranty_id' => $request->warranty_claim_id ])->first();

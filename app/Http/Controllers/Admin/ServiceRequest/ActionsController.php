@@ -92,7 +92,7 @@ class ActionsController extends Controller
 
             'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $serviceRequestID)
             // ->where('type', 'Request')
-            ->with('rfqSupplier', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
+            ->with('rfqSupplier.rfqSupplierInvoice', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
         ]);
     }
 

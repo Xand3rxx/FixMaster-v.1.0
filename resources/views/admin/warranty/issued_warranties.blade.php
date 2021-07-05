@@ -102,7 +102,7 @@
 
 
               <a href="{{ route('admin.warranty_details', ['warranty'=>$warranty->service_request->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary"><i class="far fa-clipboard"></i> Details</a>
-             @if($warranty->expiration_date >  Carbon\Carbon::now())
+             @if($warranty->expiration_date <  Carbon\Carbon::now())
 
         
 

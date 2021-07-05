@@ -148,7 +148,8 @@
         <a href="" class="nav-link"><i data-feather="star"></i> <span>Rating</span></a>
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.category') ? 'active' : '' }}"><a href="{{ route('admin.category',  app()->getLocale()) }}">Service Diagnosis Ratings</a></li>
-          <li class="{{ Route::currentRouteNamed('admin.service_rating') ? 'active' : '' }}"><a href="{{ route('admin.service_rating',  app()->getLocale()) }}">Service Performance Ratings</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.service_rating') ? 'active' : '' }}"><a href="{{ route('admin.service_rating',  app()->getLocale()) }}">Service Ratings</a></li>
+
           <li class="{{ Route::currentRouteNamed('admin.job') ? 'active' : '' }}"><a href="{{ route('admin.job',  app()->getLocale()) }}">Service Ratings</a></li>
           <li class="{{ Route::currentRouteNamed('admin.category_reviews') ? 'active' : '' }}"><a href="{{ route('admin.category_reviews',  app()->getLocale()) }}">Service Reviews</a></li>
         </ul>
@@ -178,9 +179,9 @@
       </li>
 
      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show', 'admin.requests-ongoing.index', 'admin.requests-ongoing.show', 'admin.requests-completed', 'admin.requests-completed.show', 'admin.requests-cancelled', 'admin.requests-cancelled.show') ? 'active show' : '' }}">
-        <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span><span class="badge badge-primary">{{ $pendingRequests }}</suspan></span></a>
+        <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span>@if($pendingRequests > 0)<span class="badge badge-primary">{{ $pendingRequests }}</span>@endif</a>
         <ul>
-          <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup></a></li>
+          <li class="{{ Route::currentRouteNamed('admin.requests-pending.index', 'admin.requests-pending.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}">Pending @if($pendingRequests > 0) <sup class="font-weight-bold text-primary">{{ $pendingRequests }}</sup>@endif </a></li>
           <li class="{{ Route::currentRouteNamed('admin.requests-ongoing.index', 'admin.requests-ongoing.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-ongoing.index', app()->getLocale()) }}">Ongoing</a></li>
           <li class="{{ Route::currentRouteNamed('admin.requests-completed', 'admin.requests-completed.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-completed', app()->getLocale()) }}">Completed</a></li>
           <li class="{{ Route::currentRouteNamed('admin.requests-cancelled', 'admin.requests-cancelled.show') ? 'active' : '' }}"><a href="{{ route('admin.requests-cancelled', app()->getLocale()) }}">Cancelled</a></li>

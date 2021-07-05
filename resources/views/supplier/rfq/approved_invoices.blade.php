@@ -90,7 +90,7 @@
 
 
 @push('scripts')
-<script src="{{ asset('assets/dashboard/assets/js/a784c9e7-4015-44df-994d-50ffe4921458.js') }}"></script>
+{{-- <script src="{{ asset('assets/dashboard/assets/js/a784c9e7-4015-44df-994d-50ffe4921458.js') }}"></script> --}}
 
 <script>
   $(document).ready(function() {

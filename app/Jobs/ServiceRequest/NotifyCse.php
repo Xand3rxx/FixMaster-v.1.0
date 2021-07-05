@@ -55,9 +55,9 @@ class NotifyCse implements ShouldQueue, ShouldBeUnique
         // Loop through all cess and send each of them email
         foreach ($users as $key => $cse) {
             $params = [
-                'recipient_email' => $cse->email,
-                'lastname' => $cse['account']['first_name'],
-                'firstname' => $cse['account']['last_name'],
+                'recipient_email' => $cse['email'],
+                'firstname' => $cse['account']['first_name'],
+                'lastname' => $cse['account']['last_name'],
                 'email' => $cse['email'],
                 'url'  => (string)$this->url($this->service_request)
             ];

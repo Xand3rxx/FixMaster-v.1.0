@@ -143,16 +143,8 @@
                                 -
                             @endif
                         </td>
-                        @if(count($item['supplierInvoiceBatches']) > 0)
-                        @foreach($item['supplierInvoiceBatches'] as $amount)
-                            <td class="tx-medium text-center">{{ !empty($amount['unit_price']) ? number_format($amount['unit_price']) : '0' }}</td>
-                            <td class="tx-medium text-center">{{ !empty($amount['total_amount']) ? number_format($amount['total_amount']) : '0' }}</td>
-                        @endforeach
-                        @else
-                            <td class="tx-medium text-center">0</td>
-                            <td class="tx-medium text-center">0</td>
-                        @endif
-
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) : '0' }}</td>
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) : '0' }}</td>
                     </tr>
                 @endforeach
             </tbody>
