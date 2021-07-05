@@ -129,6 +129,9 @@ class RfqController extends Controller
 
         if($supplierinvoiceBatch){
 
+            $supplierMailData = [];
+            $adminMailData = [];
+
             //Supplier mail data
             $supplierMailData = [
                 'firstname'         =>  $request->user()->account->first_name,
@@ -168,14 +171,16 @@ class RfqController extends Controller
      */
     private function validateRequest(){
         return request()->validate([
-            'rfq_id'        =>   'required|numeric',
+            'rfq_id'        =>   'bail|required|numeric',
             'rfq_batch_id'  =>   'required|array',
-            'quantity'      =>   'required|array',
+            'rfq_batch_id*' =>   'required|numeric',
+            'quantity'      =>   'bail|required|array',
             'quantity.*'    =>   'bail|required|numeric|min:1',
-            'unit_price'    =>   'required|array',
+            'unit_price'    =>   'bail|required|array',
             'unit_price.*'  =>   'bail|required|numeric|min:1',
-            'delivery_fee'  =>   'required|numeric',
-            'delivery_time' =>   'required',
+            'delivery_fee'  =>   'bail|required|numeric',
+            'delivery_time' =>   'bail|required',
+            'total_amount'  =>   'bail|required|numeric'
         ]);
 
         // return $validator->errors()->keys();

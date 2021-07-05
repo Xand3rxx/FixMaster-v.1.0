@@ -218,7 +218,7 @@ class MessageController extends Controller
         // Build Message Body
         $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
         $recipient = DB::table('users')->where('users.email', $parameters['recipient_email'])->first();
-        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com')->first();
+        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com ')->first();
        
         Message::create([
             'title' => $messageTemplate->title,
@@ -310,12 +310,9 @@ class MessageController extends Controller
           
         Message::insert($mail_objects);
      
-         }
-            
-
         $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
 
-         return $mail = $this->dispatch(new PushEmails($message_array));
+        return $mail = $this->dispatch(new PushEmails($message_array));
 
     
         // if(!empty($feature) && $sms!=""){
@@ -342,7 +339,6 @@ class MessageController extends Controller
                 $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
             }
         }
-    }
 
         return $messageTemp;
     }

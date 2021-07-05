@@ -58,7 +58,7 @@ class RequestController extends Controller
     {
         // find the service request using the uuid and relations
         $service_request = ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'service_request_cancellation', 'invoice', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfq' => function ($query) {
-            $query->where('type', 'Request')->with('rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
+            $query->where('type', 'Request')->with('rfqSupplier.rfqSupplierInvoice', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
         }, 'payment' => function ($query) {
             $query->where('status', \App\Models\Payment::STATUS['success'])->first();
         }])->firstOrFail();

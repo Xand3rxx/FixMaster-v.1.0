@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Supplier;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Auth;
-use Route;
-use DB;
+use App\Models\Rfq;
 use App\Traits\Loggable;
-use App\Traits\GenerateUniqueIdentity;
+use App\Models\SubStatus;
+use Illuminate\Http\Request;
+use App\Traits\UserNotification;
+use Illuminate\Support\Facades\DB;
 use App\Models\RfqSupplierDispatch;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
+use App\Models\ServiceRequestProgress;
+use App\Traits\GenerateUniqueIdentity;
+use App\Models\RfqDispatchNotification;
 
 class DispatchController extends Controller
 {
@@ -93,12 +98,13 @@ class DispatchController extends Controller
             'comment'               =>  'sometimes',
         ]);
 
+        $actionUrl = Route::currentRouteAction();
 
         //Set `createDispatch` to false before Db transaction and pass by reference
         (bool) $createDispatch  = false;
 
         // Set DB to rollback DB transacations if error occurs
-        DB::transaction(function () use ($request, &$createDispatch) {
+        DB::transaction(function () use ($request, $rfq, &$createDispatch) {
              RfqSupplierDispatch::create([
                 'rfq_id'                =>  $request->rfq_id,
                 'rfq_supplier_invoice'  =>  $request->rfq_supplier_invoice,
@@ -111,7 +117,7 @@ class DispatchController extends Controller
             ]);
             
             //Record service request progress of `A supplier sent an invoice`
-            \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, \App\Models\Rfq::where('id', $request->rfq_id)->firstOrFail()->service_request_id, 2, \App\Models\SubStatus::where('uuid', 'ef8c69e8-5634-4bd0-a7e6-b73a89ae034f')->firstOrFail()->id);
+            \App\Models\ServiceRequestProgress::storeProgress(auth()->user()->id, $rfq->service_request_id, 2, \App\Models\SubStatus::where('uuid', 'ef8c69e8-5634-4bd0-a7e6-b73a89ae034f')->firstOrFail()->id);
 
             //Set variables as true to be validated outside the DB transaction
             $createDispatch =  true;
@@ -120,20 +126,50 @@ class DispatchController extends Controller
         if($rfq['type'] == 'Warranty'){
             $this->updateRfqDispatchNotify($request,$rfq->service_request_id);
         }
-        // $serviceRquest = \App\Models\Rfq::where(['id'=>$request->rfq_id, 'type'=> 'Warranty' ])->first()->service_request_id;
-        //  if($serviceRquest)
-        //  {
-        // $updateWArrantyDispatch = $this->updateRfqDispatchNotify($request,$serviceRquest);
-        //  }
-
+       
         if($createDispatch){
 
             //Code to send mail to FixMaster, CSE and Supplier who sent the quote
+            $supplierMailData = [];
+            $adminMailData = [];
+            $cseMailData = [];
+
+            //Supplier mail data
+            $supplierMailData = [
+                'firstname'         =>  $request->user()->account->first_name,
+                'lastname'          =>  $request->user()->account->last_name,
+                'recipient_email'   =>  $request->user()->email,
+                'rfq_ref'           =>  $rfq->unique_id,
+                'dispatch_id'       =>  $request->unique_id
+            ];
+
+            //Admin mail data
+            $adminMailData = [
+                'firstname'         =>  'FixMaster',
+                'lastname'          =>  'Administrator',
+                'recipient_email'   =>  'info@fixmaster.com.ng',
+                'supplier_name'     => $request->user()->account->first_name .' '.$request->user()->account->last_name,
+                'dispatch_id'       =>  $request->unique_id,
+                'rfq_ref'           =>  $rfq->unique_id,
+            ];
+
+            //Admin mail data
+            $cseMailData = [
+                'firstname'         =>  $rfq['issuer']['account']['first_name'],
+                'lastname'          =>  $rfq['issuer']['account']['last_name'],
+                'recipient_email'   =>  $rfq['issuer']['email'],
+                'supplier_name'     => $request->user()->account->first_name .' '.$request->user()->account->last_name,
+                'dispatch_id'       =>  $request->unique_id,
+                'rfq_ref'           =>  $rfq->unique_id,
+            ];
+
+            \App\Traits\UserNotification::send($supplierMailData, 'SUPPLIER_DISPATCHED_INVOICE_NOTIFICATION');
+            \App\Traits\UserNotification::send($adminMailData, 'ADMIN_SUPPLIER_DISPATCHED_MATERIALS_NOTIFICATION');
+            \App\Traits\UserNotification::send($cseMailData, 'CSE_SUPPLIER_DISPATCHED_MATERIALS_NOTIFICATION');
 
             //Record crurrenlty logged in user activity
             $type = 'Request';
             $severity = 'Informational';
-            $actionUrl = Route::currentRouteAction();
             $message = Auth::user()->email.' created '.$request->unique_id.' dispatch code for '.$request->rfq.' RFQ.';
             $this->log($type, $severity, $actionUrl, $message);
  
@@ -144,8 +180,7 @@ class DispatchController extends Controller
             //Record Unauthorized user activity
             $type = 'Errors';
             $severity = 'Error';
-            $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.Auth::user()->email.' was trying to create '.$request->unique_id.' dispatch code for '.$request->rfq.' RFQ.';
+            $message = 'An error occurred while '.$request->user()->email.' was trying to create '.$request->unique_id.' dispatch code for '.$request->rfq.' RFQ.';
             $this->log($type, $severity, $actionUrl, $message);
  
             return back()->with('error', 'An error occurred while trying to create dispatch code for '.$request->rfq.' RFQ.');
@@ -211,8 +246,6 @@ class DispatchController extends Controller
             });
 
             if($updateDispatchStatus){
-
-                //Code to send mail to FixMaster, CSE and Supplier who sent the quote
 
                 //Record crurrenlty logged in user activity
                 $type = 'Request';
