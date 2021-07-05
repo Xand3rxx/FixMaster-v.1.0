@@ -292,6 +292,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
     Route::resource('requests-ongoing', AdminOngoingRequestController::class);
+    Route::get('requests-completed', [AdminServiceRequestActionsController::class, 'index'])->name('requests-completed');
+    Route::get('requests-completed/{requests_completed:uuid}',          [AdminServiceRequestActionsController::class, 'show'])->name('requests-completed.show');
+    Route::get('requests-cancelled', [AdminServiceRequestActionsController::class, 'cancelledRequests'])->name('requests-cancelled');
+    Route::get('requests-cancelled/{requests_cancelled:uuid}',          [AdminServiceRequestActionsController::class, 'cancelledRequestDetails'])->name('requests-cancelled.show');
     Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes

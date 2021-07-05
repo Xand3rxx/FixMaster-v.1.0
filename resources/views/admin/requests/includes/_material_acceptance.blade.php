@@ -138,7 +138,7 @@
                         <td class="tx-medium">{{ !empty($item['unit_of_measurement']) ? $item['unit_of_measurement'] : 'UNAVAILABLE' }}</td>
                         <td class="text-center">
                             @if(!empty($item['image']))
-                            <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item['component_name'] }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('cse.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
+                            <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item['component_name'] }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('admin.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
                             @else
                                 -
                             @endif
@@ -162,6 +162,8 @@
     <h5 class="mt-4">No records for RFQ on this job request.</h5>
    @endif
 </div>
+
+@include('admin.rfq._rfq_details_modal')
 
 @push('scripts')
     <script>

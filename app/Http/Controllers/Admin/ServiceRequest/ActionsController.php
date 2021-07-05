@@ -8,12 +8,7 @@ use App\Models\SubStatus;
 use Illuminate\Http\Request;
 use App\Traits\CancelRequest;
 use App\Models\ServiceRequest;
-use App\Models\WalletTransaction;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
-use App\Models\ServiceRequestProgress;
-
 class ActionsController extends Controller
 {
     use Utility, Loggable, CancelRequest;
@@ -25,7 +20,21 @@ class ActionsController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.requests.completed.index', [
+            'requests'  =>  ServiceRequest::with('client', 'price')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Completed'])->latest('created_at')->get()
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelledRequests()
+    {
+        return view('admin.requests.cancelled.index', [
+            'requests'  =>  ServiceRequest::with('client', 'price')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Canceled'])->latest('created_at')->get()
+        ]);
     }
 
     /**
@@ -52,12 +61,39 @@ class ActionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $uuid
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($language, $uuid)
     {
-        //
+        $serviceRequestID = ServiceRequest::where('uuid', $uuid)->firstOrFail()->id;
+
+        return view('admin.requests.completed.show', [
+            'serviceRequest'        =>  ServiceRequest::with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses', 'client', 'service_request_assignees', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs'])->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Completed'])->firstOrFail(),
+
+            'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $serviceRequestID)
+            // ->where('type', 'Request')
+            ->with('rfqSupplier', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $uuid
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelledRequestDetails($language, $uuid)
+    {
+        $serviceRequestID = ServiceRequest::where('uuid', $uuid)->firstOrFail()->id;
+
+        return view('admin.requests.cancelled.show', [
+            'serviceRequest'        =>  ServiceRequest::with(['price', 'service', 'client', 'serviceRequestMedias', 'adminAssignedCses', 'client', 'service_request_assignees', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfqs'])->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Canceled'])->firstOrFail(),
+
+            'materials_accepted'    => \App\Models\Rfq::where('service_request_id', $serviceRequestID)
+            // ->where('type', 'Request')
+            ->with('rfqSupplier', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first()
+        ]);
     }
 
     /**
