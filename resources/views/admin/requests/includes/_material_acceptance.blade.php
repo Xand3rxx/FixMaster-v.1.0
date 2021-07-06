@@ -138,21 +138,13 @@
                         <td class="tx-medium">{{ !empty($item['unit_of_measurement']) ? $item['unit_of_measurement'] : 'UNAVAILABLE' }}</td>
                         <td class="text-center">
                             @if(!empty($item['image']))
-                            <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item['component_name'] }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('cse.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
+                            <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item['component_name'] }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('admin.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
                             @else
                                 -
                             @endif
                         </td>
-                        @if(count($item['supplierInvoiceBatches']) > 0)
-                        @foreach($item['supplierInvoiceBatches'] as $amount)
-                            <td class="tx-medium text-center">{{ !empty($amount['unit_price']) ? number_format($amount['unit_price']) : '0' }}</td>
-                            <td class="tx-medium text-center">{{ !empty($amount['total_amount']) ? number_format($amount['total_amount']) : '0' }}</td>
-                        @endforeach
-                        @else
-                            <td class="tx-medium text-center">0</td>
-                            <td class="tx-medium text-center">0</td>
-                        @endif
-
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) : '0' }}</td>
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) : '0' }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -162,6 +154,8 @@
     <h5 class="mt-4">No records for RFQ on this job request.</h5>
    @endif
 </div>
+
+@include('admin.rfq._rfq_details_modal')
 
 @push('scripts')
     <script>

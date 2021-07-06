@@ -292,6 +292,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
     Route::resource('requests-ongoing', AdminOngoingRequestController::class);
+    Route::get('requests-completed', [AdminServiceRequestActionsController::class, 'index'])->name('requests-completed');
+    Route::get('requests-completed/{requests_completed:uuid}',          [AdminServiceRequestActionsController::class, 'show'])->name('requests-completed.show');
+    Route::get('requests-cancelled', [AdminServiceRequestActionsController::class, 'cancelledRequests'])->name('requests-cancelled');
+    Route::get('requests-cancelled/{requests_cancelled:uuid}',          [AdminServiceRequestActionsController::class, 'cancelledRequestDetails'])->name('requests-cancelled.show');
     Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes
@@ -333,6 +337,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/warranty/extended',  [WarrantyReportController::class, 'extended_warranty'])->name('extended_warranty_reports');
     Route::post('/reports/warranty/list-sorting',      [WarrantyReportController::class, 'listSorting'])->name('warranty_list_report_sorting');
     Route::post('/reports/warranty/extended/list-sorting',      [WarrantyReportController::class, 'extendedWarrantyListSorting'])->name('extended_warranty_list_report_sorting');
+    Route::get('/reports/warranty/customer/rating/history',      [WarrantyReportController::class, 'customerRatingHistory'])->name('customer_rating_history_reports');
+    Route::post('/reports/warranty/customer/rating/history/list-sorting',      [WarrantyReportController::class, 'customerRatingHistorySorting'])->name('customer_rating_history_list_report_sorting');
+    Route::get('/reports/warranty/unresolved',      [WarrantyReportController::class, 'unresolvedWarranty'])->name('unresolved_warranty_reports');
+    Route::post('/reports/warranty/unresolved/list-sorting',      [WarrantyReportController::class, 'unresolvedWarrantySorting'])->name('unresolved_warranty_list_report_sorting');
+
 
     
 

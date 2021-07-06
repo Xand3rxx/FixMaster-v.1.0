@@ -14,7 +14,6 @@ class AdminRatingSeeder extends Seeder
      */
     public function run()
     {
-<<<<<<< HEAD
         //cse rating
         $rate = new Rating();
         $rate->rater_id = 6;
@@ -45,8 +44,6 @@ class AdminRatingSeeder extends Seeder
         $rate6->created_at = '2021-01-27 16:36:58';
         $rate6->save();
 
-=======
->>>>>>> 740a0f0aae1b6c6dc1ad8c990caf413b1d5597b6
         //cse Diagnosis rating
         $rate2 = new Rating();
         $rate2->rater_id = 5;

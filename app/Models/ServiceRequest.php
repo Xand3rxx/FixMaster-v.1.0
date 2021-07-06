@@ -242,6 +242,11 @@ class ServiceRequest extends Model
         return $this->hasOne(ServiceRequestPayment::class);
     }
 
+ 
+    public function serviceRating()
+    {
+        return $this->hasOne(Rating::class,'service_request_id');
+    }
     /**
      * Scope a query to only include all pending requests
      *

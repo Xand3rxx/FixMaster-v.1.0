@@ -462,6 +462,7 @@ class WarrantClaimController extends Controller
                 'template_feature' => 'SUPPLIER_ACCEPTED_INVOICE_NOTIFICATION',
                 'email' =>  $supplier->email,
                 'firstname' =>  $supplier->account->first_name,
+                'lastname' =>  $supplier->account->last_name,
                 'job_ref' =>  $request->service_request_unique_id,
                 
               ]);
@@ -497,6 +498,7 @@ class WarrantClaimController extends Controller
                 'template_feature' => 'SUPPLIER_DECLINED_INVOICE_NOTIFICATION',
                 'email' =>  $supplier->email,
                 'firstname' =>  $supplier->account->first_name,
+                'lastname' =>  $supplier->account->last_name,
                 'job_ref' =>  $request->service_request_unique_id,
                 
               ]);

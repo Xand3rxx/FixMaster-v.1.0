@@ -86,7 +86,7 @@
             <div class="dropdown-file">
             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
               <div class="dropdown-menu dropdown-menu-right">
-              @if($warranty->expiration_date >  Carbon\Carbon::now())
+              @if($warranty->expiration_date <  Carbon\Carbon::now())
 
               @if(is_null($warranty->service_request_warranty_issued))
               <a href="{{ route('cse.accept_warranty_claim', ['warranty'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary"><i class="far fa-clipboard"></i> Accept</a>
@@ -94,14 +94,15 @@
 
                @if(!is_null($warranty->service_request_warranty_issued))
         
-               @if($warranty->service_request_warranty_issued->cse_id == Auth::user()->id)
+               @if($warranty->service_request_warranty_issued->cse_id == Auth::user()->id && $warranty->has_been_attended_to != 'Yes')
                <a href="{{ route('cse.warranty_details', ['warranty'=>$warranty->service_request->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary"><i class="far fa-clipboard"></i> Details</a>
                <a href="#markAsResolved" id="markas-resolved"
               data-toggle="modal"
               data-url="{{ route('cse.mark_warranty_resolved', ['warranty'=>$warranty->uuid, 'locale'=>app()->getLocale() ]) }}"
               class="dropdown-item details text-success"><i class="fas fa-check"></i>  Mark as Resolved</a>
              
-               @else
+              @endif
+              @if($warranty->service_request_warranty_issued->cse_id != Auth::user()->id)
                <a href="#" class="dropdown-item details text-default"> No Details</a>
 
                @endif

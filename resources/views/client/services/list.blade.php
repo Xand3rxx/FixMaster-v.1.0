@@ -114,7 +114,7 @@
                                                                         Mark as Completed</a>
                                                                 @endif
 
-                                                                @if ($myServiceRequest['status_id'] == 4)
+                                                                {{-- @if ($myServiceRequest['status_id'] == 4)
                                                                     <div class="dropdown-divider"></div>
                                                                     <a href="#" id="activate"
                                                                         data-url="{{ route('client.reinstate_request', ['request' => $myServiceRequest->uuid, 'locale' => app()->getLocale()]) }}"
@@ -122,7 +122,7 @@
                                                                         title="Reinstate">
                                                                         <i data-feather="corner-up-left"
                                                                             class="fea icon-sm"></i> Reinstate Request</a>
-                                                                @endif
+                                                                @endif --}}
 
                                                                 @if($myServiceRequest['payment']['status'] == 'pending')
                                                                     <a href="#" class="dropdown-item details text-info"><i data-feather="repeat" class="fea icon-sm"></i>Verify Payment</a>
