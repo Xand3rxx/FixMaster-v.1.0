@@ -130,12 +130,8 @@ class DispatchController extends Controller
         if($createDispatch){
 
             //Code to send mail to FixMaster, CSE and Supplier who sent the quote
-            $supplierMailData = [];
-            $adminMailData = [];
-            $cseMailData = [];
-
             //Supplier mail data
-            $supplierMailData = [
+            (array)$supplierMailData = [
                 'firstname'         =>  $request->user()->account->first_name,
                 'lastname'          =>  $request->user()->account->last_name,
                 'recipient_email'   =>  $request->user()->email,
@@ -144,7 +140,7 @@ class DispatchController extends Controller
             ];
 
             //Admin mail data
-            $adminMailData = [
+            (array)$adminMailData = [
                 'firstname'         =>  'FixMaster',
                 'lastname'          =>  'Administrator',
                 'recipient_email'   =>  'info@fixmaster.com.ng',
@@ -154,7 +150,7 @@ class DispatchController extends Controller
             ];
 
             //Admin mail data
-            $cseMailData = [
+            (array)$cseMailData = [
                 'firstname'         =>  $rfq['issuer']['account']['first_name'],
                 'lastname'          =>  $rfq['issuer']['account']['last_name'],
                 'recipient_email'   =>  $rfq['issuer']['email'],
