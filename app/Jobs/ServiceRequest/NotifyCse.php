@@ -74,7 +74,8 @@ class NotifyCse implements ShouldQueue, ShouldBeUnique
     protected function send($mailer, $message)
     {
         return $mailer->send('emails.message', ['mail_message' => $message['content']], function ($mail) use ($message) {
-            $mail->from($message['from'])->to($message['to'])->subject($message['subject']);
+            $mail->from($message['from']);
+            $mail->to($message['to'])->subject($message['subject']);
         });
     }
 
