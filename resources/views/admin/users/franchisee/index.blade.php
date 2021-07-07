@@ -42,6 +42,7 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
+                                    {{-- <th>Average Rating</th> --}}
                                     <th>CAC Number</th>
                                     <!-- <th>Requests</th> -->
                                     <th>Status</th>
@@ -57,6 +58,7 @@
                                     <td class="tx-medium">{{ Str::title($franchisee['user']['account']['last_name'] ." ". $franchisee['user']['account']['first_name']) }}</td>
                                     <td class="tx-medium">{{ $franchisee['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $franchisee['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
+                                    {{-- <td class="tx-medium">{{ round($franchisee->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td> --}}
 
                                     <td class="tx-medium text-uppercase">{{$franchisee['cac_number']}}</td>
 

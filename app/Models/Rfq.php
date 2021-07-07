@@ -85,7 +85,7 @@ class Rfq extends Model
 
     public function rfqSupplierInvoice()
     {
-        return $this->hasOne(RfqSupplierInvoice::class, 'rfq_id');
+        return $this->hasOne(RfqSupplierInvoice::class, 'rfq_id')->with('supplierInvoiceBatch', 'supplierInvoiceBatches');
     }
 
     public function rfqSuppliesInvoices()

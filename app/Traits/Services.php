@@ -20,9 +20,11 @@ trait Services
         //Return all active categories with at least one Service
         $services = Category::ActiveCategories()
         ->where('id', '!=', 1)
+        ->where('id', '!=', 12)
         ->orderBy('name', 'ASC')
         ->with(['services'    =>  function($query){
-            return $query->select('id','name', 'uuid', 'image', 'category_id');
+        
+        return $query->select('id','name', 'uuid', 'image', 'category_id')->where('id', '!=', 28);
         }])
         ->has('services')->get();
 
@@ -33,7 +35,7 @@ trait Services
     }
 
     /**
-     * Check if password match
+     * Check if service uuid exist
      *
      * @param  App\Models\Service $uuid
      * @param  string  $uuid

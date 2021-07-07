@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class QASeeder extends Seeder
 {
@@ -16,18 +16,21 @@ class QASeeder extends Seeder
     {
         // QA User
         $qa = new \App\Models\User;
-        $qa->email = 'quality@fix-master.com';
+        $qa->email = 'qa@9thtest.com.ng';
         $qa->password = bcrypt('admin12345');
+        $qa->email_verified_at = now();
         $qa->save();
 
         $qa1 = new \App\Models\User;
         $qa1->email = 'desmond.john@yahoo.com';
         $qa1->password = bcrypt('admin12345');
+        $qa1->email_verified_at = now();
         $qa1->save();
 
         $qa2 = new \App\Models\User;
         $qa2->email = 'bidemi.johson@outlook.co.uk';
         $qa2->password = bcrypt('admin12345');
+        $qa2->email_verified_at = now();
         $qa2->save();
 
         // AQ Roles and Permissions

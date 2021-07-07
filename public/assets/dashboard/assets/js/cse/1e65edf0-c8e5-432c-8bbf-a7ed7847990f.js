@@ -81,8 +81,12 @@ $(document).on('change', '.custom-file-input', function() {
 
 $(document).on('change', '.new-supplier', function() {
     if ($(this).prop('checked')) {
-         $('.old-supplier').prop('checked', false)
-      
+         $('.old-supplier').prop('checked', false);
+         $('.initial-supplier').addClass('d-none');
+         $('.other-suppliers').removeClass('d-none'); 
+    }else{
+        $('.initial-supplier').removeClass('d-none'); 
+        $('.other-suppliers').addClass('d-none'); 
     }
          
 });
@@ -90,10 +94,16 @@ $(document).on('change', '.new-supplier', function() {
 $(document).on('change', '.old-supplier', function() {
     if ($(this).prop('checked')) {
          $('.new-supplier').prop('checked', false)
+         $('.other-supplier').addClass('d-none');
+         $('.initial-suppliers').removeClass('d-none'); 
       
+    }else{
+        $('.other-supplier').removeClass('d-none'); 
+        $('.initial-suppliers').addClass('d-none'); 
     }
          
 });
+
 
 
 

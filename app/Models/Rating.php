@@ -10,7 +10,7 @@ class Rating extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['rater_id', 'ratee_id', 'service_request_id', 'service_id', 'star', 'updated_at', 'service_diagnosis_by'];
+    protected $fillable = ['rater_id', 'ratee_id', 'service_performed_by', 'service_request_id', 'service_id', 'star', 'updated_at', 'service_diagnosis_by'];
 
     protected static function boot()
     {
@@ -28,13 +28,21 @@ class Rating extends Model
         return $this->hasOne(Account::class, 'user_id', 'rater_id');
     }
 
+    public function account(){
+        return $this->hasOne(Account::class, 'user_id', 'rater_id');
+    }
+
     public function cseAccount(){
         return $this->hasOne(Account::class, 'user_id', 'service_diagnosis_by');
     }
 
+    public function cseAcc(){
+        return $this->hasOne(Account::class, 'user_id', 'service_performed_by');
+    }
+
 
     public function client(){
-        return $this->hasOne(Client::class, 'user_id', 'rater_id');
+        return $this->hasOne(Client::class, 'user_id', 'rater_id')->with('user', 'user.roles');
     }
 
 public function service_request(){

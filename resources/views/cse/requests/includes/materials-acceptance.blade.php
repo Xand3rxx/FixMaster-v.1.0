@@ -11,7 +11,12 @@
             <tbody>
                 <tr>
                     <td class="tx-medium">Supplier Name</td>
-                    <td class="tx-color-03">{{ !empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']) ? Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) : 'UNAVAILABLE' }} <small class="text-muted">(Business Name: {{ $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] }})</small></td>
+                    @if (!empty($materials_accepted['rfqSupplier']['supplier']['account']['first_name']))
+                    <td class="tx-color-03">{{  Str::title($materials_accepted['rfqSupplier']['supplier']['account']['first_name'] ." ". $materials_accepted['rfqSupplier']['supplier']['account']['last_name']) }} <small class="text-muted">(Business Name: {{ collect($materials_accepted['rfqSupplier'])->isNotEmpty() ? $materials_accepted['rfqSupplier']['supplier']['supplier']['business_name'] : 'UNAVAILABLE'}})</small></td>
+                    @else
+                    <td class="tx-color-03"> UNAVAILABLE <small class="text-muted">(Business Name: UNAVAILABLE)</small></td>
+                    @endif
+                    
                 </tr>
                 <tr>
                     <td class="tx-medium">Delivery Status</td>
@@ -50,6 +55,10 @@
                 <tr>
                     <td class="tx-medium">Courier Phone Number</td>
                     <td class="tx-color-03">{{ !empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['courier_phone_number']) ? $materials_accepted['rfqSupplierInvoice']['supplierDispatch']['courier_phone_number'] : 'UNAVAILABLE' }}</td>
+                </tr>
+                <tr>
+                    <td class="tx-medium">Dispatch Code</td>
+                    <td class="tx-color-03">{{ !empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['unique_id']) ? $materials_accepted['rfqSupplierInvoice']['supplierDispatch']['unique_id'] : 'UNAVAILABLE' }}</td>
                 </tr>
                 <tr>
                     <td class="tx-medium">Dispatch Status</td>
@@ -99,13 +108,13 @@
                
                 @foreach ($materials_accepted['rfqBatches'] as $item)
                     <tr>
-                        <td class="tx-color-03 tx-center">{{ ++$loop->iteration }}</td>
+                        <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
                         <td class="tx-medium">{{ !empty($item['manufacturer_name']) ? $item['manufacturer_name'] : 'UNAVAILABLE' }}</td>
                         <td class="tx-medium">{{ !empty($item['model_number']) ? $item['model_number'] : 'UNAVAILABLE' }}</td>
                         <td class="tx-medium">{{ !empty($item['component_name']) ? $item['component_name'] : 'UNAVAILABLE' }}</td>
                         <td class="tx-medium text-center">{{ !empty($item['quantity']) ? number_format($item->quantity) : '0' }}</td>
                         <td class="tx-medium text-center">{{ !empty($item['size']) ? number_format($item->size) : '0' }}</td>
-                        <td class="tx-medium">{{ !empty($item['unit_of_measurement']) ? $item['unit_of_measurement'] : 'UNAVAILABLE' }}</td>
+                        <td class="tx-medium">{{ !empty($item['unit_of_measurement']) ? $item['unit_of_measurement'] : '-' }}</td>
                         <td class="text-center">
                             @if(!empty($item['image']))
                             <a href="#rfqImageDetails" data-toggle="modal" class="text-info" title="View {{ $item['component_name'] }} image" data-batch-number="{{ $item->id }}" data-url="{{ route('cse.rfq_details_image', ['image'=>$item->id, 'locale'=>app()->getLocale()]) }}" id="rfq-image-details"> View</a>
@@ -113,22 +122,13 @@
                                 -
                             @endif
                         </td>
-                        @if(count($item['supplierInvoiceBatches']) > 0)
-                        @foreach($item['supplierInvoiceBatches'] as $amount)
-                            <td class="tx-medium text-center">{{ !empty($amount['unit_price']) ? number_format($amount['unit_price']) : '0' }}</td>
-                            <td class="tx-medium text-center">{{ !empty($amount['total_amount']) ? number_format($amount['total_amount']) : '0' }}</td>
-                        @endforeach
-                        @else
-                            <td class="tx-medium text-center">0</td>
-                            <td class="tx-medium text-center">0</td>
-                        @endif
-
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) : '0' }}</td>
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) : '0' }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div><!-- table-responsive -->
-    {{-- {{ dd($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status']) }} --}}
     @if(!empty($materials_accepted['rfqSupplierInvoice']['supplierDispatch'])) 
     @if($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_status'] !== 'Delivered'))
     <h5 class="mt-4">Update RFQ Status</h5>
@@ -153,68 +153,70 @@
     </div>
 
     @else
-    <h5 class="mt-4">Accept Materials Delivery</h5>
-    <div class="form-row">
-        <div class="form-group col-md-12">
-            <label for="accepted">Accept Delivery</label>
-            <select class="form-control custom-select" id="accepted" name="material_accepted">
-                <option selected disabled value="" selected>Select...</option>
-                <option value="Yes" value="{{ old('Yes') }}" {{ old('material_accepted') == 'Yes' ? 'selected' : '' }}>
-                    Yes, all ordered components were delivered </option>
-                <option value="No" value="{{ old('No') }}" {{ old('material_accepted') == 'No' ? 'selected' : '' }}>
-                    No, all ordered components were not delivered </option>
-            </select>
-            @error('accepted')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
-        </div>
-        <div class="form-group decline-rfq-reason col-md-12">
-            <label for="reason">Reason</label>
-            <textarea required rows="3" class="form-control @error('reason') is-invalid @enderror" id="reason"
-                name="material_reason"></textarea>
-        </div>
-    </div>
+        @if($materials_accepted['rfqSupplierInvoice']['supplierDispatch']['cse_material_acceptance'] == 'Pending')
+            <h5 class="mt-4">Accept Materials Delivery</h5>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="accepted">Accept Delivery</label>
+                    <select class="form-control custom-select" id="accepted" name="material_accepted">
+                        <option selected disabled value="" selected>Select...</option>
+                        <option value="Yes" value="{{ old('Yes') }}" {{ old('material_accepted') == 'Yes' ? 'selected' : '' }}>
+                            Yes, all ordered components were delivered </option>
+                        <option value="No" value="{{ old('No') }}" {{ old('material_accepted') == 'No' ? 'selected' : '' }}>
+                            No, all ordered components were not delivered </option>
+                    </select>
+                    @error('accepted')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group decline-rfq-reason col-md-12">
+                    <label for="reason">Reason</label>
+                    <textarea required rows="3" class="form-control @error('reason') is-invalid @enderror" id="reason"
+                        name="material_reason"></textarea>
+                </div>
+            </div>
+        @endif
     @endif
     @endif
 
 
 </section>
 @push('scripts')
-<script>
-$(document).ready(function() {
-    //Get image associated with invoice quote
-    $(document).on('click', '#rfq-image-details', function(event) {
-      event.preventDefault();
-      let route = $(this).attr('data-url');
-      let batchNumber = $(this).attr('data-batch-number');
-      
-      $.ajax({
-          url: route,
-          beforeSend: function() {
-            $("#modal-image-body").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');
-          },
-          // return the result
-          success: function(result) {
-              $('#modal-image-body').modal("show");
-              $('#modal-image-body').html('');
-              $('#modal-image-body').html(result).show();
-          },
-          complete: function() {
-              $("#spinner-icon").hide();
-          },
-          error: function(jqXHR, testStatus, error) {
-              var message = error+ ' An error occured while trying to retireve '+ batchNumber +'  details.';
-              var type = 'error';
-              displayMessage(message, type);
-              $("#spinner-icon").hide();
-          },
-          timeout: 8000
-      })
-    });
-
-  });
-</script>
-  @endpush
+    <script>
+        $(function() {
+            //Get image associated with invoice quote
+            $(document).on('click', '#rfq-image-details', function(event) {
+                event.preventDefault();
+                let route = $(this).attr('data-url');
+                let batchNumber = $(this).attr('data-batch-number');
+                
+                $.ajax({
+                    url: route,
+                    beforeSend: function() {
+                    $("#modal-image-body").html('<div class="d-flex justify-content-center mt-4 mb-4"><span class="loadingspinner"></span></div>');
+                    },
+                    // return the result
+                    success: function(result) {
+                        $('#modal-image-body').modal("show");
+                        $('#modal-image-body').html('');
+                        $('#modal-image-body').html(result).show();
+                    },
+                    complete: function() {
+                        $("#spinner-icon").hide();
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        var message = error+ ' An error occured while trying to retireve '+ batchNumber +'  details.';
+                        var type = 'error';
+                        displayMessage(message, type);
+                        $("#spinner-icon").hide();
+                    },
+                    timeout: 8000
+                })
+            });
+        });
+    </script>
+@endpush
 

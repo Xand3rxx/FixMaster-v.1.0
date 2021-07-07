@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js" defer></script>
 
  <script>
-var url = window.location.origin;
+var url = "{{config('app.url')}}";
 var editor_disabled = false;
 var checked_value = 'Email';
 $(document).ready(function () {

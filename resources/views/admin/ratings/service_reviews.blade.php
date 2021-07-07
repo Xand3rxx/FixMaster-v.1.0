@@ -68,7 +68,7 @@
                             @if($review->status == 1)
                             <a href="{{route('admin.deactivate_review', [$review->uuid, 'locale'=>app()->getLocale()])}}" class="dropdown-item details text-danger"><i class="fas fa-times"></i> Mark as Inactive</a>
                             @else
-                            <a href="{{route('admin.activate_review', [$review->uuid, 'locale'=>app()->getLocale()])}}" class="dropdown-item details text-success"><i class="fas fa-times"></i> Mark as Active</a>
+                            <a href="{{route('admin.activate_review', [$review->uuid, 'locale'=>app()->getLocale()])}}" class="dropdown-item details text-success"><i class="fas fa-check"></i> Mark as Active</a>
                             @endif
                             <a href="{{route('admin.delete_review', [$review->uuid, 'locale'=>app()->getLocale()])}}" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
                           </div>

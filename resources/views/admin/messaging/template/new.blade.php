@@ -22,7 +22,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                             <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
-                            <li class="breadcrumb-item"><a href="/{{app()->getLocale()}}/admin/messaging/templates">Message Templates</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.message_template', app()->getLocale()) }}">Message Templates</a></li>
                             <li class="breadcrumb-item active" aria-current="page">New Email</li>
                         </ol>
                     </nav>
@@ -97,7 +97,7 @@
 <!-- include summernote css/js -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js" defer></script>
 <script>
-    var url = window.location.origin;
+    var url = "{{config('app.url')}}";
     var editor_disabled = false;
     var checked_value = 'Email';
     $(document).ready(function (){

@@ -36,5 +36,10 @@ class RfqSupplier extends Model
     {
         return $this->belongsTo(User::class, 'supplier_id')->with('account', 'supplier');
     }
+
+    public function rfqSupplierInvoice()
+    {
+        return $this->belongsTo(RfqSupplierInvoice::class, 'rfq_id', 'rfq_id', 'supplier_id', 'supplier_id')->with('supplierInvoiceBatch');
+    }
     
 }

@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers\Supplier;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
-use Route;
-
-use App\Models\User;
-use App\Models\ActivityLog;
-use App\Models\UserType;
-use App\Traits\Loggable;
-use Illuminate\Support\Facades\URL;
 use App\Models\Rfq;
-use DB;
+use App\Traits\Loggable;
+use Illuminate\Http\Request;
 use App\Models\RfqSupplierInvoice;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
 use App\Models\RfqSupplierInvoiceBatch;
 
 class RfqController extends Controller
@@ -89,7 +83,7 @@ class RfqController extends Controller
         //Validate user input fields
         $this->validateRequest();
 
-        $supplierInvoiceExists = RfqSupplierInvoice::where('rfq_id', $request->rfq_id)->where('supplier_id', Auth::id())->count();
+        $supplierInvoiceExists = RfqSupplierInvoice::where('rfq_id', $request->rfq_id)->where('supplier_id', auth()->user()->id)->count();
 
         if($supplierInvoiceExists > 0){
             return redirect()->route('supplier.rfq', app()->getLocale())->with('error', 'Sorry, you already sent an invoice for this RFQ');
@@ -103,8 +97,8 @@ class RfqController extends Controller
 
             $supplierinvoice = RfqSupplierInvoice::create([
                 'rfq_id'        =>  $request->rfq_id,
-                'supplier_id'   =>  Auth::id(),
-                'delivery_fee' =>  $request->delivery_fee,  
+                'supplier_id'   =>  auth()->user()->id,
+                'delivery_fee'  =>  $request->delivery_fee,  
                 'delivery_time' =>  $request->delivery_time,
                 'total_amount'  =>  $request->total_amount,
             ]);
@@ -131,27 +125,42 @@ class RfqController extends Controller
 
         }, 3);
 
+        $actionUrl = Route::currentRouteAction();
+
         if($supplierinvoiceBatch){
 
-            //Code to send mail to FixMaster, CSE and Supplier who sent the quote
+            $supplierMailData = [];
+            $adminMailData = [];
 
+            //Supplier mail data
+            $supplierMailData = [
+                'firstname'         =>  $request->user()->account->first_name,
+                'lastname'          =>  $request->user()->account->last_name,
+                'recipient_email'   =>  $request->user()->email,
+                'rfq_ref'           =>  $rfqUniqueId,
+            ];
+
+            //Admin mail data
+            $adminMailData = [
+                'firstname'         =>  'FixMaster',
+                'lastname'          =>  'Administrator',
+                'recipient_email'   =>  'info@fixmaster.com.ng',
+                'supplier_name'     => $request->user()->account->first_name .' '.$request->user()->account->last_name,
+                'rfq_ref'           =>  $rfqUniqueId,
+            ];
+
+            \App\Traits\UserNotification::send($supplierMailData, 'SUPPLIER_SENT_INVOICE_NOTIFICATION');
+            \App\Traits\UserNotification::send($adminMailData, 'ADMIN_SENT_SUPPLIER_INVOICE_NOTIFICATION');
+            
             //Record crurrenlty logged in user activity
-            $type = 'Others';
-            $severity = 'Informational';
-            $actionUrl = Route::currentRouteAction();
-            $message = Auth::user()->email.' sent an invoice for '.$rfqUniqueId.' RFQ';
-            $this->log($type, $severity, $actionUrl, $message);
+            $this->log('Others', 'Informational', $actionUrl, auth()->user()->email.' sent an invoice for '.$rfqUniqueId.' RFQ');
 
             return redirect()->route('supplier.rfq_sent_invoices', app()->getLocale())->with('success', 'Your invoice for '.$rfqUniqueId.' RFQ has been sent.');
 
         }else{
 
             //Record Unauthorized user activity
-            $type = 'Errors';
-            $severity = 'Error';
-            $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.Auth::user()->email.' was trying to sent an invoice for '.$rfqUniqueId.' RFQ';
-            $this->log($type, $severity, $actionUrl, $message);
+            $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.auth()->user()->email.' was trying to sent an invoice for '.$rfqUniqueId.' RFQ');
 
             return back()->with('error', 'An error occurred while trying to send your invoice for '.$rfqUniqueId.' RFQ.');
         }
@@ -162,14 +171,16 @@ class RfqController extends Controller
      */
     private function validateRequest(){
         return request()->validate([
-            'rfq_id'        =>   'required|numeric',
+            'rfq_id'        =>   'bail|required|numeric',
             'rfq_batch_id'  =>   'required|array',
-            'quantity'      =>   'required|array',
+            'rfq_batch_id*' =>   'required|numeric',
+            'quantity'      =>   'bail|required|array',
             'quantity.*'    =>   'bail|required|numeric|min:1',
-            'unit_price'    =>   'required|array',
+            'unit_price'    =>   'bail|required|array',
             'unit_price.*'  =>   'bail|required|numeric|min:1',
-            'delivery_fee'  =>   'required|numeric',
-            'delivery_time' =>   'required',
+            'delivery_fee'  =>   'bail|required|numeric',
+            'delivery_time' =>   'bail|required',
+            'total_amount'  =>   'bail|required|numeric'
         ]);
 
         // return $validator->errors()->keys();
@@ -178,7 +189,7 @@ class RfqController extends Controller
     public function sentInvoices(){
 
         return view('supplier.rfq.sent_invoices', [
-            'rfqs'  =>  Auth::user()->supplierSentInvoices()->get(),
+            'rfqs'  =>  auth()->user()->supplierSentInvoices()->get(),
         ]);
        
     }
@@ -193,14 +204,14 @@ class RfqController extends Controller
     public function approvedInvoices(){
 
         return view('supplier.rfq.approved_invoices', [
-            'rfqs'  =>  Auth::user()->supplierSentInvoices()->where('accepted', 'Yes')->get(),
+            'rfqs'  =>  auth()->user()->supplierSentInvoices()->where('accepted', 'Yes')->get(),
         ]);
     }
 
     public function declinedInvoices(){
 
         return view('supplier.rfq.declined_invoices', [
-            'rfqs'  =>  Auth::user()->supplierSentInvoices()->where('accepted', 'No')->get(),
+            'rfqs'  =>  auth()->user()->supplierSentInvoices()->where('accepted', 'No')->get(),
         ]);
     }
 
@@ -212,8 +223,9 @@ class RfqController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rfqDetailsImage($language, $id){
+
         return view('supplier.rfq._details_image', [
-            'rfqDetails'    =>  \App\Models\RfqBatch::select('image')->where('id', $id)->first(),
+            'rfqDetails'    =>  \App\Models\RfqBatch::select('image')->where('id', $id)->firstOrFail(),
         ]);
     }
 

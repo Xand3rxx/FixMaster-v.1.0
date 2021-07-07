@@ -90,10 +90,25 @@
 </head>
 
 <body>
+
 <section class="bg-invoice mb-5">
     <div class="container">
         <div class="row mt-5 pt-4 pt-sm-0 justify-content-center">
             <div class="col-lg-10">
+                @if($invoice->status == '1' && $invoice['phase'] == '2')
+                <div class="py-4">
+                    <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
+                    <input id="client-return" type="hidden" name="route" value="{{ route('client.return', app()->getLocale()) }}">
+                    <button id="return-btn" href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary mr-2">
+                        <i class="fa fa-arrow-left"></i> Go Back to Pay for {{$invoice['invoice_type'] === 'Diagnosis Invoice' ? 'Final' : 'Diagnosis'}} Invoice
+                    </button>
+                </div>
+                @else
+                    <div class="py-4">
+                        <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Return to service request
+                        </a>
+                    </div>
+                @endif
                 <div class="card shadow rounded border-0">
                     <div class="card-body">
                         <div class="invoice-top pb-4 border-bottom">
@@ -132,7 +147,7 @@
                             </div><!--end row-->
                             @if($invoice['status'] === '2' && $invoice['phase'] == '2')
                             <div class="d-flex justify-content-start">
-                                <h3 style="border: 2px solid red; padding: 5px; color: red;">PAID</h3>
+                                <img src="{{asset('assets/images/paystampss.png')}}" style="width: 200px; height: 100px">
                             </div>
                             @endif
                             <div class="d-flex justify-content-center">
@@ -212,9 +227,9 @@
                                 <table class="table mb-0 table-center invoice-tb">
                                     <thead class="bg-light">
                                     <tr>
-                                        <th scope="col" class="text-left">S/N</th>
-                                        <th scope="col" class="text-left">Materials</th>
-                                        <th scope="col" class="text-left">Quantity</th>
+                                        <th scope="col" class="text-left" style="width: 80px">S/N</th>
+                                        <th scope="col" class="text-left" style="width: 200px">Materials</th>
+                                        <th scope="col" class="text-left" style="width: 200px">Quantity</th>
                                         <th scope="col" class="text-left">Unit of Measurement</th>
                                         <th scope="col" class="text-left">Unit Price</th>
                                         <th scope="col" class="text-left">Total Price</th>
@@ -232,12 +247,8 @@
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td class="text-left">-</td>
-                                        <td class="text-left">-</td>
-                                        <td class="text-left">-</td>
-                                        <td class="text-left">-</td>
-                                        <td class="text-left">-</td>
-                                        <td class="text-left">₦ {{ number_format($materialsMarkupPrice, 2) }}</td>
+                                        <th class="text-left" colspan="5">Total Material Cost</th>
+                                        <th class="text-left">₦ {{ number_format($materialsMarkupPrice, 2) }}</th>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -247,8 +258,8 @@
                                     <table class="table mb-0 table-center invoice-tb">
                                         <tbody>
                                         <tr>
-                                            <th scope="col" class="text-left" colspan="5">Supplier Delivery Fee:</th>
-                                            <th scope="col" class="text-left">{{ number_format($supplierDeliveryFee, 2) }}</th>
+                                            <th scope="col" class="text-left" colspan="5" style="width: 580px">Supplier Delivery Fee:</th>
+                                            <th scope="col" class="text-left">₦ {{ number_format($supplierDeliveryFee, 2) }}</th>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -260,10 +271,10 @@
                                     <table class="table mb-0 table-center invoice-tb">
                                         <thead class="bg-light">
                                         <tr>
-                                            <th scope="col" class="text-left">S/N</th>
-                                            <th scope="col" class="text-left">Labour</th>
-                                            <th scope="col" class="text-left">Quantity</th>
-                                            <th scope="col" class="text-left">Cost</th>
+                                            <th scope="col" class="text-left" style="width: 80px">S/N</th>
+                                            <th scope="col" class="text-left" style="width: 200px">Labour</th>
+                                            <th scope="col" class="text-left" style="width: 200px">Quantity</th>
+                                            <th scope="col" class="text-left" colspan="2" style="width: 210px">Cost</th>
                                             <th scope="col" class="text-left">Sub Totals</th>
                                         </tr>
                                         </thead>
@@ -273,16 +284,27 @@
                                                 <td class="text-left">{{$loop->iteration }}</td>
                                                 <td class="text-left">{{$labourCost['subService']['name']}}</td>
                                                 <td class="text-left">{{$labourCost['quantity']['quantity']}}</td>
-                                                <td class="text-left">₦ {{number_format($labourCost['subService']['labour_cost'] + $labourCost['subService']['labour_cost'] * $labourMarkup, 2)}}</td>
+                                                <td class="text-left" colspan="2">₦ {{number_format($labourCost['subService']['labour_cost'] + $labourCost['subService']['labour_cost'] * $labourMarkup, 2)}}</td>
                                                 <td class="text-left">₦ {{number_format($labourCost['amount'], 2)}}</td>
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <td class="text-left">-</td>
-                                            <td class="text-left">-</td>
-                                            <td class="text-left">-</td>
-                                            <td class="text-left">-</td>
-                                            <td class="text-left">₦ {{number_format($totalLabourCost, 2)}}</td>
+                                            <th class="text-left" colspan="5">Total Labour Cost</th>
+                                            <th class="text-left">₦ {{number_format($totalLabourCost, 2)}}</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="table-responsive bg-white shadow rounded mt-3">
+                                    <table class="table mb-0 table-center invoice-tb">
+                                        <tbody>
+                                        <tr>
+                                            <th scope="col" class="text-left" colspan="5" style="width: 580px">FixMaster Royalty:</th>
+                                            <th scope="col" class="text-left">₦ {{number_format($fixMasterRoyalty, 2)}}</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col" class="text-left" colspan="5" style="width: 580px">Logistics Cost</th>
+                                            <th scope="col" class="text-left">₦ {{number_format($logistics, 2)}}</th>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -316,23 +338,22 @@
 
     @if($invoice['invoice_type'] == 'Final Invoice')
 
-    <li class='text-muted d-flex justify-content-between'>Subtotal :<span>₦ {{number_format($subTotal, 2)}} </span></li>
-    <li class='text-muted d-flex justify-content-between'>Logistics :<span>₦  {{number_format($logistics, 2)}} </span></li>
-    <li class='text-muted d-flex justify-content-between'>FixMaster Royalty :<span>₦ {{number_format($fixMasterRoyalty, 2)}}</span></li>
-    <li class='text-muted d-flex justify-content-between'>Total Job Quotation :<span>₦ {{ number_format($totalQuotation, 2) }}</span></li>
-    <hr>
-    <li class='d-flex justify-content-between text-danger'>Less Booking Fee :<span>- ₦ {{ number_format($bookingFee, 2) }}</span></li>
-    <li class='d-flex justify-content-between mt-2'>Amount Due :<span>₦ {{ number_format($amountDue, 2) }}</span></li>
-    <hr>
+{{--    <li class='text-muted d-flex justify-content-between'>Subtotal :<span>₦ {{number_format($subTotal, 2)}} </span></li>--}}
+    <li class='text-muted d-flex justify-content-between my-2'>Total Job Quotation :<span>₦ {{ number_format($totalQuotation, 2) }}</span></li>
+    <li class='d-flex justify-content-between text-danger my-2'>Less Booking Fee :<span>- ₦ {{ number_format($bookingFee, 2) }}</span></li>
+{{--    <li class='d-flex justify-content-between mt-2'>Amount Due :<span>₦ {{ number_format($amountDue, 2) }}</span></li>--}}
+{{--    <hr>--}}
     @if($invoice['serviceRequest']['client_discount_id'] != null)
     <li class='text-muted d-flex justify-content-between mt-2'>Discounts : </li>
     <li class='d-flex justify-content-between text-danger mb-2'>First Booking Discount (50%) :<span>- ₦ {{ number_format($discount, 2) }}</span></li>
     @endif
 
-    <li class='text-muted d-flex justify-content-between mt-2'>Warranty : </li>
-    <li class='text-muted d-flex justify-content-between mb-2'>{{ $warranty['name'] }} :<span>₦ {{ number_format($warrantyCost, 2) }}</span></li>
-    <li class='text-muted d-flex justify-content-between mb-2'>VAT :<span>₦ {{ number_format($vat, 2) }}</span></li>
-    <li class='d-flex justify-content-between mt-2'>Total Amount Due :<span>₦ {{ number_format($totalAmount, 2) }}</span></li>
+    <li class='text-muted d-flex justify-content-between my-2'>Warranty </li>
+    <li class='text-muted d-flex justify-content-between my-2'>
+        <span>{{ $warranty['name'] }} <strong>({{ $warranty['duration'] }} Days)</strong> :</span><span>₦ {{ number_format($warrantyCost, 2) }}</span>
+    </li>
+    <li class='text-muted d-flex justify-content-between my-2'>VAT :<span>₦ {{ number_format($vat, 2) }}</span></li>
+    <li class='d-flex justify-content-between my-2'>Total Amount Due :<span>₦ {{ number_format($totalAmount, 2) }}</span></li>
     @else
     <li class='text-muted d-flex justify-content-between'>Subtotal :<span>₦  {{number_format($subTotal, 2)}}</span></li>
     <li class='text-muted d-flex justify-content-between'>FixMaster Royalty :<span>₦ {{number_format($fixMasterRoyalty, 2)}}</span></li>
@@ -348,6 +369,7 @@
                             </div>
                     </div>
 
+
                     <div class="d-flex justify-content-center py-3">
                         @if($invoice->status == '1' && $invoice['phase'] == '1')
                         <div id="client-decision">
@@ -355,20 +377,17 @@
                             <input id="client-accept" type="hidden" name="route" value="{{ route('client.accept', app()->getLocale()) }}">
                             <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
 {{--                            <button class="btn btn-outline-primary" id="client_accept" name="client_choice">Client Accept</button>--}}
-                            <a href="#" data-toggle="modal" data-target="#clientAccept" data-payment-ref="" data-url="" id="payment-details" class="btn btn-outline-primary ">Client Accept</a>
-                            <button class="btn btn-outline-primary" id="client_decline" name="client_choice">Client Decline</button>
+                            <a href="#" data-toggle="modal" data-target="#clientAccept" data-payment-ref="" data-url="" id="payment-details" class="btn btn-outline-primary ">Click to Pay for final invoice</a>
+                            <button class="btn btn-outline-primary" id="client_decline" name="client_choice">Click here to reject final invoice</button>
                             <div id="msg"></div>
                         </div>
                         @elseif($invoice->status == '1' && $invoice['phase'] == '2')
 {{--                            @if($invoice['invoice_type'] === 'Diagnosis Invoice')--}}
-                                <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
-                                <input id="client-return" type="hidden" name="route" value="{{ route('client.return', app()->getLocale()) }}">
-                                <button id="return-btn" href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary mr-2">Go Back</button>
 {{--                            @endif--}}
-                            <form method="POST" action="{{ route('paystack-submit', app()->getLocale()) }}">
+                            <form method="POST" action="{{ route('client.invoice_payment', app()->getLocale()) }}">
                                 @csrf
                                 {{-- REQUIREMENTS FOR PAYMENT GATWAYS  --}}
-                                <input type="hidden" class="d-none" value="paystack" id="payment_channel" name="payment_channel">
+{{--                                <input type="hidden" class="d-none" value="paystack" id="payment_channel" name="payment_channel">--}}
                                 <input type="hidden" class="d-none" value="{{$totalAmount}}" name="booking_fee">
                                 <input type="hidden" class="d-none" value="{{$service_request_assigned['user_id']}}" name="cse_assigned">
                                 <input type="hidden" class="d-none" value="{{$technician_assigned['user_id']}}" name="technician_assigned">
@@ -383,40 +402,36 @@
                                 <input type="hidden" class="d-none" value="{{$labour_markup}}" id="labour_markup" name="labour_markup">
                                 <input type="hidden" class="d-none" value="{{$material_markup}}" id="material_markup" name="material_markup">
                                 <input type="hidden" class="d-none" value="{{$fixMasterRoyalty}}" id="fixMasterRoyalty" name="fixMasterRoyalty">
+                                <input type="hidden" class="d-none" value="{{ $warrantyCost }}" id="warrantyCost" name="warrantyCost">
 
                                 <input type="hidden" class="d-none" value="invoice" id="payment_for" name="payment_for">
                                 <input type="hidden" class="d-none" value="{{ $invoice['unique_id'] }}" id="unique_id" name="unique_id">
                                 <input type="hidden" class="d-none" value="{{ $invoice['invoice_type'] }}" id="invoice_type" name="invoice_type">
                                 <input type="hidden" class="d-none" value="{{ $invoice['uuid'] }}" id="uuid" name="uuid">
-                                <button type="submit" id="paystack_option"  class="btn btn-outline-success">Pay with paystack</button>
+                                <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="paystack">
+                                    <div>
+                                        Click here to pay with
+                                    </div>
+                                    <div>
+                                        <label for="paystack" class="pplogo-container" style="cursor:pointer;">
+                                            <img class="img-fluid" alt="paystack" src="{{ asset('assets/images') }}/paystack.png" width="100" height="20">
+                                        </label>
+                                    </div>
+                                </button>
+                                <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="flutterwave">
+                                    <div>
+                                        Click Here to pay with
+                                    </div>
+                                    <div>
+                                        <label for="paystack" class="pplogo-container" style="cursor:pointer;">
+                                            <img class="img-fluid" alt="flutterwave" src="{{ asset('assets/images') }}/flutter.png" width="100" style="height:px">
+                                        </label>
+                                    </div>
+                                </button>
                             </form>
-                                <form method="POST" action="{{ route('flutterwave-submit', app()->getLocale()) }}">
-                                    @csrf
-                                    {{-- REQUIREMENTS FOR PAYMENT GATWAYS  --}}
-                                    <input type="hidden" class="d-none" value="flutterwave" id="payment_channel" name="payment_channel">
-                                    <input type="hidden" class="d-none" value="{{$totalAmount}}" name="booking_fee">
-                                    <input type="hidden" class="d-none" value="{{$service_request_assigned['user_id']}}" name="cse_assigned">
-                                    <input type="hidden" class="d-none" value="{{$technician_assigned['user_id']}}" name="technician_assigned">
-                                    <input type="hidden" class="d-none" value="{{$invoice['rfqs']['rfqSupplier']['supplier_id'] ?? null}}" name="supplier_assigned">
-                                    <input type="hidden" class="d-none" value="{{$qa_assigned['user_id'] ?? null}}" name="qa_assigned">
 
-                                    <input type="hidden" class="d-none" value="{{$logistics}}" id="logistics_cost" name="logistics_cost">
-                                    <input type="hidden" class="d-none" value="{{$retention_fee}}" id="retention_fee" name="retention_fee">
-                                    <input type="hidden" class="d-none" value="{{$vat}}" id="tax" name="tax">
-                                    <input type="hidden" class="d-none" value="{{$actual_labour_cost}}" id="actual_labour_cost" name="actual_labour_cost">
-                                    <input type="hidden" class="d-none" value="{{$actual_material_cost}}" id="actual_material_cost" name="actual_material_cost">
-                                    <input type="hidden" class="d-none" value="{{$labour_markup}}" id="labour_markup" name="labour_markup">
-                                    <input type="hidden" class="d-none" value="{{$material_markup}}" id="material_markup" name="material_markup">
-                                    <input type="hidden" class="d-none" value="{{$fixMasterRoyalty}}" id="fixMasterRoyalty" name="fixMasterRoyalty">
-
-                                    <input type="hidden" class="d-none" value="invoice" id="payment_for" name="payment_for">
-                                    <input type="hidden" class="d-none" value="{{ $invoice['unique_id'] }}" id="unique_id" name="unique_id">
-                                    <input type="hidden" class="d-none" value="{{ $invoice['invoice_type'] }}" id="invoice_type" name="invoice_type">
-                                    <input type="hidden" class="d-none" value="{{ $invoice['uuid'] }}" id="uuid" name="uuid">
-                                    <button type="submit" id="flutterwave_option"  class="btn btn-outline-success">Pay with flutterwave</button>
-                                </form>
                             @elseif($invoice['status'] === '2' && $invoice['phase'] == '2')
-                            <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary">Go Back</a>
+                            <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary">Return to Service Requests</a>
                         @endif
                     </div>
 
@@ -449,7 +464,7 @@
                                         <div class="mb-4">
                                             <span>Selected warranty will be applied on the final invoice</span>
                                         </div>
-                                        <form method="POST" action="{{ route('client.decision', ['locale' => app()->getLocale(), 'invoice' => $invoice['uuid']]) }}">
+                                        <form method="POST" action="{{ route('client.warranty_decision', ['locale' => app()->getLocale(), 'invoice' => $invoice['uuid']]) }}">
                                             @csrf
                                             @method('PUT')
 {{--                                            <div class="form-group">--}}
@@ -462,7 +477,7 @@
                                                 <div class="form-group">
                                                     <div class="custom-control custom-radio">
                                                         <input class="custom-control-input" type="radio" name="warranty_id" id="inlineRadio{{ $ActiveWarranty->id }}" value="{{ $ActiveWarranty->id }}" data-warranty-id="{{$ActiveWarranty->id}}" @if($invoice['warranty_id'] === $ActiveWarranty['id']) checked @endif >
-                                                        <label class="custom-control-label" for="inlineRadio{{ $ActiveWarranty->id }}">{{ $ActiveWarranty->name }} - (₦ {{ number_format($ActiveWarranty->percentage/100 * ($subTotal), 2) }}) </label><br>
+                                                        <label class="custom-control-label" for="inlineRadio{{ $ActiveWarranty->id }}">{{ $ActiveWarranty->name }} - (₦ {{ number_format($ActiveWarranty->percentage/100 * ($subTotal), 2) }}) <strong>Valid for {{$ActiveWarranty['duration']}} days</strong> </label><br>
                                                     </div>
                                                 </div>
                                         @endforeach

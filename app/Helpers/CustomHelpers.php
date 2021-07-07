@@ -172,4 +172,20 @@ class CustomHelpers
         }
         return !empty($arr) ? implode(", ", $arr) : false;
     }
+
+    public static function supplyInvoiceBatch($id, $serviceid){
+
+        $rfq =  \App\Models\Rfq::where('id', '!=', $id)->where(['service_request_id'=>$serviceid ])->where('type', '!=', 'Warranty')->first();
+         $invoice = $rfq?  \App\Models\RfqSupplierInvoice::where('rfq_id', '=', $rfq->id)->first(): null;
+         $invoiceBatch = $invoice?\App\Models\RfqSupplierInvoiceBatch::where(['rfq_supplier_invoice_id'=> $invoice->id ])->first(): null;
+        return  $invoiceBatch??'UNAVAILABLE';
+    }
+
+
+    public static function deliveryFee($id, $serviceid){
+
+        $rfq =  \App\Models\Rfq::where('id', '!=', $id)->where(['service_request_id'=>$serviceid ])->where('type', '!=', 'Warranty')->first();
+         $invoice = $rfq?  \App\Models\RfqSupplierInvoice::where('rfq_id', '=', $rfq->id)->first(): null;
+        return  $invoice??'UNAVAILABLE';
+    }
 }

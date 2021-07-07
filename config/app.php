@@ -129,6 +129,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'geolocation_api_key' => env('GEOLOCATION_API_KEY', 'AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -167,7 +169,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        // Unicodeveloper\Paystack\PaystackServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -181,6 +182,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\FlutterwavePaymentServiceProvider::class,
+        App\Providers\PaystackPaymentServiceProvider::class,
         // Intervention\Image\ImageServiceProvider::class
     ],
 
@@ -220,6 +223,8 @@ return [
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
+        'PayUsingFlutterwave' => App\PaymentProcessor\Facades\FlutterwavePayment::class,
+        'PayUsingPaystack' => App\PaymentProcessor\Facades\PaystackPayment::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
         // 'Redis' => Illuminate\Support\Facades\Redis::class,
@@ -236,7 +241,6 @@ return [
         'EnumHelper' => App\Helpers\EnumHelper::class,
         'CustomHelpers' => App\Helpers\CustomHelpers::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
     ],
 
 ];

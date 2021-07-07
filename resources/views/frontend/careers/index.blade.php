@@ -2,7 +2,7 @@
 @section('title', 'Join Us')
 @section('contents')
     @include('layouts.partials._messages')
-
+   
     <section class="section bg-light">
         <div class="container" style="margin-top: 3rem;">
             <div class="row justify-content-center">
@@ -559,7 +559,7 @@
 
     @push('scripts')
         <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4Cgk4_memXity0NLrIGyjS3ORuMykkkQ&v=3.exp&libraries=places">
+            src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places">
         </script>
         <script src="{{ asset('assets/dashboard/assets/js/bootstrap-multiselect.js') }}"></script>
         <script src="{{ asset('assets/js/geolocation.js') }}"></script>
@@ -597,12 +597,11 @@
     @endpush
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/dashboard/assets/css/bootstrap-multiselect.css') }}">
-
         <style>
-            .invalid-response {
+            .invalid-response{
+                font-size: 11px !important;
                 color: #e43f52;
             }
-
         </style>
     @endpush
 @endsection

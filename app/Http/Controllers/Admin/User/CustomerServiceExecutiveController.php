@@ -35,6 +35,8 @@ class CustomerServiceExecutiveController extends Controller
             'franchisees' => \App\Models\Franchisee::select('id', 'cac_number')->latest()->get(),
             'applicant' => $request->session()->get('applicant')
         ]);
+
+    
     }
 
     /**

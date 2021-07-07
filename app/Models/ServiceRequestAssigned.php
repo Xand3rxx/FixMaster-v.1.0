@@ -33,7 +33,7 @@ class ServiceRequestAssigned extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class)->with('account', 'roles');
+        return $this->belongsTo(User::class)->with('account', 'roles', 'ratings');
     }
 
     /**
@@ -68,6 +68,12 @@ class ServiceRequestAssigned extends Model
     {
         return $this->belongsTo(User::class, 'user_id')->with('roles', 'account');
     }
+
+    // public function cses()
+    // {
+    //     return $this->belongsTo(Cse::class, 'user_id');
+    // }
+
 
     public function account()
     {

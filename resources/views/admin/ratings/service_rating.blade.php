@@ -28,7 +28,6 @@
                 </div>
 
               </div><!-- card-header -->
-
               <div class="table-responsive">
 
                 <table class="table table-hover mg-b-0" id="basicExample">
@@ -44,22 +43,25 @@
                   <tbody>
                     @php $sn = 1; @endphp
                 @foreach($cards as $rating)
+                @if($rating['client'] != null)
+                
                     <tr>
 
                     <td class="tx-color-03 tx-center">{{$sn++}}</td>
-                    <td class="tx-medium">{{$rating->service_request->service->name}}</td>
+                    <td class="tx-medium">{{$rating->service_request->service->name ?? 'Unavailable'}}</td>
                       <td class="tx-medium text-center">{{$rating->id}}</td>
                       <td class="text-medium text-center">{{round($rating->starAvg)}}</td>
                       <td class=" text-center">
                         <div class="dropdown-file">
                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                             <div class="dropdown-menu dropdown-menu-right">
-                            <a href="javascript:void(0)" data-toggle="modal" data-number="{{$rating->service_request_id}}" class="dropdown-item details text-primary" title="View Computer & Laptops ratings"><i class="far fa-star"></i> Ratings</a>
+                            <a href="javascript:void(0)" data-toggle="modal" data-number="{{$rating->service_request_id}}" data-name="{{$rating->service_request->service->name}}" class="dropdown-item details text-primary" title="View Computer & Laptops ratings"><i class="far fa-star"></i> Ratings</a>
                             </div>
                         </div>
                       </td>
 
                     </tr>
+                    @endif
                   @endforeach
 
 
@@ -78,7 +80,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content tx-14">
       <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLabel2">Total Ratings for {{$rating->service_request->service->name}}</h6>
+        <h6 class="modal-title" id="exampleModalLabel2">Total Ratings for </h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -111,7 +113,8 @@
 <script>
 $(document).ready(function(){
    $(document).on('click', ".dropdown-item", function() {
-       let service_request_id = $(this).data('number');
+       let service_request_id = $(this).data('number'); 
+       let service_name =  $(this).data('name');
        //alert(id);
 
                     $.ajaxSetup({
@@ -130,7 +133,7 @@ $(document).ready(function(){
                             if (data) {
                             //console.log(data);
                             var sn = 1;
-                                $.each(data, function(key, rating) { //+rating.service_request.unique_id+
+                                $.each(data, function(key, rating) { 
                                 var date = new Date(rating.created_at);
                                 var rate_table = `
                                 <tr>
@@ -141,11 +144,13 @@ $(document).ready(function(){
                                     <td>`+ date.toDateString() +`</td>
                                 </tr>
                                 `;
-                                $("#exampleModalLabel2").append(rating.service_request.service);
                                 $("#tbody").append(rate_table);
                                 $("#serviceDetails").modal({show: true});
                                 });
 
+                                $("#exampleModalLabel2").append(service_name);
+                                console.log(service_request_id);
+  
                             }
                         }
 

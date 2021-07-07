@@ -31,26 +31,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   </head>
+</head>
 
-<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #fff;" leftmargin="0">
+<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #E97D1F;" leftmargin="0">
     <!--100% body table-->
-    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#fff" 
-        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif; 
-         ">
+    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#E97D1F"
+        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
         <tr>
             <td>
-                <table style="background-color: #fff; max-width:670px;  margin:0 auto;" width="100%" border="0"
+                <table style="background-color: #E97D1F; max-width:670px;  margin:0 auto;" width="100%" border="0"
                     align="center" cellpadding="0" cellspacing="0">
                     <tr>
                         <td style="height:80px;">&nbsp;</td>
                     </tr>
-                    <tr>
-                        <td style="text-align:center;">
-                          <a href="https://rakeshmandal.com" title="logo" target="_blank">
-                      
-                          </a>
-                        </td>
-                    </tr>
+                 
                     <tr>
                         <td style="height:20px;">&nbsp;</td>
                     </tr>
@@ -61,73 +55,78 @@
                                 <tr>
                                     <td style="height:40px;">&nbsp;</td>
                                 </tr>
-
                                 <tr>
-                                <td>    
-                                <div style="text-align:right" >
-                    
-                                    <span style="color: #8492a6"> <?= date('Y-m-d')?> </span>
+                                <td>
+                                    <div style="padding:0 35px">
+                                    
+                                    <br/>
+
+                                        <p style="color:#8492a6; font-weight:500; margin:0;font-size:14px;font-family:'Rubik',sans-serif; text-align:right">
+
+                                        <?= date('Y-m-d')?></p>
                                 </div>
-                           
-                                <span
-                                            style="display:inline-block; vertical-align:middle; margin:14px 0 26px; border-bottom:3px solid #cecece; width:100%;"></span></td>
-                                
-                                  
-                                    &nbsp;</td>
+                                <span style="display:inline-block; vertical-align:middle; margin:10px 0 16px; border-bottom:1px solid #cecece; width:100%;"></span>
+                                <td>
                                 </tr>
+
                                 <tr>
-                                    <td style="padding:0 35px 100px;">
-                                
-        
+                                    <td style="padding:0 35px;">
+                                  
 
-                                    <div style="padding: 15px 15px; color: #8492a6;">
-                            {!! $mail_message !!}
-                            </div>
+                                            {!! $mail_message !!}
 
-                                                                                    
-                                        
+                                      
+                                      <p>For further enquiries, please contact our call centre on 01-4447448 or email us on info@fixmaster.com.ng</p>
+                                      
+                                      <p>Thank you <br/> FixMaster Team</p>
                                          
                                     </td>
-                                    
                                 </tr>
                                 <tr>
-                                <td style="height:140px;">    
-                                <span
-                                            style="display:inline-block; vertical-align:middle; margin:14px 0 26px; border-bottom:3px solid #cecece; width:100%;"></span>
+                                <td>
+                                 
+                                <span style="display:inline-block;vertical-align:middle; margin:19px 0 26px; border-bottom:1px solid #cecece; width:100%;"></span>
 
-                                            <div style="float:right; text-align: right;padding:0 10px;">
-                                            <img src="{{ asset('assets/images/home-fix-logo-colored.png') }}" height="45" alt="FixMaster Logo">
-                                             <p style="margin-top: 5px; font-size: 13px; color: #8492a6">(+234) 0813-286-3878</p>
-                                             <p style="margin-top: -15px; font-size: 13px;color: #8492a6">info@fixmaster.com.ng</p>
-                                             <p style="margin-top: -15px; font-size: 13px; color: #8492a6">www.fixmaster.com.ng</p>
-                                             <p style="margin-top: -15px; font-size: 13px;color: #8492a6">FixMaster ,Ajose Adeogun, Lagos, Nigeria</p>
+                              
+                                 <div style="float:left;padding:0 35px">
+                                 <br/>
+                                 <br/>
+                                 <p style="color: #8492a6; margin:5px 0px 2px; font-size:15px"> Connect With Us</p>
+                                 <a href="javascript:void(0)">
+                                <img src="{{ asset('assets/images/twitter.png') }}" height="20" alt="twitter"/>
+                                </a>
+                                <a href="javascript:void(0)" style=" ">
+                                <img src="{{ asset('assets/images/official-facebook-circle-icon.png') }}" height="23" alt="facebook" style=""/>
+                                </a>
 
-                                     </div>
+                                <a href="javascript:void(0)" style="margin: 5px 2px;">
+                                <img src="{{ asset('assets/images/index.jpeg') }}" height="23" alt="instagram" style=""/>
+                                </a>
+                                <a href="javascript:void(0)" style="">
+                                <img src="{{ asset('assets/images/inkedin-circle-logo-transparent.jpeg') }}" height="23" alt="linkedin" style=""/>
+                                </a>
+                                 </div>
 
-                                     <div style="float:left; padding:0 10px">
-                                        <br/>
-                                        <p style="color: #8492a6; margin:5px 0px -6px; font-size:14px"> Connect With Us</p>
-                        
-                    <a href="javascript:void(0)" class="fa fa-twitter" style="background-color: #fff;color: #55ACEE; font-size: 20px;   margin: 5px 2px;"></a>
-                    <a href="javascript:void(0)" class="fa fa-facebook" style="background-color: #007bb5;color: white; padding: 2px 5px;border-radius: 50%;  margin: 5px 2px;"></a>
-                    <a href="javascript:void(0)" class="fa fa-instagram" style="background-color: #007bb5;color: white; padding: 2px 5px;border-radius: 50%;   margin: 5px 2px;"></a>
-                    <a href="javascript:void(0)" class="fa fa-linkedin" style="background-color: #007bb5;color: white; padding: 2px 5px;border-radius: 50%;   margin: 5px 2px;"></a>
+                                 <div style="float:right;padding:0 35px; text-align:right">
+                                 <img src="{{ asset('assets/images/home-fix-logo-colored.png') }}" height="45" alt="FixMaster Logo">
+                                             <p style="text-align:right;margin-top: 5px; font-size: 13px; color: #8492a6">(+234) 0813-286-3878</p>
+                                             <p style="text-align:right; margin-top: -5px; font-size: 13px;color: #8492a6">info@fixmaster.com.ng</p>
+                                             <p style="text-align:right; margin-top: -5px; font-size: 13px; color: #8492a6">www.fixmaster.com.ng</p>
+                                             <p style="text-align:right; margin-top: -5px; font-size: 13px;color: #8492a6">284 Ajose Adeogun Street, Victoria Island, Lagos, Nigeria</p>
 
-                                     </div>
-
-                                            </td>
-                                
-
-                           
-                                    <td style="height:40px;">
-                                    &nbsp;</td>
+                                </div>
+               
+                                <td>
+                                </tr>
+                                <tr>
+                                    <td style="height:40px;">&nbsp;</td>
                                 </tr>
                             </table>
                         </td>
                     <tr>
                         <td style="height:20px;">&nbsp;</td>
                     </tr>
-                
+                   
                     <tr>
                         <td style="height:80px;">&nbsp;</td>
                     </tr>

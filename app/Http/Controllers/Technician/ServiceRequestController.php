@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Technician;
 
-use App\Http\Controllers\Controller;
-use App\Models\ServiceRequestAssigned;
 use Illuminate\Http\Request;
+use App\Models\ServiceRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceRequestAssigned;
+use App\Models\ServiceRequestWarranty;
 
 class ServiceRequestController extends Controller
 {
 
 
 
-    public function getActiveRequest(Request $request){
+    public function getActiveRequests(Request $request){
 
         $activeRequest = ServiceRequestAssigned::whereHas('service_request', function ($query) {
             $query->where('status_id', 2);
@@ -22,6 +24,62 @@ class ServiceRequestController extends Controller
             ->get();
         return view('technician.requests.active')
             ->with('activeJobs', $activeRequest);
+    }
+
+    public function getCompletedRequests(Request $request){
+
+        $completedJobs = ServiceRequestAssigned::whereHas('service_request', function ($query) {
+            $query->where('status_id', 4);
+        })
+            ->where('user_id', Auth::id())
+            ->where('assistive_role', 'Technician')
+            ->get();
+        return view('technician.requests.completed')
+            ->with('completedJobs', $completedJobs);
+    }
+
+    public function getCancelledRequests(Request $request){
+
+        $cancelledJobs = ServiceRequestAssigned::whereHas('service_request', function ($query) {
+            $query->where('status_id', 3);
+        })
+        ->where('user_id', Auth::id())
+        ->where('assistive_role', 'Technician')
+        ->get();
+        return view('technician.requests.cancelled')
+        ->with('cancelledJobs', $cancelledJobs);
+    }
+
+    public function getWarranties(Request $request){
+        $warranties = ServiceRequestWarranty::with('service_request_assignees', 'service_request')
+                ->whereHas('service_request_assignees', function ($query){
+                    $query->where('user_id', Auth::id());
+                })->latest('created_at')->get();
+        return view('technician.requests.warranty_claim')
+        ->with('warranties', $warranties);
+    }
+
+    public function warrantyDetails($language, $uuid)
+    {
+        $respond = ServiceRequest::where('uuid', $uuid)->first();
+        $output = ServiceRequestWarranty::where('service_request_id', $respond->id)->first();
+        return view('technician.requests.warranty', compact('output'));
+    }
+
+    public function acceptedJobDetails($language, $uuid){
+        $output = ServiceRequest::where('uuid', $uuid)->first();
+        //dd($output->id);
+         $activeDetails = ServiceRequestAssigned::where('user_id', Auth::id())
+        ->where('service_request_id', $output->id)->first();
+
+        foreach($activeDetails->service_request->users as $res){
+            if($res->type->role->name === 'Customer Service Executive'){
+                $phone = $res->contact->phone_number;
+            }
+        }
+        // $town = $activeDetails->service_request->address;
+        // dd($town);
+        return view('technician.requests.active_details', compact('activeDetails','phone'));
     }
 
 

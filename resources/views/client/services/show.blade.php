@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
 <link href="{{ asset('assets/frontend/css/service-details.css') }}" rel="stylesheet" type="text/css"/>
 
-{{-- {{ dd($service->serviceRequests()->count()) }} --}}
 <div class="col-lg-8 col-12" style="margin-top: 3rem;">
 
     <div class="row mt-4">

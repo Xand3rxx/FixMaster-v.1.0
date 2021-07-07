@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Send Supplier Invoice')
+@section('title', 'Send Supplier Invoice: Warranty')
 @include('layouts.partials._messages')
 @section('content')
 
@@ -11,10 +11,10 @@
           <ol class="breadcrumb breadcrumb-style1 mg-b-10">
           <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
               <li class="breadcrumb-item"><a href="{{ route('supplier.rfq', app()->getLocale()) }}">RFQ's List</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Send Quote</li>
+            <li class="breadcrumb-item active" aria-current="page">Send 345Quote</li>
           </ol>
         </nav>
-        <h4 class="mg-b-0 tx-spacing--1">Send Quote for: {{ !empty($rfqDetails->unique_id) ? $rfqDetails->unique_id : 'UNAVAILABLE' }} RFQ</h4>
+        <h4 class="mg-b-0 tx-spacing--1">Send Warranty Quote for: {{ !empty($rfqDetails->unique_id) ? $rfqDetails->unique_id : 'UNAVAILABLE' }} RFQ</h4>
       </div>
     </div>
 
@@ -25,7 +25,7 @@
             Service: {{ $rfqDetails->serviceRequest->service->name }}
           </h5>
         <div class="table-responsive mt-4">
-        <form method="POST" action="{{ route('supplier.rfq_store_ supplier_warranty_claim', app()->getLocale()) }}">
+        <form method="POST" action="{{ route('supplier.rfq_store_supplier_warranty_claim', app()->getLocale()) }}">
             @csrf
             <table class="table table-hover mg-b-0">
             <thead class="thead-primary">
@@ -42,25 +42,37 @@
                 <input value="{{ $rfqDetails->id }}" type="hidden" name="rfq_id" class="d-none">
                 <input value="{{ old('total_amount') }}" type="hidden" name="total_amount"  id="total_amount" class="d-none"> 
 
+            
                 @foreach ($rfqDetails->rfqBatches as $item)
-
+             
                 <input value="{{ $item->id }}" type="hidden" name="rfq_batch_id[]" class="d-none">
-                <input value="{{ $item->quantity }}" type="hidden" name="quantity[]"> 
+                <input value="{{ $item->quantity }}" type="hidden" name="quantity[]" value="{{$item->quantity}}"> 
                     <tr>
                         <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
                         <td class="tx-medium">{{ $item->component_name }}</td>
                         <td>{{ $item->model_number }}</td>
                         <td class="tx-medium text-center quantity-{{$item->id}}">{{ $item->quantity }}</td>
                         <td class="tx-medium text-center">
-                        <input type="number" maxlength="7" min="1" name="unit_price[]"
+                        <input type="number" maxlength="7" min="1" name="" disabled
                          class="form-control @error('unit_price') is-invalid @enderror"
-                          id="unit-price-{{$item->id}}" value="{{ old('unit_price[]') }}" onkeyup="individualAmount({{ $item->id }})" autocomplete="off">
+                          id="unit-price-{{$item->id}}" value="{{ CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id ) != 'UNAVAILABLE'?
+                            CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id)->unit_price: '' }}" 
+                          onkeyup="individualAmount({{ $item->id }})" autocomplete="off">
                         @error('unit_price')
                         <x-alert :message="$message" />
                         @enderror
-                        <input type="hidden" class="each-amount" id="unit-amount-{{$item->id}}">
+                        <input type="hidden" class="each-amount" id="unit-amount-{{$item->id}}" value="{{CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
+                            CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id)->total_amount: 0}}">
+                        
+                
+                     <input type="hidden" maxlength="7" min="1" name="unit_price[]" class="form-control @error('unit_price') is-invalid @enderror"
+                          id="unit-price-{{$item->id}}" value="{{ CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id ) != 'UNAVAILABLE'?
+                            CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id)->unit_price: '' }}">
+                             </td>
+                        <td class="tx-medium text-center amount-{{$item->id}} t-amount">
+                        {{CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
+                            CustomHelpers::supplyInvoiceBatch($item->rfq_id, $rfqDetails->service_request_id)->total_amount: 0}}
                         </td>
-                        <td class="tx-medium text-center amount-{{$item->id}}">0</td>
                     </tr>
                 @endforeach
                 <thead class="thead-primary">
@@ -74,7 +86,17 @@
                 <tr>
                     <td colspan="2">1</td>
                     <td>
-                    <input class="form-control @error('delivery_fee') is-invalid @enderror each-amount" name="delivery_fee" id="delivery_fee" type="number" maxlength="7" min="1" value="{{ old('delivery_fee')}}" autocomplete="off" onkeyup="deliveryFee()">
+                    <input  readonly class="form-control @error('delivery_fee') is-invalid @enderror each-amount" 
+                    name="delivery_fe" id="delivery_fee" type="number" maxlength="7" min="1" 
+                    value="{{CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
+                            CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id)->delivery_fee: 0}}" 
+                    autocomplete="off" onkeyup="deliveryFee()">
+
+                    <input type="hidden" class="form-control @error('delivery_fee') is-invalid @enderror " 
+                    name="delivery_fee" id="" type="number" maxlength="7" min="1" 
+                    value="{{CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id) != 'UNAVAILABLE'?
+                            CustomHelpers::deliveryFee($item->rfq_id, $rfqDetails->service_request_id)->delivery_fee: 0}}" 
+                 >
                     @error('delivery_fee')
                         <x-alert :message="$message" />
                     @enderror
@@ -107,7 +129,7 @@
 
 
 @push('scripts')
-    <script src="{{ asset('assets/dashboard/assets/js/a784c9e7-4015-44df-994d-50ffe4921458.js') }}"></script>
+    <script src="{{ asset('assets/dashboard/assets/js/a784c9e7-4015-44df-994d-50ffe4921411.js') }}"></script>
 @endpush
 
 @endsection

@@ -1,5 +1,6 @@
-# FixMaster-v.0.2
-![FixMaster Logo](http://temp.homefix.ng/assets/images/home-fix-logo-colored.png)
+# FixMaster-v.1.0
+
+<img alt="FixMaster Logo" src="https://fixmaster.com.ng/wp-content/uploads/2020/11/fix-master-logo-straight.png">
 
 ## About FixMaster
 
@@ -13,12 +14,11 @@ FixMaster is your best trusted one-call solution for a wide range of home mainte
 3. Inside .env file, setup database configurations
 4. Run composer install
 5. Run php artisan key:generate command
-6. Run php artisan migrate command
-7. Run php artisan db:seed command
-8. Run php artisan serve command
-9. Define your routes based on the User Role in web.php
-10. to run a single migration php artisan migrate --path=/database/migrations/my_migration.php
-11. to run single seeder php artisan db:seed --class=ServiceRequestSettingsSeeder
+6. Run php artisan migrate:fresh --seed command
+7. Run php artisan serve command
+8. Define your routes based on the User Role in web.php
+9. To run a single migration php artisan migrate --path=/database/migrations/my_migration.php
+10. To run single seeder php artisan db:seed --class=ServiceRequestSettingsSeeder
 
 ## Fix Master Permission Procedures
 Step-by-step instruction on how to create permissions for various actions in a feature will appear here. Thanks.

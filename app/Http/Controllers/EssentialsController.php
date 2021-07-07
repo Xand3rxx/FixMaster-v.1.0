@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\State;
 use App\Models\LGA;
+use App\Models\State;
+use Illuminate\Http\Request;
 use App\Models\ServiceRequest;
 use App\Models\ServiceRequestAssigned;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\ServiceRequestSettingController;
 
 class EssentialsController extends Controller
 {
@@ -58,7 +59,7 @@ class EssentialsController extends Controller
 
             $lgaId = $request->get('lga_id');
 
-            $stateExists = LGA::findOrFail($lgaId);
+            $stateExists = Lga::findOrFail($lgaId);
 
             $towns =  $stateExists->towns;
 
@@ -85,11 +86,11 @@ class EssentialsController extends Controller
         return $serviceRequests;
     }
 
-    public function Edit($id)
-    {
-        $data = ServiceRequestSettingController::find($id);
-        return $data;
-    }
+    // public function Edit($id)
+    // {
+    //     $data = ServiceRequestSettingController::find($id);
+    //     return $data;
+    // }
 
     public function getAvailableToolQuantity(Request $request)
     {

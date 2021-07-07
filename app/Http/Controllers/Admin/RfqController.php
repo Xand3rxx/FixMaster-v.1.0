@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\URL;
-use App\Traits\Loggable;
-use Illuminate\Http\Request;
-use Auth;
 use Route;
 use App\Models\Rfq;
 use App\Models\RfqBatch;
-use App\Models\RfqSupplier;
-use App\Models\RfqSupplierInvoice;
-use App\Models\RfqSupplierInvoiceBatch;
-use DB;
 use App\Traits\Invoices;
+use App\Traits\Loggable;
+use App\Models\RfqSupplier;
+use Illuminate\Http\Request;
+use App\Models\RfqSupplierInvoice;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\RfqSupplierInvoiceBatch;
 
 class RfqController extends Controller
 {
@@ -29,16 +29,15 @@ class RfqController extends Controller
     }
 
     public function index(){
-
         return view('admin.rfq.index', [
-            'rfqs'   =>  Rfq::orderBy('created_at', 'DESC')->get(),
+            'rfqs'   =>  Rfq::with('serviceRequest')->orderBy('created_at', 'DESC')->get(),
         ]);
     }
 
     public function rfqDetails($language, $uuid){
 
         return view('admin.rfq._details', [
-            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
+            'rfqDetails'    =>  Rfq::where('uuid', $uuid)->with('serviceRequest', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first(),
         ]);
     }
 
@@ -92,6 +91,9 @@ class RfqController extends Controller
             return back()->with('error', 'Sorry, you already accepted '.$supplier['supplier']['account']['first_name'] ." ". $supplier['supplier']['account']['last_name'].' invoice for this '.$supplier->rfq->unique_id);
         }
 
+        //Get  CSE who issued the request
+        $cse = Rfq::where('id', $supplier->rfq_id)->firstOrFail();
+        
         //Get selected supplier rfq batches
         $supplierInvoiceBatches =  RfqSupplierInvoiceBatch::where('rfq_supplier_invoice_id', $supplierInvoiceId)->get();
 
@@ -128,10 +130,12 @@ class RfqController extends Controller
             ]);
 
             // Decline other supplier invoices
-            foreach($otherSuppliers as $item){
-                RfqSupplierInvoice::where('rfq_id', $supplierRfqId)->where('uuid', '!=', $uuid)->update([
-                    'accepted'  => 'No'
-                ]);
+            if(collect($otherSuppliers)->isNotEmpty()){
+                foreach($otherSuppliers as $item){
+                    RfqSupplierInvoice::where('rfq_id', $supplierRfqId)->where('uuid', '!=', $uuid)->update([
+                        'accepted'  => 'No'
+                    ]);
+                }
             }
             
             //Record service request progress of `A supplier sent an invoice`
@@ -141,8 +145,46 @@ class RfqController extends Controller
 
         }, 3);
 
+        $approvedSupplierData = [];
+        $cseData = [];
+        $disApprovedSupplierData = [];
+
         if($supplierUpdate){
-            //Notification code goes here...
+            //Send mail to approved supplier
+            $approvedSupplierData = [
+                'recipient_email'   =>  $supplier['user']['email'],
+                'firstname'         =>  $supplier['supplier']['account']['first_name'],
+                'lastname'          =>  $supplier['supplier']['account']['last_name'],
+                'job_ref'           =>  $supplier->rfq->unique_id,
+            ];
+
+            \App\Traits\UserNotification::send($approvedSupplierData, 'SUPPLIER_ACCEPTED_INVOICE_NOTIFICATION');
+
+            //Send mail to CSE who issued the RFQ request
+            if(!empty($cse)){
+                $cseData = [
+                    'recipient_email'   =>  $cse['issuer']['email'],
+                    'firstname'         =>  $cse['issuer']['account']['first_name'],
+                    'lastname'          =>  $cse['issuer']['account']['last_name'],
+                    'job_ref'           =>  $supplier->rfq->unique_id,
+                    'supplier_name'     =>  $supplier['supplier']['account']['first_name'].' '.$supplier['supplier']['account']['last_name'],
+                ];
+                
+                \App\Traits\UserNotification::send($cseData, 'ADMIN_CSE_SUPPLIER_INVOICE_APPROVAL_NOTIFICATION');
+            }
+            //Send mail to disapproved suppliers who sent an invoice
+            if(collect($otherSuppliers)->isNotEmpty()){
+                foreach($otherSuppliers as $otherSupplier){
+                    $disApprovedSupplierData = [
+                        'recipient_email'   =>  $otherSupplier['user']['email'],
+                        'firstname'         =>  $otherSupplier['supplier']['account']['first_name'],
+                        'lastname'          =>  $otherSupplier['supplier']['account']['last_name'],
+                        'job_ref'           =>  $otherSupplier->rfq->unique_id,
+                    ];
+
+                    \App\Traits\UserNotification::send($disApprovedSupplierData, 'SUPPLIER_DECLINED_INVOICE_NOTIFICATION');
+                }
+            }
 
             // $this->supplierInvoice($supplier->rfq->service_request_id, $supplier->rfq_id);
             return back()->with('success', $supplier['supplier']['account']['first_name'] ." ". $supplier['supplier']['account']['last_name'].' invoice has been selected for '.$supplier->rfq->unique_id.' RFQ');

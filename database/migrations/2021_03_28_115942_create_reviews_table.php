@@ -18,7 +18,7 @@ class CreateReviewsTable extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignId('client_id')->comment('User making the review');
             $table->foreignId('service_id');
-            $table->text('reviews');
+            $table->text('reviews')->nullable();
             $table->integer('status')->default(0);
             $table->timestamps();
         });

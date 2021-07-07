@@ -1,3 +1,4 @@
+
 <div class="table-responsive mt-4">
     <table class="table table-striped table-sm mg-b-0">
     <tbody>
@@ -26,8 +27,8 @@
 
         <tr>
             <td class="tx-medium" width="25%">Completed By</td>
-            <td class="tx-color-03" width="75%">{{ $serviceRequest->service_request_warranty_issued->completedBy->first_name }} 
-            {{ $serviceRequest->service_request_warranty_issued->completedBy->last_name }}
+            <td class="tx-color-03" width="75%">{{ $serviceRequest->service_request_warranty_issued->completedBy->first_name?? '' }} 
+            {{ $serviceRequest->service_request_warranty_issued->completedBy->last_name??'' }}
             </td>
         </tr>
 

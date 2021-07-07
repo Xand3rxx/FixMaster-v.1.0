@@ -48,13 +48,13 @@ class Applicant extends Model
             (string) $template_feature = NULL;
             switch ($applicant->user_type) {
                 case Applicant::USER_TYPES[0]: // CSE...
-                    $template_feature = 'CSE_ACCOUNT_CREATION_NOTIFICATION';
+                    $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';
                     break;
                 case Applicant::USER_TYPES[1]: // SUPPLIER...
-                    $template_feature = 'SUPPLIER_ACCOUNT_CREATION_NOTIFICATION';
+                    $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';
                     break;
                 case Applicant::USER_TYPES[2]: // TECHNICIAN...
-                    $template_feature = 'TECHNICIAN_ACCOUNT_CREATION_NOTIFICATION';
+                    $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';
                     break;
                 default:
                     # Ask for default Notification...
@@ -68,8 +68,8 @@ class Applicant extends Model
                     'firstname' => $applicant->form_data['first_name'],
                     'email' => $applicant->form_data['email'],
                 ]);
-                $messanger->sendNewMessage('Account Created', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
-                // $messanger->sendNewMessage('email', Str::title(Str::of($template_feature)->replace('_', ' ',)), 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+                $messanger->sendNewMessage('Account Created', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
+                // $messanger->sendNewMessage('email', Str::title(Str::of($template_feature)->replace('_', ' ',)), 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
             }
         });
     }

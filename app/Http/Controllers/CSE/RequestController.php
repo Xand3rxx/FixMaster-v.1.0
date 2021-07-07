@@ -57,15 +57,12 @@ class RequestController extends Controller
     public function show($language, string $uuid)
     {
         // find the service request using the uuid and relations
-        $service_request = ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'service_request_cancellation', 'invoice', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest'])->firstOrFail();
+        $service_request = ServiceRequest::where('uuid', $uuid)->with(['price', 'service', 'service.subServices', 'client', 'service_request_cancellation', 'invoice', 'serviceRequestMedias', 'serviceRequestProgresses', 'serviceRequestReports', 'toolRequest', 'rfq' => function ($query) {
+            $query->where('type', 'Request')->with('rfqSupplier.rfqSupplierInvoice', 'rfqBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
+        }, 'payment' => function ($query) {
+            $query->where('status', \App\Models\Payment::STATUS['success'])->first();
+        }])->firstOrFail();
 
-        // Refactor this to be eager loaded with service request, use with and callback function
-        $materials_accepted = \App\Models\Rfq::where('service_request_id', $service_request->id)
-        ->where('type', 'Request')
-        ->with('rfqBatches.supplierInvoiceBatches', 'rfqSupplierInvoice.supplierDispatch')->first();
-
-        $service_request_progresses = \App\Models\ServiceRequestProgress::where('user_id', auth()->user()->id)->latest('created_at')->first();
-        
         (array) $variables = [
             'contents'              => $this->path(base_path('contents/cse/service_request_action.json')),
             'service_request'       => $service_request,
@@ -73,15 +70,9 @@ class RequestController extends Controller
             'qaulity_assurances'    => \App\Models\Role::where('slug', 'quality-assurance-user')->with('users', 'users.account')->first(),
             'technicians'           => \App\Models\Technician::with('services', 'user', 'user.contact')->get(),
             'categories'            => \App\Models\Category::where('id', '!=', 1)->get(),
-            'services'              => \App\Models\Service::all(),
-            // 'ongoingSubStatuses' => \App\Models\SubStatus::where('status_id', 2)
-            //         ->when($service_request_progresses->sub_status_id <= 13, function ($query, $sub_status) {
-            //             return $query->whereBetween('phase', [4, 9]);
-            //         }, function ($query) {
-            //             return $query->whereBetween('phase', [20, 27]);
-            //         })->get(['id', 'uuid', 'name']),
-            'ongoingSubStatuses' => \App\Models\SubStatus::where('status_id', 2)->whereBetween('phase', [9, 13])->get(),
-            'materials_accepted'    => $materials_accepted,
+            'services'              => \App\Models\Service::withTrashed()->get(),
+            'ongoingSubStatuses'    => \App\Models\SubStatus::where('status_id', 2)->whereBetween('phase', [9, 13])->get(),
+            'materials_accepted'    => $service_request['rfq'],
         ];
 
         return view('cse.requests.show', $variables);
@@ -107,7 +98,7 @@ class RequestController extends Controller
         ]);
         // Instantiate Contoller
         $messanger = new \App\Http\Controllers\Messaging\MessageController();
-        return $messanger->sendNewMessage('', 'dev@fix-master.com', $mail_data['email'], $mail_data, $template_feature);
+        return $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
     }
 
     public function getServiceRequestsByTechnician(Request $request)
@@ -169,7 +160,8 @@ class RequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function rfqDetailsImage($language, $id){
+    public function rfqDetailsImage($language, $id)
+    {
         return view('cse.requests.includes._details_image', [
             'rfqDetails'    =>  \App\Models\RfqBatch::select('image')->where('id', $id)->first(),
         ]);
@@ -181,11 +173,11 @@ class RequestController extends Controller
      * @param  uuid  $uuid
      * @return \Illuminate\Http\Response
      */
-    public function toolRequestDetails($language, $uuid){
+    public function toolRequestDetails($language, $uuid)
+    {
 
         return view('cse.requests.includes._tool_request_details', [
             'toolRequestDetails'    =>  \App\Models\ToolRequest::where('uuid', $uuid)->firstOrFail(),
         ]);
-
     }
 }

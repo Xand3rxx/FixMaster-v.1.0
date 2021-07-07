@@ -23,7 +23,7 @@ class WarrantySeeder extends Seeder
                 'uuid'          =>  Str::uuid('uuid'),      
                 'user_id'       =>  1,
                 'unique_id'     =>  'WAR-09328932',
-                'name'          =>  'Free Warranty',
+                'name'          =>  'Standard Warranty',
                 'percentage'    =>  0,
                 'warranty_type' => 'Free',
                 'duration'      => 7,

@@ -21,3 +21,6 @@ htaccess.prod
 npm-debug.log
 yarn-error.log
 _ide_helper.php
+/public/assets/rfq-images
+/public/assets/warranty-claim-images
+/public/assets/service-request-media-files
