@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client\ServiceRequest;
 
+use Carbon\Carbon;
 use App\Models\Payment;
 use App\Models\Service;
 use App\Traits\Services;
@@ -126,7 +127,38 @@ class ServiceRequestController extends Controller
                 'status'                => $payment['status']
             ]);
 
-            // Use created service request to trigger notification
+            $bookingFeeName = \App\Models\Price::where('id', $payment['meta_data']['price_id'])->first()->name;
+
+            (array) $clientMailData = [
+                'firstname'         =>  request()->user()->account->first_name,
+                'lastname'          =>  request()->user()->account->last_name,
+                'recipient_email'   =>  request()->user()->email,
+                'job_ref'           =>  $payment['unique_id'],
+                'amount'            =>  number_format($payment['amount']),
+                'service_name'      =>  $service['name'],
+                'booking_name'      =>  $bookingFeeName,
+                'date'              =>  Carbon::parse($service_request['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa')
+            ];
+
+            //Admin mail data
+            (array) $adminMailData = [
+                'firstname'         =>  'FixMaster',
+                'lastname'          =>  'Administrator',
+                'recipient_email'   =>  'info@fixmaster.com.ng',
+                'client_name'       =>  request()->user()->account->first_name .' '.request()->user()->account->last_name,
+                'job_ref'           =>  $payment['unique_id'],
+                'amount'            =>  number_format($payment['amount']),  
+                'service_name'      =>  $service['name'],
+                'booking_name'      =>  $bookingFeeName
+            ];
+
+            //Send mail notification confirmation to ClientDiscount
+            \App\Traits\UserNotification::send($clientMailData, 'CUSTOMER_SUCCESSFUL_JOB_BOOKING_NOTIFICATION');
+
+            //Send notification to FixMaster
+            \App\Traits\UserNotification::send($adminMailData, 'ADMIN_NEW_JOB_NOTIFICATION');
+
+            // Use created service request to trigger notification to CSE's
             \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
         }
