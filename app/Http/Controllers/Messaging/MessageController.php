@@ -230,7 +230,7 @@ class MessageController extends Controller
             'updated_at'        => Carbon::now(),
             'mail_status' => 'Not Sent',
         ]);
-        return ['to' => $parameters['recipient_email'], 'from' => 'info@fixmaster.com.ng', 'subject' => $messageTemplate->title, 'content' => $message_body];;
+        return ['to' => $parameters['recipient_email'], 'from' => 'info@fixmaster.com.ng', 'subject' => $messageTemplate->title, 'content' => $message_body];
     }
 
     /**
