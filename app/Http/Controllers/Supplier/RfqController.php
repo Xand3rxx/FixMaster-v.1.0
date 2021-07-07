@@ -129,11 +129,8 @@ class RfqController extends Controller
 
         if($supplierinvoiceBatch){
 
-            $supplierMailData = [];
-            $adminMailData = [];
-
             //Supplier mail data
-            $supplierMailData = [
+            (array)$supplierMailData = [
                 'firstname'         =>  $request->user()->account->first_name,
                 'lastname'          =>  $request->user()->account->last_name,
                 'recipient_email'   =>  $request->user()->email,
@@ -141,7 +138,7 @@ class RfqController extends Controller
             ];
 
             //Admin mail data
-            $adminMailData = [
+            (array)$adminMailData = [
                 'firstname'         =>  'FixMaster',
                 'lastname'          =>  'Administrator',
                 'recipient_email'   =>  'info@fixmaster.com.ng',
