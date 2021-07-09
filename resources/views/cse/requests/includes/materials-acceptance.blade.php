@@ -122,8 +122,8 @@
                                 -
                             @endif
                         </td>
-                        <td class="tx-medium text-center">{{ !empty($item['supplierInvoiceBatch']['unit_price']) ? number_format($item['supplierInvoiceBatch']['unit_price']) : '0' }}</td>
-                        <td class="tx-medium text-center">{{ !empty($item['supplierInvoiceBatch']['total_amount']) ? number_format($item['supplierInvoiceBatch']['total_amount']) : '0' }}</td>
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['unit_price']) : '0' }}</td>
+                        <td class="tx-medium text-center">{{ !empty($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) ? number_format($materials_accepted['rfqSupplier']['rfqSupplierInvoice']['supplierInvoiceBatch']['total_amount']) : '0' }}</td>
                     </tr>
                 @endforeach
             </tbody>

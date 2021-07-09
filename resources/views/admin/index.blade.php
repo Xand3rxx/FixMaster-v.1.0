@@ -396,10 +396,8 @@
           @else
             <div>No Payment Currently</div>
           @endif 
-<<<<<<< HEAD
         </div><!-- card -->
       </div>
-=======
         </div>
       </div> --}}
 

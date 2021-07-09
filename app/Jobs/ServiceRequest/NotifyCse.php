@@ -32,6 +32,13 @@ class NotifyCse implements ShouldQueue, ShouldBeUnique
     protected $service_request;
 
     /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 120;
+    
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -55,9 +62,9 @@ class NotifyCse implements ShouldQueue, ShouldBeUnique
         // Loop through all cess and send each of them email
         foreach ($users as $key => $cse) {
             $params = [
-                'recipient_email' => $cse->email,
-                'lastname' => $cse['account']['first_name'],
-                'firstname' => $cse['account']['last_name'],
+                'recipient_email' => $cse['email'],
+                'firstname' => $cse['account']['first_name'],
+                'lastname' => $cse['account']['last_name'],
                 'email' => $cse['email'],
                 'url'  => (string)$this->url($this->service_request)
             ];
@@ -74,7 +81,8 @@ class NotifyCse implements ShouldQueue, ShouldBeUnique
     protected function send($mailer, $message)
     {
         return $mailer->send('emails.message', ['mail_message' => $message['content']], function ($mail) use ($message) {
-            $mail->from($message['from'])->to($message['to'])->subject($message['subject']);
+            $mail->from($message['from']);
+            $mail->to($message['to'])->subject($message['subject']);
         });
     }
 

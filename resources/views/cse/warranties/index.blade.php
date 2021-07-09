@@ -86,7 +86,7 @@
             <div class="dropdown-file">
             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
               <div class="dropdown-menu dropdown-menu-right">
-              @if($warranty->expiration_date <  Carbon\Carbon::now())
+              @if($warranty->expiration_date > Carbon\Carbon::now())
 
               @if(is_null($warranty->service_request_warranty_issued))
               <a href="{{ route('cse.accept_warranty_claim', ['warranty'=>$warranty->uuid, 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary"><i class="far fa-clipboard"></i> Accept</a>

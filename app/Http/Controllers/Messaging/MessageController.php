@@ -218,7 +218,7 @@ class MessageController extends Controller
         // Build Message Body
         $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
         $recipient = DB::table('users')->where('users.email', $parameters['recipient_email'])->first();
-        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com')->first();
+        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com ')->first();
        
         Message::create([
             'title' => $messageTemplate->title,
@@ -230,7 +230,7 @@ class MessageController extends Controller
             'updated_at'        => Carbon::now(),
             'mail_status' => 'Not Sent',
         ]);
-        return ['to' => $parameters['recipient_email'], 'from' => 'info@fixmaster.com.ng', 'subject' => $messageTemplate->title, 'content' => $message_body];;
+        return ['to' => $parameters['recipient_email'], 'from' => 'info@fixmaster.com.ng', 'subject' => $messageTemplate->title, 'content' => $message_body];
     }
 
     /**
@@ -306,17 +306,6 @@ class MessageController extends Controller
         $mail = $this->dispatch(new PushEmails($message_array));
 
         return $mail;
-
-          
-        Message::insert($mail_objects);
-     
-         }
-            
-
-        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
-
-         return $mail = $this->dispatch(new PushEmails($message_array));
-
     
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
@@ -329,12 +318,7 @@ class MessageController extends Controller
 
     private function replacePlaceHolders($variables, $messageTemp)
     {
-        // foreach ($variables as $key => $value) {
-        //     $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
-        // }
-
-        // return $messageTemp;
-
+    
         foreach ($variables as $key => $value) {
             if ($key == 'url') {
                 $messageTemp = str_replace('{' . $key . '}', '<a href="' . $value . '" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);
@@ -342,7 +326,7 @@ class MessageController extends Controller
                 $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
             }
         }
-    }
+    
 
         return $messageTemp;
     }
