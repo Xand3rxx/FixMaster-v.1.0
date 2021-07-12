@@ -306,14 +306,6 @@ class MessageController extends Controller
         $mail = $this->dispatch(new PushEmails($message_array));
 
         return $mail;
-
-          
-        Message::insert($mail_objects);
-     
-        $message_array = ['to'=>$to, 'from'=>$from, 'subject'=>$subject, 'content'=>$message];
-
-        return $mail = $this->dispatch(new PushEmails($message_array));
-
     
         // if(!empty($feature) && $sms!=""){
         //     $this->dispatch(new PushSMS($sms));
@@ -326,12 +318,7 @@ class MessageController extends Controller
 
     private function replacePlaceHolders($variables, $messageTemp)
     {
-        // foreach ($variables as $key => $value) {
-        //     $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
-        // }
-
-        // return $messageTemp;
-
+    
         foreach ($variables as $key => $value) {
             if ($key == 'url') {
                 $messageTemp = str_replace('{' . $key . '}', '<a href="' . $value . '" style=" background-color: #E97D1F; border: none;color: white; padding:7px 32px;text-align: center;display: inline-block;font-size: 14px; border-radius:6px; text-decoration:none;">Here </a>', $messageTemp);
@@ -339,6 +326,7 @@ class MessageController extends Controller
                 $messageTemp = str_replace('{' . $key . '}', $value, $messageTemp);
             }
         }
+    
 
         return $messageTemp;
     }

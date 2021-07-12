@@ -752,7 +752,7 @@ class ClientController extends Controller
 
     public function warrantyInitiate(Request $request, $language, $id)
     {
-
+       
         $request->validate([
             'reason'       =>   'bail|required|string',
         ]);
@@ -804,8 +804,9 @@ class ClientController extends Controller
                 'date_initiated'    =>  \Carbon\Carbon::now('UTC'),
             ]);
 
+       
             if ($initateWarranty) {
-
+    
                 $mail_data_admin = collect([
                     'email' =>  'info@fixmaster.com.ng',
                     'template_feature' => 'ADMIN_WARRANTY_CLAIM_NOTIFICATION',
