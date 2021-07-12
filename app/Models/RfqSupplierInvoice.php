@@ -35,7 +35,7 @@ class RfqSupplierInvoice extends Model
 
     public function rfq()
     {
-        return $this->belongsTo(Rfq::class)->with('serviceRequest');
+        return $this->belongsTo(Rfq::class)->with('serviceRequest', 'rfqPayment');
     }
 
     public function supplier()

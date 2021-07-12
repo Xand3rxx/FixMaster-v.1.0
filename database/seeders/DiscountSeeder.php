@@ -35,7 +35,7 @@ class DiscountSeeder extends Seeder
         $discount->duration_end =  '2022-04-01 00:00:00';
         $discount->description =  'This is a discount which entitles all clients to 5% off their first job booking upon email verification.';
         $discount->parameter = json_encode($parameterArray);
-        $discount->created_by= 'dev@fix-master.com';
+        $discount->created_by= 'info@fixmaster.com.ng';
         $discount->status= 'activate';
         $discount->save();
     }

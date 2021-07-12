@@ -196,7 +196,7 @@ class WarrantyController extends Controller
 
         //Return all issued warranties bt clients
         return view('admin.warranty.issued_warranties', [
-            'issuedWarranties' => ServiceRequestWarranty::with('user.account', 'service_request', 'warranty', 'service_request_warranty_issued')->orderBy('has_been_attended_to', 'ASC')->latest()->get()
+            'issuedWarranties' => ServiceRequestWarranty::where('initiated', 'Yes')->with('user.account', 'service_request', 'warranty', 'service_request_warranty_issued')->orderBy('has_been_attended_to', 'ASC')->latest()->get()
         ]);
     }
 

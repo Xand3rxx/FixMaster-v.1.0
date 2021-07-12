@@ -55,7 +55,7 @@ class ServiceRequestAssigned extends Model
             'user_id'                   => $user_id,
             'service_request_id'        => $service_request_id,
             'job_accepted'              => $job_accepted,
-            'job_acceptance_time '      => $job_acceptance_time,
+            'job_acceptance_time'      => \Carbon\Carbon::now(),
             'job_diagnostic_date'       => $job_diagnostic_date,
             'job_declined_time'         => $job_declined_time,
             'job_completed_date'        => $job_completed_date,

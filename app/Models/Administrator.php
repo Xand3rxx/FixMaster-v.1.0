@@ -30,7 +30,7 @@ class Administrator extends Model
     protected static function booted()
     {
         static::saving(function ($user) {
-            $user->created_by = auth()->user()->email ?? 'dev@fix-master.com'; // Register the Created by column
+            $user->created_by = auth()->user()->email ?? 'info@fixmaster.com.ng'; // Register the Created by column
         });
     }
 }

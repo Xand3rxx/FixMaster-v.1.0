@@ -218,7 +218,7 @@ class MessageController extends Controller
         // Build Message Body
         $message_body = self::buildMessageBody($parameters, $messageTemplate->content);
         $recipient = DB::table('users')->where('users.email', $parameters['recipient_email'])->first();
-        $sender = DB::table('users')->where('users.email', 'dev@fix-master.com ')->first();
+        $sender = DB::table('users')->where('users.email', 'info@fixmaster.com.ng')->first();
        
         Message::create([
             'title' => $messageTemplate->title,

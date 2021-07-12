@@ -63,14 +63,14 @@
         <li class="nav-label">MENU</li>
         <li class="nav-item {{ Route::currentRouteNamed('cse.index') ? 'active' : '' }}"><a href="{{ route('cse.index', app()->getLocale()) }}" class="nav-link"><i data-feather="airplay"></i> <span>Dashboard</span></a></li>
 
-        <li class="nav-item with-sub {{ Route::currentRouteNamed('cse.requests.index', 'cse.requests.active', 'cse.request_details', 'cse.warranty_details','cse.requests.show', 'cse.warranty_claims_list','cse.warranty_claims', 'cse.warranty_claim_details') ? 'active show' : '' }}">
+        <li class="nav-item with-sub {{ Route::currentRouteNamed('cse.requests.index', 'cse.requests.active', 'cse.request_details', 'cse.warranty_details','cse.requests.show', 'cse.warranty_claims_list','cse.warranty_claims', 'cse.warranty_claim_details', 'cse.warranty_claims_list') ? 'active show' : '' }}">
             <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Requests</span></a>
             <ul>
                 <li class="{{ Route::currentRouteNamed('cse.requests.active') ? 'active' : '' }}"><a href="{{ route('cse.requests.status', ['locale' => app()->getLocale(), 'status' => 'Ongoing']) }}"> Active </a></li>
                 <li class="{{ Route::currentRouteNamed('cse.messages.sent') ? 'active' : '' }}"><a href="{{ route('cse.requests.status', ['locale' => app()->getLocale(), 'status' => 'Canceled']) }}"> Cancelled </a></li>
                 <li class="{{ Route::currentRouteNamed('cse.messages.sent') ? 'active' : '' }}"><a href="{{ route('cse.requests.status', ['locale' => app()->getLocale(), 'status' => 'Completed']) }}"> Completed </a></li>
                 <li class="{{ Route::currentRouteNamed('cse.requests.index') ? 'active' : '' }}"><a href="{{ route('cse.requests.status', ['locale' => app()->getLocale(), 'status' => 'Pending']) }}"> Pending </a></li>
-                <li class="{{ Route::currentRouteNamed('cse.warranty_claims', 'cse.warranty_claim_details') ? 'active' : '' }}"><a href="{{ route('cse.warranty_claims_list', app()->getLocale()) }}"> Warranty Claims <sup class="font-weight-bold text-primary">{{$unresolvedWarranties }}</sup></a></li>
+                <li class="{{ Route::currentRouteNamed('cse.warranty_claims', 'cse.warranty_claim_details', 'cse.warranty_claims_list') ? 'active' : '' }}"><a href="{{ route('cse.warranty_claims_list', app()->getLocale()) }}"> Warranty Claims @if($unresolvedWarranties > 0) <sup class="font-weight-bold text-primary">{{$unresolvedWarranties }}</sup>@endif</a></li>
             </ul>
         </li>
 
