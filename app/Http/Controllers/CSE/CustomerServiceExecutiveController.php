@@ -40,7 +40,8 @@ class CustomerServiceExecutiveController extends Controller
             'ongoing' => $cse->filter(function ($each) {
                 return $each['service_request']['status_id'] == ServiceRequest::SERVICE_REQUEST_STATUSES['Ongoing'];
             })->count(),
-            'available_requests' => Cse::isAvailable() ? ServiceRequest::where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Pending'])->with('service', 'address')->get() : []
+            'available_requests' => Cse::isAvailable() ? ServiceRequest::where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Pending'])->with('service', 'address')->get() : [],
+            'profile'   =>  \App\Models\User::with('ratings')->findOrFail($request->user()->id)
         ]);
     }
 

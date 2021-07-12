@@ -55,7 +55,7 @@
         <th>Job Reference</th>  
         <th>Start Date</th>  
         <th>End Date</th>  
-        <th>Warrant Status</th>
+        <th>Warranty Status</th>
         <th>Status</th>
         <th>Assigned CSE</th>
         <th>Assigned Status</th>
@@ -86,8 +86,8 @@
           @endif
           
           @if(is_null($warranty->service_request_warranty_issued))
-          <td class="text-danger">None </td>
-          <td class="text-danger">Pending</td>
+          <td class="tx-medium">None </td>
+          <td class="text-warning">Pending</td>
           @else
           <td class="text-success">Yes</td>
           <td class="text-success">Accepted</td>

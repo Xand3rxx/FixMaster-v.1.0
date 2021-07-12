@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $manageUsers = \App\Models\Permission::where('slug','create-admin')->first();
 
         $user1 = new User();
-        $user1->email = 'dev@fix-master.com';
+        $user1->email = 'info@fixmaster.com.ng';
         $user1->password = bcrypt('admin12345');
         $user1->email_verified_at = now();
         $user1->save();

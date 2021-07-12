@@ -38,6 +38,10 @@ trait Invoices
 //            dd($invoice_created['client']['email']);
             $messenger->sendNewMessage(null, 'info@fixmaster.com.ng', $invoice_created['client']['email'], $mail_data, $template_feature);
         }
+
+        //Update job diagnostic date
+        self::updateJobDiagnosticDate($service_request);
+        
         return $invoice_created;
     }
 
@@ -55,5 +59,15 @@ trait Invoices
             'status'                => '1',
             'phase'                 => '1'
         ]);
+    }
+
+    public static function updateJobDiagnosticDate($service_request){
+        return \App\Models\ServiceRequestAssigned::where(
+            [
+                'user_id' => auth()->user()->id, 
+                'service_request_id' => $service_request['id']
+            ])->update([
+                'job_diagnostic_date'   => \Carbon\Carbon::now()
+            ]);
     }
 }

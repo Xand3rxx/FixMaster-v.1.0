@@ -29,14 +29,15 @@
 
               <div class="card-body pd-0">
                 <div class="pd-t-10 pd-b-15 pd-x-20 d-flex align-items-baseline">
-                  <h1 class="tx-normal tx-rubik mg-b-0 mg-r-5">4</h1>
-                  <div class="tx-18">
-                    <i class="icon ion-md-star lh-0 tx-orange"></i>
-                    <i class="icon ion-md-star lh-0 tx-orange"></i>
-                    <i class="icon ion-md-star lh-0 tx-orange"></i>
-                    <i class="icon ion-md-star lh-0 tx-orange"></i>
-                    <i class="icon ion-md-star lh-0 tx-gray-300"></i>
-                  </div>
+                  <h1 class="tx-normal tx-rubik mg-b-0 mg-r-5">{{ !empty(round($profile['ratings']->avg('star'))) ? round($profile['ratings']->avg('star')) : '0' }}</h1>
+                    <div class="tx-18">
+                      @for ($i = 0; $i < round($profile['ratings']->avg('star')); $i++)
+                        <i class="icon ion-md-star lh-0 tx-orange"></i>
+                      @endfor
+                      @for ($x = 0; $x < (5 - round($profile['ratings']->avg('star'))); $x++)
+                          <i class="icon ion-md-star lh-0 tx-gray-300"></i>
+                      @endfor
+                    </div>
                 </div>
 
               </div><!-- card-body -->

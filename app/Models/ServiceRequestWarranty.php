@@ -77,7 +77,9 @@ class ServiceRequestWarranty extends Model
     public function scopeUnresolvedWarranties($query)
     {
         return $query->select('*')
-        ->where('has_been_attended_to', 'No');
+        ->where('has_been_attended_to', 'No')
+        ->where('initiated', 'Yes');
     }
 
 }
+

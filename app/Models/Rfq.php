@@ -117,6 +117,9 @@ class Rfq extends Model
         return $this->hasMany(User::class, 'client_id')->with('account');
     }
 
+    public function rfqPayment(){
+        return $this->hasOne(ServiceRequestPayment::class, 'service_request_id', 'service_request_id')->where('payment_type', 'rfq');
+    }
 
     /** 
      * Scope a query to only include all pending requests

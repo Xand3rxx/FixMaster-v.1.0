@@ -47,7 +47,7 @@ use App\Http\Controllers\Admin\User\TechnicianArtisanController;
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
 use App\Http\Controllers\Admin\Report\TechnicianReportController;
-use App\Http\Controllers\ServiceRequest\ProjectProgressController;
+use App\Http\Controllers\ServiceRequest\Concerns\ProjectProgress as ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
 use App\Http\Controllers\ServiceRequest\AssignTechnicianController;
 use App\Http\Controllers\Admin\User\Administrator\SummaryController;
