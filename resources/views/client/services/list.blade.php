@@ -140,7 +140,7 @@
 
                                                                 @if ($myServiceRequest->status_id == 4 && !empty($myServiceRequest['warranty']))
             
-                                                                  @if ($myServiceRequest['warranty']['expiration_date'] < Carbon\Carbon::now())
+                                                                  @if ($myServiceRequest['warranty']['expiration_date'] > Carbon\Carbon::now())
                                                                         <div class="dropdown-divider"></div>
 
                                                                         @if ($myServiceRequest['warranty']['initiated'] != 'Yes')
