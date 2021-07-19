@@ -29,17 +29,17 @@
 
         <div class="form-group col-md-6">
             <label for="category_id">Category</label>
-            <input type="text" class="form-control " readonly
+            <input type="text" class="form-control" readonly
                 value="{{ $service_request['service']['category']['name'] }}">
         </div>
 
         <div class="form-group col-md-6">
             <label for="service_id">Service</label>
-            <input type="text" class="form-control " readonly value="{{ $service_request['service']['name'] }}">
+            <input type="text" class="form-control" readonly value="{{ $service_request['service']['name'] }}">
         </div>
         <div class="form-group col-md-6 position-relative">
             <label for="sub_service_uuid">Sub Service</label>
-            <select class="form-control selectpicker name="sub_service_uuid[]" id="sub_service_uuid" multiple>
+            <select class="form-control selectpicker" name="sub_service_uuid[]" id="sub_service_uuid" multiple>
                 <option disabled value="">Select Sub service</option>
                 @foreach ($service_request['sub_services'] as $key => $sub_service_uuid)
                     <option value="{{ $sub_service_uuid['uuid'] }}" data-count="{{ $key }}"

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Supplier;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use Auth;
-use Route;
-use DB;
 use App\Traits\Loggable;
-use App\Traits\PasswordUpdator;
 use App\Traits\ImageUpload;
+use Illuminate\Http\Request;
+use App\Traits\PasswordUpdator;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class ProfileController extends Controller
 {
@@ -23,7 +22,6 @@ class ProfileController extends Controller
      */
     public function dashboard()
     {
-        // return  \App\Models\User::with('account', 'supplier', 'contact', 'ratings', 'supplierSentInvoices')->findOrFail(Auth::id());
         $causalAgent  =  \App\Models\ServiceRequestWarrantyReport::where('causal_agent_id', Auth::id())->with('rfqInvoices')->get();
      
         return view('supplier.index', [
@@ -31,9 +29,6 @@ class ProfileController extends Controller
             'rfqs'  =>  \App\Models\Rfq::where('status', 'Pending')->orderBy('created_at', 'DESC')->get(),
             'causalAgentAmt'  => !empty($causalAgent)? $causalAgent: '0',
       ]);
-
-     
-
     }
 
     /**
@@ -43,11 +38,9 @@ class ProfileController extends Controller
      */
     public function index()
     {
-       
         return view('supplier.view_profile', [
             'profile'   =>  \App\Models\User::with('supplier', 'account', 'contact', 'ratings')->findOrFail(Auth::id())
         ]);
-
     }
 
     /**
@@ -106,7 +99,7 @@ class ProfileController extends Controller
     public function update($language, Request $request, $uuid)
     {
         //Get authenticated user object
-        $user = Auth::user();
+        $user = $request->user();
 
         //Validate user input fields
         $this->validateUpdateProfileRequest($user->id);
@@ -159,6 +152,11 @@ class ProfileController extends Controller
                 'bank_id'           =>  $request->bank_id,
                 'account_number'    =>  $request->account_number
             ]);
+
+            //Update supplier table records
+            $user->account->update([
+                'business_description'  => $request->business_description,
+            ]);
         
             //Update authenticated user Contact record
             $user->contact->update([
@@ -172,13 +170,14 @@ class ProfileController extends Controller
             $updateAccount  = true;
         });
 
+        $actionUrl = Route::currentRouteAction();
+
         if($updateAccount){
 
             //Record crurrenlty logged in user activity
             $type = 'Profile';
             $severity = 'Informational';
-            $actionUrl = Route::currentRouteAction();
-            $message = Auth::user()->email.' updated '.$genderPreposition.' profile.';
+            $message = $request->user()->email.' updated '.$genderPreposition.' profile.';
             $this->log($type, $severity, $actionUrl, $message);
  
             return back()->with('success', 'Your profile was successfully updated.');
@@ -188,8 +187,7 @@ class ProfileController extends Controller
             //Record Unauthorized user activity
             $type = 'Errors';
             $severity = 'Error';
-            $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.Auth::user()->email.' was trying to update '.$genderPreposition.' profile.';
+            $message = 'An error occurred while '.$request->user()->email.' was trying to update '.$genderPreposition.' profile.';
             $this->log($type, $severity, $actionUrl, $message);
  
             return back()->with('error', 'An error occurred while trying to update your profile.');
@@ -219,12 +217,13 @@ class ProfileController extends Controller
             'last_name'         =>   'required',
             'gender'            =>   'required|in:male,female,others',
             'phone_number'      =>   'required|numeric|unique:contacts,phone_number,'.$id.',user_id|bail',
-            'image'             =>   'sometimes|mimes:jpg,png,jpeg,gif,svg|max:512',
+            'image'             =>   'sometimes|required|mimes:jpg,png,jpeg,gif,svg|max:512',
             'bank_id'           =>   'sometimes',
-            'account_number'    =>   'sometimes|numeric|unique:accounts,account_number,'.$id.',user_id|bail',
+            'account_number'    =>   'sometimes|unique:accounts,account_number,'.$id.',user_id',
             'address'           =>   'required', 
             'address_longitude' =>   'required',
             'address_latitude'  =>   'required',
+            'business_description'  => 'required'
         ]);
     }
 
