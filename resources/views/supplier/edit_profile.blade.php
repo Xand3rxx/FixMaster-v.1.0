@@ -8,7 +8,7 @@
         <div>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-style1 mg-b-10">
-            <li class="breadcrumb-item"><a href="{{ route('franchisee.index', app()->getLocale()) }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('supplier.index', app()->getLocale()) }}">Dashboard</a></li>
               <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
             </ol>
           </nav>
@@ -147,6 +147,14 @@
                           </div>
 
                             <!-- Full Address -->
+                            <div class="form-group col-md-12">
+                              <label for="business_description">Business Description</label>
+                              <textarea rows="3" class="user_address form-control @error('business_description') is-invalid @enderror" id="business_description" name="business_description">{{ old('business_description') ?? !empty($profile['supplier']['business_description']) ? $profile['supplier']['business_description'] : '' }}</textarea>
+                              @error('business_description')
+                                <x-alert :message="$message" />
+                              @enderror
+                            </div>
+
                             <div class="form-group col-md-12">
                               <label for="address">Full Address</label>
                               <textarea rows="3" class="user_address form-control @error('address') is-invalid @enderror" id="address" name="address">{{ old('address') ?? !empty($profile['contact']['address']) ? $profile['contact']['address'] : '' }}</textarea>

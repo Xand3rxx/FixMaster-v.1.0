@@ -585,7 +585,8 @@
                                         @foreach ($technicains as $technicain)
                                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                                         @endforeach
-                                        <span class="font-weight-bold ml-2">0.6km</span>
+                                        <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($service_request['client']['contact']['address_latitude'], $service_request['client']['contact']['address_longitude'], $technicain['user']['contact']['address_latitude'], $technicain['user']['contact']['address_longitude']) }}
+                                    km</span>
                                     </span>
                                   </div>
                                   <div class="col-md-6 col-sm-6">
