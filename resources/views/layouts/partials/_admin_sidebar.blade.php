@@ -132,7 +132,6 @@
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.payments.disbursed') ? 'active' : '' }}"><a href="{{ route('admin.payments.disbursed',  app()->getLocale()) }}">Disbursed</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.received') ? 'active' : '' }}"><a href="{{ route('admin.payments.received',  app()->getLocale()) }}">Received</a></li>
-          <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Verify</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.pending') ? 'active' : '' }}"><a href="{{ route('admin.payments.pending',  app()->getLocale()) }}">Pending Payments</a></li>
         </ul>
       </li>
