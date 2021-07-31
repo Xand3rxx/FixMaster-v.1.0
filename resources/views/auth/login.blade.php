@@ -30,7 +30,6 @@
                                         @enderror
                                     </div>
                                 </div>
-
                                 <div class="col-lg-12">
                                     <div class="form-group position-relative">
                                         <label>Password <span class="text-danger">*</span></label>
@@ -38,7 +37,6 @@
                                         <input type="password" name="password" class="form-control pl-5" placeholder="Password" required>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-12">
                                     <div class="d-flex justify-content-between">
                                         <div class="form-group">
@@ -47,21 +45,13 @@
                                                 <label class="custom-control-label" for="customCheck1">Remember me</label>
                                             </div>
                                         </div>
-                                        <p class="forgot-pass mb-0"><a href="#" class="text-dark font-weight-bold">Forgot password ?</a></p>
+                                        <p class="forgot-pass mb-0"><a href="{{ route('password.request', app()->getLocale()) }}" class="text-dark font-weight-bold">Forgot password ?</a></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 mb-0">
                                     <button type="submit" class="btn btn-primary btn-block">Login</button>
                                 </div>
-                                {{-- <div class="col-lg-12 mt-4 text-center">
-                                    <h6>Or Login With</h6>
-                                    <ul class="list-unstyled social-icon mb-0 mt-3">
-                                        <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="facebook" class="fea icon-sm fea-social"></i></a></li>
-                                        <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="github" class="fea icon-sm fea-social"></i></a></li>
-                                        <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="twitter" class="fea icon-sm fea-social"></i></a></li>
-                                        <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="gitlab" class="fea icon-sm fea-social"></i></a></li>
-                                    </ul><!--end icon-->
-                                </div> --}}
+                                
                                 <div class="col-12 text-center">
                                     <p class="mb-0 mt-3"><small class="text-dark mr-2">Don't have an account ?</small> <a href="{{ route('frontend.registration.client.index', app()->getLocale()) }}" class="text-dark font-weight-bold">Register</a></p>
                                 </div>

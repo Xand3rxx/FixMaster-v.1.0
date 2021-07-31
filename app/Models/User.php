@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -252,7 +253,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function supplierSentInvoices()
     {
-        return $this->hasMany(RfqSupplierInvoice::class, 'supplier_id');
+        return $this->hasMany(RfqSupplierInvoice::class, 'supplier_id')->with('rfq');
     }
 
     public function cses()

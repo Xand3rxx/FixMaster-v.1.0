@@ -91,5 +91,12 @@ class CategorySeeder extends Seeder
         $category8->material_markup = 0.10;
         $category8->save();
 
+        $category8 = new Category();
+        $category8->user_id = '1';
+        $category8->name = 'Custom Category';
+        $category8->labour_markup = 0.00;
+        $category8->material_markup = 0.00;
+        $category8->save();
+
     }
 }

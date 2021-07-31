@@ -59,10 +59,10 @@
                 <td class="tx-medium">{{!empty($payment['users']['account']['bank']['name']) ? $payment['users']['account']['bank']['name'] : 'Unavailable'}}</td>
                 <td class="tx-medium">&#8358;{{!empty($payment['flat_rate']) ? number_format($payment['flat_rate'],2) : 'Unavailable'}}</td>
             @else
-            <td class="tx-medium">Unavailable</td>
-            <td class="tx-medium">Unavailable</td>
-            <td class="tx-medium">Unavailable</td>
-            <td class="tx-medium">Unavailable</td>
+            <td class="tx-medium">-</td>
+            <td class="tx-medium">-</td>
+            <td class="tx-medium">-</td>
+            <td class="tx-medium">-</td>
             @endif
 
             {{-- for QAs --}}
@@ -72,35 +72,35 @@
              <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
              <td class="tx-medium">&#8358;{{number_format($payment['flat_rate'],2)}}</td>
              @else
-             <td class="tx-medium">Unavailable</td>
-             <td class="tx-medium">Unavailable</td>
-             <td class="tx-medium">Unavailable</td>
-             <td class="tx-medium">Unavailable</td>
+             <td class="tx-medium">-</td>
+             <td class="tx-medium">-</td>
+             <td class="tx-medium">-</td>
+             <td class="tx-medium">-</td>
              @endif
 
               @if($role['name'] == 'Technicians & Artisans')
           {{-- for Technicians --}}
                 <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name']}}</td>
-                <td class="tx-medium">{{$payment['users']['account']['account_number']}}</td>
-                <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
+                <td class="tx-medium">{{!empty($payment['users']['account']['account_number'])? $payment['users']['account']['account_number'] : 'UNAVAILABLE'}}</td>
+              <td class="tx-medium">{{!empty($payment['users']['account']['bank']['name']) ? $payment['users']['account']['bank']['name'] : 'UNAVAILABLE'}}</td>
                 <td class="tx-medium">&#8358;{{number_format($payment['actual_labour_cost'],2)}}</td>
               @else
-              <td class="tx-medium">Unavailable</td>
-              <td class="tx-medium">Unavailable</td>
-              <td class="tx-medium">Unavailable</td>
-              <td class="tx-medium">Unavailable</td>
+              <td class="tx-medium">-</td>
+              <td class="tx-medium">-</td>
+              <td class="tx-medium">-</td>
+              <td class="tx-medium">-</td>
             @endif
 
               @if($role['name'] == 'Suppliers')
               <td class="tx-medium">{{$payment['users']['account']['first_name'].' '.$payment['users']['account']['middle_name'].' '.$payment['users']['account']['last_name']}}</td>
-              <td class="tx-medium">{{$payment['users']['account']['account_number']}}</td>
-              <td class="tx-medium">{{$payment['users']['account']['bank']['name']}}</td>
+              <td class="tx-medium">{{!empty($payment['users']['account']['account_number'])? $payment['users']['account']['account_number'] : 'UNAVAILABLE'}}</td>
+              <td class="tx-medium">{{!empty($payment['users']['account']['bank']['name']) ? $payment['users']['account']['bank']['name'] : 'UNAVAILABLE'}}</td>
               <td class="tx-medium">&#8358;{{number_format($payment['actual_material_cost'],2)}}</td>
               @else
-               <td class="tx-medium">Unavailable</td>
-               <td class="tx-medium">Unavailable</td>
-               <td class="tx-medium">Unavailable</td>
-               <td class="tx-medium">Unavailable</td>
+               <td class="tx-medium">-</td>
+               <td class="tx-medium">-</td>
+               <td class="tx-medium">-</td>
+               <td class="tx-medium">-</td>
               @endif
 
               @if($role['name'] == 'Technicians & Artisans' || $role['name'] == 'Suppliers')
@@ -110,8 +110,8 @@
 
               @else
 
-              <td class="tx-medium">Unavailable</td>
-              <td class="tx-medium">Unavailable</td>
+              <td class="tx-medium">-</td>
+              <td class="tx-medium">-</td>
 
               @endif
 

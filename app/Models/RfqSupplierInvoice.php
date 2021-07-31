@@ -28,9 +28,14 @@ class RfqSupplierInvoice extends Model
         });
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'supplier_id');
+    }
+
     public function rfq()
     {
-        return $this->belongsTo(Rfq::class)->with('serviceRequest');
+        return $this->belongsTo(Rfq::class)->with('serviceRequest', 'rfqPayment');
     }
 
     public function supplier()
@@ -40,7 +45,7 @@ class RfqSupplierInvoice extends Model
 
     public function supplierInvoiceBatch()
     {
-        return $this->hasOne(RfqSupplierInvoiceBatch::class, 'rfq_batch_id', 'id');
+        return $this->hasOne(RfqSupplierInvoiceBatch::class, 'rfq_supplier_invoice_id');
     }
 
     public function supplierInvoiceBatches()

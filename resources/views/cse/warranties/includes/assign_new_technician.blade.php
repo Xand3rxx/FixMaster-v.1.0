@@ -8,10 +8,11 @@
                                             <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ !empty($technician['user']['account']['first_name']) ? $technician['user']['account']['first_name'] .' '. $technician['user']['account']['last_name'] : 'UNAVAILABLE'}}</h6>
                                             
                                             <span class="d-block tx-11 text-muted">
-                                                @foreach ($technicians as $item)
+                                                {{-- @foreach ($technicians as $item)
                                                     <i class="icon ion-md-star lh-0 tx-orange"></i>
-                                                @endforeach
-                                                <span class="font-weight-bold ml-2">0.6km</span>
+                                                @endforeach --}}
+                                                <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($service_request['client']['contact']['address_latitude'], $service_request['client']['contact']['address_longitude'], $technician['user']['contact']['address_latitude'], $technician['user']['contact']['address_longitude']) }}
+                                                    km</span>
                                             </span>
                                             </div>
                                             <div class="col-md-6 col-sm-6">

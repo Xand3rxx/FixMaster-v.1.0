@@ -44,12 +44,11 @@
                   </thead>
                   <tbody>
                     @php $sn = 1; @endphp
-                @foreach($diagnosisRatings as $rating)
+                @foreach($performanceRatings as $rating)
                     <tr>
-                      {{-- {{$rating->service_request->service->name}} --}}
                       <td class="tx-color-03 tx-center">{{$sn++}}</td>
                       <td class="tx-medium">{{$rating->clientAccount->first_name.' '.$rating->clientAccount->last_name ?? 'Unavailable'}}</td>
-                      <td class="tx-medium">{{$rating->cseAccount->first_name.' '.$rating->cseAccount->last_name ?? 'Unavailable'}}</td>
+                      <td class="tx-medium">{{$rating->cseAcc->first_name.' '.$rating->cseAcc->last_name ?? 'Unavailable'}}</td>
                       <td class="tx-medium">{{$rating->service_request->service->name ?? 'Unavailable'}}</td>
                       <td class="tx-medium text-center">{{$rating->service_request->unique_id ?? 'Unavailable'}}</td>
                       <td class="text-medium text-center">{{round($rating->star) ?? 'Unavailable'}}</td>

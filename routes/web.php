@@ -47,7 +47,7 @@ use App\Http\Controllers\Admin\User\TechnicianArtisanController;
 use App\Http\Controllers\Supplier\SupplierRfqWarrantyController;
 use App\Http\Controllers\Technician\TechnicianProfileController;
 use App\Http\Controllers\Admin\Report\TechnicianReportController;
-use App\Http\Controllers\ServiceRequest\ProjectProgressController;
+use App\Http\Controllers\ServiceRequest\Concerns\ProjectProgress as ProjectProgressController;
 use App\Http\Controllers\QualityAssurance\ServiceRequestController;
 use App\Http\Controllers\ServiceRequest\AssignTechnicianController;
 use App\Http\Controllers\Admin\User\Administrator\SummaryController;
@@ -95,15 +95,14 @@ use App\Http\Controllers\Admin\Report\WarrantyReportController;
 Route::prefix('admin')->name('admin.')->group(function () {
     //Route::view('/', 'admin.index')->name('index'); //Take me to Admin Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/ratings/job-performance', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-diagnosis', [AdminRatingController::class, 'cseDiagnosis'])->name('category');
+    Route::get('/ratings/job-performance', [AdminRatingController::class, 'servicePerformance'])->name('service_rating');
     Route::get('/ratings/services',      [AdminRatingController::class, 'getServiceRatings'])->name('job');
     Route::get('/ratings/service_reviews',      [AdminReviewController::class, 'getServiceReviews'])->name('category_reviews');
     Route::get('/activate/{uuid}',      [AdminReviewController::class, 'activate'])->name('activate_review');
     Route::get('/deactivate/{uuid}',      [AdminReviewController::class, 'deactivate'])->name('deactivate_review');
     Route::get('/delete/{uuid}',      [AdminReviewController::class, 'delete'])->name('delete_review');
     Route::get('/get_ratings_by_service',    [AdminRatingController::class, 'getRatings'])->name('get_ratings_by_service');
-
-
 
 
     Route::prefix('users')->name('users.')->group(function () {
@@ -293,6 +292,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     //Service Reques Routes
     Route::resource('requests-pending', AdminPendingRequestController::class);
     Route::resource('requests-ongoing', AdminOngoingRequestController::class);
+    Route::get('requests-completed', [AdminServiceRequestActionsController::class, 'index'])->name('requests-completed');
+    Route::get('requests-completed/{requests_completed:uuid}',          [AdminServiceRequestActionsController::class, 'show'])->name('requests-completed.show');
+    Route::get('requests-cancelled', [AdminServiceRequestActionsController::class, 'cancelledRequests'])->name('requests-cancelled');
+    Route::get('requests-cancelled/{requests_cancelled:uuid}',          [AdminServiceRequestActionsController::class, 'cancelledRequestDetails'])->name('requests-cancelled.show');
     Route::get('/requests/action/complete/{request:uuid}',          [AdminServiceRequestActionsController::class, 'markCompletedRequest'])->name('request.mark_as_completed');
 
     //CSE Reporting Routes
@@ -334,6 +337,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/warranty/extended',  [WarrantyReportController::class, 'extended_warranty'])->name('extended_warranty_reports');
     Route::post('/reports/warranty/list-sorting',      [WarrantyReportController::class, 'listSorting'])->name('warranty_list_report_sorting');
     Route::post('/reports/warranty/extended/list-sorting',      [WarrantyReportController::class, 'extendedWarrantyListSorting'])->name('extended_warranty_list_report_sorting');
+    Route::get('/reports/warranty/customer/rating/history',      [WarrantyReportController::class, 'customerRatingHistory'])->name('customer_rating_history_reports');
+    Route::post('/reports/warranty/customer/rating/history/list-sorting',      [WarrantyReportController::class, 'customerRatingHistorySorting'])->name('customer_rating_history_list_report_sorting');
+    Route::get('/reports/warranty/unresolved',      [WarrantyReportController::class, 'unresolvedWarranty'])->name('unresolved_warranty_reports');
+    Route::post('/reports/warranty/unresolved/list-sorting',      [WarrantyReportController::class, 'unresolvedWarrantySorting'])->name('unresolved_warranty_list_report_sorting');
+
 
     
 
@@ -357,7 +365,7 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
     Route::post('/requests/update-request/{request:id}', [ClientController::class, 'updateRequest'])->name('update_request');
     Route::post('/requests/technician_profile',          [ClientController::class, 'technicianProfile'])->name('technician_profile');
     Route::get('/requests/warranty/{request:id}',          [ClientController::class, 'warrantyInitiate'])->name('warranty_initiate');
-    Route::get('/requests/reinstate/{request:id}',          [ClientController::class, 'reinstateRequest'])->name('reinstate_request');
+    Route::get('/requests/reinstate/{request:uuid}',          [ClientController::class, 'reinstateRequest'])->name('reinstate_request');
     Route::get('/requests/completed-request/{request:id}',          [ClientController::class, 'markCompletedRequest'])->name('completed_request');
 
     //Profile and password update
@@ -405,8 +413,10 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
 
     Route::get('myContactList',                 [ClientController::class, 'myContactList'])->name('service.myContacts');
 
+    //client ratings
     Route::post('/update_service_request',  [ClientController::class, 'update_client_service_rating'])->name('update_service_request');
     Route::post('/submit_ratings',  [ClientController::class, 'client_rating'])->name('handle.ratings');
+   
     Route::get('/discount_mail',  [ClientController::class, 'discount_mail'])->name('discount_mail');
 
     Route::post('available-tool-quantity', [CseController::class, 'getAvailableToolQuantity'])->name('available.tools');
@@ -424,7 +434,7 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
     Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
 });
 
-Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
+Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
     //All routes regarding CSE's should be in here
     Route::get('/', [CseController::class, 'index'])->name('index'); //Take me to CSE Dashboard
     Route::post('accept-service-request', [CseController::class, 'setJobAcceptance'])->name('accept-job');
@@ -476,7 +486,7 @@ Route::prefix('cse')->name('cse.')->middleware('monitor.cseservice.request.chang
     Route::get('/warranty/claims/details/{warranty:uuid}',      [CseController::class, 'warranty_details'])->name('warranty_details');
     Route::get('/warranty/resolved/claims/details/{warranty:id}',          [WarrantyController::class, 'warranty_resolved_details'])->name('warranty_resolved_details');
     Route::get('/mark/warrant/claims/resolved/{warranty:uuid}',      [WarrantyController::class, 'resolvedWarranty'])->name('mark_warranty_resolved');
-    Route::get('/requests-for-quote/details/image/{image:id}',            [SupplierRfqController::class, 'rfqDetailsImage'])->name('rfq_details_image');
+    Route::get('/requests-for-quote/details/image/{image:id}',            [RequestController::class, 'rfqDetailsImage'])->name('rfq_details_image');
 
     Route::get('/sub-service-dynamic-feilds',  [CseController::class, 'subServiceDynamicFields'])->name('sub_service_dynamic_fields');
     Route::get('/tools-request/details/{tool_request:uuid}',           [RequestController::class, 'toolRequestDetails'])->name('tool_request_details');

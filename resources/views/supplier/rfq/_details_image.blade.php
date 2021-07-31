@@ -4,6 +4,7 @@
     @elseif(!file_exists(public_path('assets/rfq-images/'.$rfqDetails->image)))
         <img src="{{ asset('assets/images/no-image-available.png') }}" class="img-fluid wd-sm-200 rounded" alt="No image found">
     @else
-        <img src="{{ asset('assets/rfq-images/'.$rfqDetails->image) }}" class="img-fluid wd-sm-200 rounded" alt="{{ $rfqDetails->name }}">
+        {{-- <img src="{{ asset('assets/rfq-images/'.$rfqDetails->image) }}" class="img-fluid wd-sm-200 rounded" alt="{{ $rfqDetails->name }}"> --}}
+        <img src="{{ asset('storage/'.$rfqDetails->image) }}" class="img-fluid rounded" alt="{{ $rfqDetails->name }}">
     @endif
 </div>

@@ -14,6 +14,36 @@ class AdminRatingSeeder extends Seeder
      */
     public function run()
     {
+        //cse rating
+        $rate = new Rating();
+        $rate->rater_id = 6;
+        $rate->ratee_id = 2;
+        $rate->service_request_id = 3;
+        $rate->service_id = 2;
+        $rate->star = 4;
+        $rate->created_at = '2021-01-17 21:08:55';
+        $rate->save();
+
+        //service rating
+        $rate1 = new Rating();
+        $rate1->rater_id = 6;
+        $rate1->ratee_id = 10;
+        $rate1->service_request_id = 3;
+        $rate1->service_id = 2;
+        $rate1->star = 5;
+        $rate1->created_at = '2021-01-27 16:36:58';
+        $rate1->save();
+
+        //service rating
+        $rate6 = new Rating();
+        $rate6->rater_id = 6;
+        $rate6->ratee_id = 13;
+        $rate6->service_request_id = 3;
+        $rate6->service_id = 2;
+        $rate6->star = 4;
+        $rate6->created_at = '2021-01-27 16:36:58';
+        $rate6->save();
+
         //cse Diagnosis rating
         $rate2 = new Rating();
         $rate2->rater_id = 5;

@@ -45,12 +45,12 @@
                  
                  </h6>
 
-                 <span class="d-block tx-11 text-muted">
+                 {{-- <span class="d-block tx-11 text-muted">
                          <i class="icon ion-md-star lh-0 tx-orange"></i>
                          <i class="icon ion-md-star lh-0 tx-orange"></i>
                          <i class="icon ion-md-star lh-0 tx-orange"></i>
                      <span class="font-weight-bold ml-2">0.6km</span>
-                 </span>
+                 </span> --}}
                  </div>
                  <div class="col-md-6 col-sm-6">
                  <div class="form-row">
