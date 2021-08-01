@@ -12,6 +12,7 @@
 .history/
 .idea/*
 .env.production
+.DS_Store
 composer.lock
 docker-compose.override.yml
 Dockerfile
