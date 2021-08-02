@@ -1,3 +1,4 @@
+
 INSERT INTO `payment_gateways` (`id`, `uuid`, `name`, `information`, `keyword`, `created_at`, `updated_at`, `status`) VALUES
 (1,'2af6646-dc73-41d4-879b-4e6d378994fb', 'paystack', '{\"private_key\":\"sk_test_b612f25bd992c4d84760e312175c7515336b77fc\",\"public_key\":\"pk_test_41ada297a2a2953f9d42e12571365678890\",\"text\":\"Pay via Paystack\"}', 'Paystack', '2021-01-01 16:16:57', '2021-03-07 19:20:13', 1),
 (2, '32fd94b3-7b79-407b-ad66-ea51b8c1e40e', 'flutter', '{\"private_key\":\"FLWSECK_TEST-1ad889f3a9c71a7650c1e27c873b16b7-X\",\"public_key\":\"EJY0qOKliVg7wKsR3ubtSUwAaQoXtSUwAaQoXQFgq-RLlk_sQu\",\"text\":\"Pay via Flutter\"}', 'flutterwave', '2021-01-01 15:16:57', '2021-03-07 09:28:58', 1);
