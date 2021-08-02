@@ -42,7 +42,7 @@
 
       <li class="nav-item {{ Route::currentRouteNamed('admin.activity-log.index') ? 'active' : '' }}"><a href="{{ route('admin.activity-log.index', app()->getLocale()) }}" class="nav-link"><i data-feather="activity"></i> <span>Activity Log</span></a></li>
 
-      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.categories.index', 'admin.services.index', 'admin.booking-fees.index', 'admin.statuses.index', 'admin.serviceCriteria.index', 'admin.services.create', 'admin.services.edit') ? 'active show' : '' }}">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.categories.index', 'admin.services.index', 'admin.booking-fees.index', 'admin.statuses.index', 'admin.service-request-settings.index', 'admin.services.create', 'admin.services.edit') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="aperture"></i> <span>Category & Service</span></a>
         <ul>
         <li class="{{ Route::currentRouteNamed('admin.booking-fees.index') ? 'active' : '' }}"><a href="{{ route('admin.booking-fees.index', app()->getLocale()) }}">Booking Fee</a></li>
@@ -50,7 +50,7 @@
           <li class="{{ Route::currentRouteNamed('admin.services.index', 'admin.services.create', 'admin.services.edit') ? 'active' : '' }}"><a href="{{ route('admin.services.index', app()->getLocale()) }}">Services</a></li>
           {{-- <li class="{{ Route::currentRouteNamed('admin.services.index') ? 'active' : '' }}"><a href="{{ route('admin.services.index', app()->getLocale()) }}">Sub-Services</a></li> --}}
           <li class="{{ Route::currentRouteNamed('admin.statuses.index') ? 'active' : '' }}"><a href="{{ route('admin.statuses.index', app()->getLocale()) }}">Service Request Status</a></li>
-        {{-- <li class="{{ Route::currentRouteNamed('admin.serviceCriteria.index') ? 'active' : '' }}"><a href="{{ route('admin.serviceCriteria.index', app()->getLocale()) }}">Settings</a></li> --}}
+          <li class="{{ Route::currentRouteNamed('admin.service-request-settings.index') ? 'active' : '' }}"><a href="{{ route('admin.service-request-settings.index', app()->getLocale()) }}">Settings</a></li>
         </ul>
       </li>
 
@@ -132,7 +132,6 @@
         <ul>
           <li class="{{ Route::currentRouteNamed('admin.payments.disbursed') ? 'active' : '' }}"><a href="{{ route('admin.payments.disbursed',  app()->getLocale()) }}">Disbursed</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.received') ? 'active' : '' }}"><a href="{{ route('admin.payments.received',  app()->getLocale()) }}">Received</a></li>
-          <li class="{{ Route::currentRouteNamed('') ? 'active' : '' }}"><a href="#">Verify</a></li>
           <li class="{{ Route::currentRouteNamed('admin.payments.pending') ? 'active' : '' }}"><a href="{{ route('admin.payments.pending',  app()->getLocale()) }}">Pending Payments</a></li>
         </ul>
       </li>
@@ -196,15 +195,7 @@
         </ul>
       </li>
 
-      {{-- <li class="nav-item with-sub">
-        <a href="" class="nav-link"><i data-feather="git-pull-request"></i> <span>Special Project</span></a>
-        <ul>
-          <li class=""><a href="#">Inventory</a></li>
-          <li class=""><a href="#">Requests</a></li>
-        </ul>
-      </li> --}}
-      
-      <li class="nav-item {{ Route::currentRouteNamed('admin.seviced-areas.index') ? 'active' : '' }}"><a href="{{ route('admin.seviced-areas.index', app()->getLocale()) }}" class="nav-link"><i data-feather="check-circle"></i> <span>Serviced Areas</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.serviced-areas.index') ? 'active' : '' }}"><a href="{{ route('admin.serviced-areas.index', app()->getLocale()) }}" class="nav-link"><i data-feather="check-circle"></i> <span>Serviced Areas</span></a></li>
 
       <li class="nav-item {{ Route::currentRouteNamed('admin.taxes.index') ? 'active' : '' }}"><a href="{{ route('admin.taxes.index', app()->getLocale()) }}" class="nav-link"><i data-feather="percent"></i> <span>Tax Management</span></a></li>
 

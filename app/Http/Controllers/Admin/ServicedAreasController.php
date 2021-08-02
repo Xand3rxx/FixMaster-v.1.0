@@ -51,40 +51,59 @@ class ServicedAreasController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        //Validate user input fields
+        $this->validateRequest();
 
-            //Validate user input fields
-            $this->validateRequest();
+        //Create record for a new serviced area
+        $createServicedAreas = ServicedAreas::create([
+            'state_id'       =>  $request->state_id,
+            'lga_id'         =>  $request->lga_id,
+            'town_id'        =>  $request->town_id,
+        ]);
 
-            //Create record for a new serviced area
-            $createServicedAreas = ServicedAreas::create([
-                'state_id'       =>  $request->state_id,
-                'lga_id'         =>  $request->lga_id,
-                'town_id'        =>  $request->town_id,
-            ]);
+        if($createServicedAreas ){
 
-            if( $createServicedAreas ){
-
-                //Record crurrenlty logged in user activity
-                $type = 'Others';
-                $severity = 'Informational';
-                $actionUrl = Route::currentRouteAction();
-                $message = $request->user()->email.' created new service area.';
-                $this->log($type, $severity, $actionUrl, $message);
-    
-                return redirect()->route('admin.seviced-areas.index', app()->getLocale())->with('success', 'new service area was successfully created.');
-            }
- 
-        }catch(\Exception $e){
- 
-            //Record Unauthorized user activity
-            $type = 'Errors';
-            $severity = 'Error';
+            //Record crurrenlty logged in user activity
+            $type = 'Others';
+            $severity = 'Informational';
             $actionUrl = Route::currentRouteAction();
-            $message = 'An error occurred while '.$request->user()->email.' was trying to create new service area.';
+            $message = $request->user()->email.' created new serviced area.';
             $this->log($type, $severity, $actionUrl, $message);
+
+            return back()->with('success', 'Serviced area was successfully created.');
+        }else{
+
+        //Record Unauthorized user activity
+        $type = 'Errors';
+        $severity = 'Error';
+        $actionUrl = Route::currentRouteAction();
+        $message = 'An error occurred while '.$request->user()->email.' was trying to create new serviced area.';
+        $this->log($type, $severity, $actionUrl, $message);
+
+        return back()->with('error', 'An error occurred while trying to create new serviced area.');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $uuid
+     * @return \Illuminate\Http\Response
+     */
+    public function show($language, $uuid)
+    {
+        $actionUrl = Route::currentRouteAction();
+
+        if(ServicedAreas::where('uuid', $uuid)->delete()){
+            //Record crurrenlty logged in user activity
+            $this->log('Others', 'Informational', $actionUrl, auth()->user()->email.' deleted serviced area.');
+
+            return back()->with('success', 'Serviced area was successfully deleted.');
+        }else{
+            //Record authorized user activity
+            $this->log('Errors', 'Error', $actionUrl, 'An error occurred while '.auth()->user()->email.' was trying to delete serviced area.');
  
-            return back()->with('error', 'An error occurred while trying to create new service area.');
+            return back()->with('error', 'An error occurred while trying to delete serviced area.');
         }
     }
     
@@ -93,9 +112,9 @@ class ServicedAreasController extends Controller
      */
     protected function validateRequest(){
         return request()->validate([
-            'state_id'  =>   'required',
-            'lga_id'    =>   'required',
-            'town_id'   =>   'required', 
+            'state_id'  =>   'bail|required',
+            'lga_id'    =>   'bail|required',
+            'town_id'   =>   'bail|required|unique:serviced_areas,town_id', 
         ]);
     }
 }

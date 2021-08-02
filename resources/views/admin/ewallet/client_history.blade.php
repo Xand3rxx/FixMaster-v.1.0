@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'E-Wallet Transactions List')
+@section('title', 'E-Wallet Client Transaction History')
 @include('layouts.partials._messages')
 @section('content')
 
@@ -10,10 +10,11 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-style1 mg-b-10">
             <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.ewallet.clients', app()->getLocale()) }}">Clients</a></li>
               <li class="breadcrumb-item active" aria-current="page">E-Wallet Transactions History</li>
             </ol>
           </nav>
-          <h4 class="mg-b-0 tx-spacing--1">Kelvin Adesanya's E-Wallet Transactions History</h4>
+          <h4 class="mg-b-0 tx-spacing--1">{{ !empty($transaction['account']['first_name']) ? Str::title($transaction['account']['first_name'] .' '. $transaction['account']['last_name']) : 'UNAVAILABLE' }}'s E-Wallet Transactions History</h4>
         </div>
       </div>
 
@@ -23,14 +24,14 @@
             <div class="card mg-b-10">
               <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
                 <div>
-                  <h6 class="mg-b-5">Kelvin Adesanya's E-Wallet Transactions as of {{ date('M, d Y') }}</h6>
+                  <h6 class="mg-b-5">{{ !empty($transaction['account']['first_name']) ? Str::title($transaction['account']['first_name'] .' '. $transaction['account']['last_name']) : 'UNAVAILABLE' }}'s E-Wallet Transactions as of {{ date('M, d Y') }}</h6>
                   <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of all FixMaster E-Wallet Tranactions.</p>
                 </div>
                 
               </div><!-- card-header -->
              
               <div class="table-responsive">
-                <div class="row mt-1 mb-1 ml-1 mr-1">
+                {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Sort</label>
@@ -96,7 +97,7 @@
                             <input name="name" id="name" type="date" class="form-control pl-5">
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <table class="table table-hover mg-b-0" id="basicExample">
                     <thead class="thead-primary">
@@ -106,74 +107,36 @@
                         <th>Transaction ID</th>
                         <th class="text-center">Transaction Type</th>
                         <th class="text-center">Payment Type</th>
-                        <th class="text-center">Amount</th>
+                        <th class="text-center">Amount(₦)</th>
                         <th class="text-center">Status</th>
                         <th>Date Created</th>
                         <th class="text-center">Action</th>
                       </tr>
                     </thead>
                     <tbody>
+                        @foreach ($transaction['client']['walletTransactions'] as $item)
                         <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">32e3lh2e23083h432b</td>
-                            <td class="tx-medium">92347h86234g38hh23</td>
-                            <td class="text-center">Credit</td>
-                            <td class="text-center">Funding</td>
-                            <td class="tx-medium text-center">{{ number_format(10000) }}</td>
-                            <td class="text-center text-warning">Pending</td>
-                            <td>{{ Carbon\Carbon::parse('2021-02-17 16:58:54', 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
+                            <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                            <td class="tx-medium">{{ !empty($item['payment']['reference_id']) ? $item['payment']['reference_id'] : 'UNAVAILABLE' }}</td>
+                            <td class="tx-medium">{{ !empty($item['payment']['transaction_id']) ? $item['payment']['transaction_id'] : 'UNAVAILABLE' }}</td>
+                            <td class="text-center">{{ ucfirst($item['transaction_type']) }}</td>
+                            <td class="text-center">{{ ucfirst($item['payment_type']) }}</td>
+                            <td class="tx-medium text-center">{{ number_format($item['amount']) }}</td>
+                            <td class="text-center {{ (($item['payment']['status'] == 'pending') ? 'text-warning' : (($item['payment']['status'] == 'success') ? 'text-success' : (($item['payment']['status'] == 'timeout') ? 'text-danger' : 'text-danger'))) }} ">{{ ucfirst($item['payment']['status']) }}</td>
+                            <td>{{ Carbon\Carbon::parse($item['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                             <td class=" text-center">
                             <div class="dropdown-file">
                                 <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                 
-                                <a href="#transactionDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View WAL-23782382 details"><i class="far fa-clipboard"></i> Details</a>
+                                <a href="#transactionDetails" id="wallet-transaction-detail" data-toggle="modal" class="dropdown-item details text-primary" title="View {{ $transaction['client']['unique_id'] }} transaction details" data-url="{{ route('admin.ewallet.history.details', ['history'=>$item->id, 'locale'=>app()->getLocale()]) }}"><i class="far fa-clipboard"></i> Details</a>
                 
                                 </div>
                             </div>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">09234hshsa56aa897b</td>
-                            <td class="tx-medium">UNAVAILABLE</td>
-                            <td class="text-center">Debit</td>
-                            <td class="text-center">Service Request</td>
-                            <td class="tx-medium text-center">{{ number_format(5000) }}</td>
-                            <td class="text-center text-success">Success</td>
-                            <td>{{ Carbon\Carbon::parse('2020-12-28 16:58:54', 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
-                            <td class=" text-center">
-                                <div class="dropdown-file">
-                                <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                
-                                    <a href="#transactionDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View WAL-23782382 details"><i class="far fa-clipboard"></i> Details</a>
-                    
-                                </div>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">s587sn32842363h23</td>
-                            <td class="tx-medium">UNAVAILABLE</td>
-                            <td class="text-center">Credit</td>
-                            <td class="text-center">Refund</td>
-                            <td class="tx-medium text-center">{{ number_format(2000) }}</td>
-                            <td class="text-center text-success">Success</td>
-                            <td>{{ Carbon\Carbon::parse('2020-09-12 16:58:54', 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
-                            <td class=" text-center">
-                                <div class="dropdown-file">
-                                <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                
-                                    <a href="#transactionDetails" data-toggle="modal" class="dropdown-item details text-primary" title="View WAL-23782382 details"><i class="far fa-clipboard"></i> Details</a>
-                                </div>
-                                </div>
-                            </td>
-                        </tr>
+                        @endforeach
+                        
                     </tbody>
                   </table>
               </div><!-- table-responsive -->
@@ -186,8 +149,6 @@
     </div>
 </div>
 
-
-
 <div class="modal fade" id="transactionDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content tx-14">
@@ -197,88 +158,16 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body pd-x-25 pd-sm-x-30 pd-t-40 pd-sm-t-20 pd-b-15 pd-sm-b-20">
-            <div class="table-responsive mt-4">
-                <table class="table table-striped table-sm mg-b-0">
-                <tbody>
-                    <tr>
-                        <td class="tx-medium" width="25%">Unique ID</td>
-                        <td class="tx-color-03" width="75%">WAL-23782382</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Reference No.</td>
-                        <td class="tx-color-03" width="75%">32e3lh2e23083h432b</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Transaction ID.</td>
-                        <td class="tx-color-03" width="75%">Transaction ID returned on success should be displayed here only if payment gateway was used or UNAVAILABLE</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Transaction Type</td>
-                        <td class="tx-color-03" width="75%">Credit</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Payment Type</td>
-                        <td class="tx-color-03" width="75%"3">Funding</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Payment Channel</td>
-                        <td class="tx-color-03" width="75%"3">Paystack or Flutterwave or Offline or Wallet</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Payment For</td>
-                        <td class="tx-color-03" width="75%"3">Wallet</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Amount</td>
-                        <td class="tx-color-03" width="75%">₦{{ number_format(10000) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Status</td>
-                        <td class="text-success" width="75%">Success</td>
-                    </tr>
-                    <tr>
-                        <td class="tx-medium" width="25%">Refund Reason</td>
-                        <td class="tx-color-03" width="75%">This section should only be visible in a case of refund, the reason should be displayed here or UNAVAILABLE</td>
-                    </tr>
-                </tbody>
-                </table>
-            </div>
+        <div class="modal-body pd-x-25 pd-sm-x-30 pd-t-40 pd-sm-t-20 pd-b-15 pd-sm-b-20" id="modal-body">
+            
           </div><!-- modal-body -->
         <div class="modal-footer"></div>
       </div>
     </div>
 </div>
 
-@section('scripts')
-<script>
-    $(document).ready(function() {
-
-        $('#request-sorting').on('change', function (){        
-                let option = $("#request-sorting").find("option:selected").val();
-
-                if(option === 'None'){
-                    $('.specific-date, .sort-by-year, .date-range').addClass('d-none');
-                }
-
-                if(option === 'Date'){
-                    $('.specific-date').removeClass('d-none');
-                    $('.sort-by-year, .date-range').addClass('d-none');
-                }
-
-                if(option === 'Month'){
-                    $('.sort-by-year').removeClass('d-none');
-                    $('.specific-date, .date-range').addClass('d-none');
-                }
-
-                if(option === 'Date Range'){
-                    $('.date-range').removeClass('d-none');
-                    $('.specific-date, .sort-by-year').addClass('d-none');
-                }
-        });
-    });
-   
-</script>
-@endsection
+@push('scripts')
+    <script src="{{ asset('assets/dashboard/assets/js/e7475718-5047-4404-a117-ef35a0dfc1c9.js') }}"></script>
+@endpush
 
 @endsection

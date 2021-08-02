@@ -27,53 +27,53 @@
                   <h6 class="mg-b-10"><b>ADD NEW SERVICED AREA</b></h6>
                 </div>                
               </div>
-                    <form method="POST" action="{{ route('admin.seviced-areas.store', app()->getLocale()) }}">
+                    <form method="POST" action="{{ route('admin.serviced-areas.store', app()->getLocale()) }}">
                     @csrf
 
                             <div class="form-group col-md-12">
-                                <small class="text-danger">STATE</small>
-                                    <select class="form-control pl-5 @error('state_id') is-invalid @enderror" name="state_id" id="state_id">
-                                        <option selected value="">Select...</option>
-                                        @foreach($states as $state)
-                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('state_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror                               
+                                <label>State</label>
+                                <select class="form-control @error('state_id') is-invalid @enderror" name="state_id" id="state_id">
+                                    <option selected value="">Select...</option>
+                                    @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('state_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror                               
                             </div>
 
                             <div class="form-group col-md-12">
-                                <small class="text-danger">LGA</small>
-                                    <select class="form-control pl-5 @error('lga_id') is-invalid @enderror" name="lga_id" id="lga_id">
-                                        <option selected value="">Select...</option>
-                                    </select>
-                                    @error('lga_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror                               
+                                <label>L.G.A</label>
+                                <select class="form-control @error('lga_id') is-invalid @enderror" name="lga_id" id="lga_id">
+                                    <option selected value="">Select...</option>
+                                </select>
+                                @error('lga_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror                               
                             </div>
 
                             <div class="form-group col-md-12">
-                                <small class="text-danger">TOWN</small>
-                                    <select class="form-control pl-5 @error('town_id') is-invalid @enderror" name="town_id"  id="town_id">
-                                        <option selected value="">Select...</option>
-                                    </select>
-                                    @error('town_id')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror                               
+                                <label>Town</label>
+                                <select class="form-control @error('town_id') is-invalid @enderror" name="town_id"  id="town_id">
+                                    <option selected value="">Select...</option>
+                                </select>
+                                @error('town_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror                               
                             </div>
 
                             <input type="hidden" name="url" id="url" value="{{url('/')}}" />
 
-                            
-
-                    <button type="submit" class="btn btn-primary">Create</button>
+                            <div class="form-group col-md-12">
+                                <button type="submit" class="btn btn-primary">Create</button>
+                            </div>
                 <!-- </form> -->
             </div><!-- card -->    
         </div><!-- col -->
@@ -82,7 +82,7 @@
             <div class="card mg-b-10">
               <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
                 <div>
-                  <h6 class="mg-b-5">Services as of {{ date('M, d Y') }}</h6>
+                  <h6 class="mg-b-5">Serviced Areas as of {{ date('M, d Y') }}</h6>
                   <p class="tx-13 tx-color-03 mg-b-0">This table displays a list of all areas that can be serviced.</p>
                 </div>
                 
@@ -95,26 +95,8 @@
               </div><!-- table-responsive -->
             </div><!-- card -->    
         </div><!-- col -->
-
         
-          
-        <!-- <input type="hidden" name="url" id="url" value="http://localhost/main_dosh" /> -->
       </div>
-
-
-      <!-- <div class="row">
-            <div class="col-lg-12 mb-20">
-                <div class="input-effect">
-                    <input class="primary-input form-control" type="text" name="event_title" autocomplete="off" value="" />
-                    <label>Event Title <span>*</span> </label>
-                    <span class="focus-border"></span>
-                </div>
-            </div>
-
-            <input type="hidden" name="url" id="url" value="http://localhost/main_dosh" />
-        </div> -->
-
-
 
     </div>
 </div>
@@ -131,11 +113,6 @@
             let stateName = $("#state_id").find("option:selected").text();
             let wardId = $("#ward_id").find("option:selected").val();
 
-            // $.ajaxSetup({
-            //         headers: {
-            //             'X-CSRF_TOKEN':$('meta[name="csrf-token"]').attr('content')
-            //         }
-            //     });
             $.ajax({
                 url: "{{ route('lga_list', app()->getLocale()) }}",
                 method: "POST",

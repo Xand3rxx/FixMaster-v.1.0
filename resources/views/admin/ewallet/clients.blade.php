@@ -30,7 +30,7 @@
               </div><!-- card-header -->
              
               <div class="table-responsive">
-                <div class="row mt-1 mb-1 ml-1 mr-1">
+                {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Sort</label>
@@ -96,7 +96,7 @@
                             <input name="name" id="name" type="date" class="form-control pl-5">
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <table class="table table-hover mg-b-0" id="basicExample">
                     <thead class="thead-primary">
@@ -111,61 +111,26 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">Kelvin Adesanya</td>
-                            <td class="tx-medium">WAL-23782382</td>
-                            <td class="text-center">12</td>
-                            <td class="tx-medium text-center">{{ number_format(10000) }}</td>
-                            <td class="tx-medium text-center">{{ number_format(10000) }}</td>
-                            <td class=" text-center">
-                            <div class="dropdown-file">
-                                <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                
-                                <a href="{{ route('admin.ewallet.client_history', app()->getLocale()) }}" class="dropdown-item details text-primary" title="View Kelvin Adesanya wallet history"><i class="fa fa-history"></i> History</a>
-                
-                                </div>
-                            </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">Folorunsho Angelina</td>
-                            <td class="tx-medium">WAL-50B6D80A</td>
-                            <td class="text-center">8</td>
-                            <td class="tx-medium text-center">{{ number_format(5000) }}</td>
-                            <td class="tx-medium text-center">{{ number_format(5000) }}</td>
-                            <td class=" text-center">
+                        @foreach ($transactions as $transaction)
+                            <tr>
+                                <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                                <td class="tx-medium">{{ !empty($transaction['user']['account']['first_name']) ? Str::title($transaction['user']['account']['first_name'] .' '. $transaction['user']['account']['last_name']) : 'UNAVAILABLE' }}</td>
+                                <td class="tx-medium">{{ $transaction['unique_id'] }}</td>
+                                <td class="text-center">{{ $transaction['walletTransactions']->count() }}</td>
+                                <td class="tx-medium text-center">{{ number_format($transaction['user']['clientWalletBalance']['opening_balance']) }}</td>
+                                <td class="tx-medium text-center">{{ number_format($transaction['user']['clientWalletBalance']['closing_balance']) }}</td>
+                                <td class=" text-center">
                                 <div class="dropdown-file">
-                                <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                
-                                    <a href="{{ route('admin.ewallet.client_history', app()->getLocale()) }}" class="dropdown-item details text-primary" title="View Folorunsho Angelina wallet history"><i class="fa fa-history"></i> History</a>
+                                    <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                    
+                                    <a href="{{ route('admin.ewallet.client_history', ['transaction'=>$transaction['user']['uuid'], 'locale'=>app()->getLocale()]) }}" class="dropdown-item details text-primary" title="View {{ Str::title($transaction['user']['account']['first_name'] .' '. $transaction['user']['account']['last_name']) }} wallet history"><i class="fa fa-history"></i> History</a>
                     
+                                    </div>
                                 </div>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="tx-color-03 tx-center">{{ ++$i }}</td>
-                            <td class="tx-medium">Jide Jude</td>
-                            <td class="tx-medium">WAL-21780953</td>
-                            <td class="text-center">3</td>
-                            <td class="tx-medium text-center">{{ number_format(2000) }}</td>
-                            <td class="tx-medium text-center">{{ number_format(2000) }}</td>
-                            <td class=" text-center">
-                                <div class="dropdown-file">
-                                <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                
-                                    <a href="{{ route('admin.ewallet.client_history', app()->getLocale()) }}" class="dropdown-item details text-primary" title="View Jide Jude wallet history"><i class="fa fa-history"></i> History</a>
-                                </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                   </table>
               </div><!-- table-responsive -->

@@ -40,7 +40,7 @@ class Client extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class)->with(['account', 'contact']);
+        return $this->belongsTo(User::class)->with(['account', 'contact', 'clientWalletBalance']);
     }
 
     public function account()
@@ -73,6 +73,16 @@ class Client extends Model
     public function profession()
     {
         return $this->hasOne(Profession::class, 'id', 'profession_id');
+    }
+
+    public function walletTransaction()
+    {
+        return $this->hasOne(WalletTransaction::class, 'user_id', 'user_id');
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class, 'user_id', 'user_id')->with('payment');
     }
 }
 

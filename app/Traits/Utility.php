@@ -371,6 +371,9 @@ trait Utility
       //Validate if warranty already exist on `service_request_warranties` table for this service request.
       $requestWarranty = \App\Models\ServiceRequestWarranty::where(['client_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id']])->with('warranty')->first();
 
+      if(empty($requestWarranty)){
+        return back()->with('error', 'Sorry! No record of final invoice payment found.');
+      }
       //Status UUID for marking a job as completed
       $statusUUID = (auth()->user()->roles[0]->slug == 'super-admin' || auth()->user()->roles[0]->slug == 'admin-user') ? 'ce316687-62d8-45a9-a1b9-f75da104fc18' : 'fca5a961-39d4-42e5-be9d-20e4b579d4b1';
 
@@ -405,6 +408,14 @@ trait Utility
             : 
               $this->log('Request', 'Informational', $actionUrl, auth()->user()->email.' marked '.$serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' '.$serviceRequest['unique_id'].' service request as completed.');
 
+              if(collect($serviceRequest['service_request_assignees'])->isNotEmpty()){
+                foreach($serviceRequest['service_request_assignees'] as $item){
+                  if($item['user']['roles'][0]['slug'] == 'cse-user'){
+                    csePayment($item['user']['id'], $serviceRequest['unique_id'], 'Regular');
+                  }
+                }
+              }
+
             $markAsCompleted = true;
 
         }, 3);
@@ -415,7 +426,7 @@ trait Utility
           $warrantyDays = '0';
         }else{
 
-          $warrantyDetails = '<p style="margin-bottom: 0.28cm; line-height: 108%"><span style="background-color: transparent;"><b><u>WARRANTY DETAILS</u></b></span></p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Warranty Name:&nbsp;</span>'.$requestWarranty['warranty']['name'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Start Date:&nbsp;</span>'.$requestWarranty['start_date'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Expiry Date:&nbsp;</span>'.$requestWarranty['expiration_date'].'</p>';
+          $warrantyDetails = '<p style="margin-bottom: 0.28cm; line-height: 108%"><span style="background-color: transparent;"><b><u>WARRANTY DETAILS</u></b></span></p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Warranty Name:&nbsp;</span>'.$requestWarranty['warranty']['name'].'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Start Date:&nbsp;</span>'.\Carbon\Carbon::parse($requestWarranty['start_date'], 'UTC')->isoFormat('MMMM Do YYYY').'</p><p style="margin-bottom: 1rem;"><span style="font-weight: bolder;">Expiry Date:&nbsp;</span>'.\Carbon\Carbon::parse($requestWarranty['expiration_date'], 'UTC')->isoFormat('MMMM Do YYYY').'</p>';
 
           $warrantyDays = $requestWarranty['warranty']['duration'];
         }
@@ -425,8 +436,8 @@ trait Utility
         $adminEmailData = collect([
           'email'                 =>  'info@fixmaster.com.ng',
           'template_feature'      =>  'ADMIN_CUSTOMER_JOB_COMPLETED_NOTIFICATION',
-          'firstname'             =>  'FixMaster',
-          'lastname'              =>  'Administrator',
+          'first_name'             =>  'FixMaster',
+          'last_name'              =>  'Administrator',
           'job_ref'               =>  $serviceRequest['unique_id'],
           'warranty_days'         =>  $warrantyDays,
           'warranty_details'      =>  $warrantyDetails,
@@ -437,8 +448,8 @@ trait Utility
         $clientEmailData = collect([
           'email'                 =>  $serviceRequest['client']['email'],
           'template_feature'      =>  'CUSTOMER_JOB_COMPLETED_NOTIFICATION',
-          'firstname'             =>  $serviceRequest['client']['client']['account']['first_name'],
-          'lastname'              =>  $serviceRequest['client']['client']['account']['last_name'],
+          'first_name'             =>  $serviceRequest['client']['client']['account']['first_name'],
+          'last_name'              =>  $serviceRequest['client']['client']['account']['last_name'],
           'job_ref'               =>  $serviceRequest['unique_id'],
           'warranty_days'         =>  $warrantyDays,
           'warranty_details'      =>  $warrantyDetails,
@@ -456,8 +467,8 @@ trait Utility
               $cseEmailData = collect([
                 'email'             =>  $item['user']['email'],
                 'template_feature'  =>  'ADMIN_CSE_JOB_COMPLETED_NOTIFICATION',
-                'first_name'        =>  ucfirst($item['user']['account']['first_name']),
-                'last_name'         =>  ucfirst($item['user']['account']['last_name']),
+                'firstname'        =>  ucfirst($item['user']['account']['first_name']),
+                'lastname'         =>  ucfirst($item['user']['account']['last_name']),
                 'job_ref'           =>  $serviceRequest['unique_id'],
                 'url'               =>  url(app()->getLocale().'/cse/requests/status?status=Completed'),
               ]);
@@ -481,7 +492,8 @@ trait Utility
   }
 
   public function issuedWarranty($requestWarranty){
-  
+    
+    
     //Update record on `service_request_warranties` table
     $requestWarranty->update([
         'start_date'            =>  now(),

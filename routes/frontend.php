@@ -119,11 +119,13 @@ Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
-Route::post('/forgot-password', function (Request $request) {
-    $request->validate(['email' => 'required|email']);
+Route::post('/forgot-password', function ($language, Request $request) {
+
+    $valid = $request->validate(['email' => 'required|email']);
 
     $status = Password::sendResetLink(
-        $request->only('email')
+        // $request->only('email')
+        $valid
     );
 
     return $status === Password::RESET_LINK_SENT
@@ -139,7 +141,7 @@ Route::post('/reset-password', function (Request $request) {
     $request->validate([
         'token' => 'required',
         'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
+        'password' => 'required|min:6|confirmed',
     ]);
 
     $status = Password::reset(

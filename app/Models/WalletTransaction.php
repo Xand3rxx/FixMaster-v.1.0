@@ -28,4 +28,9 @@ class WalletTransaction extends Model
         return $this->belongsTo(User::class)->with(['account', 'contact']);
     }
 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id');
+    }
+
 }

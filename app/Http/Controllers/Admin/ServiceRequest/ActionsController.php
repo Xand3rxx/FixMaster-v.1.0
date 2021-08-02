@@ -161,6 +161,10 @@ class ActionsController extends Controller
         //Check if uuid exists on `service_requests` table.
         $serviceRequest = ServiceRequest::where('uuid', $uuid)->with('client', 'price', 'payment')->firstOrFail();
 
+        if(!\App\Models\ServiceRequestPayment::where(['user_id'  => $serviceRequest['client_id'], 'service_request_id' => $serviceRequest['id'], 'payment_type' =>  'final-invoice-fee'])->exists()){
+            return back()->with('error', 'Sorry! This customer is yet to make payment for final invoice.');
+        }
+
         return (($this->markCompletedRequestTrait($serviceRequest) == true) ? back()->with('success', $serviceRequest->unique_id.' request has been marked as completed.') : back()->with('error', 'An error occurred while trying to mark '. $serviceRequest->unique_id.' request as completed.'));
 
     }

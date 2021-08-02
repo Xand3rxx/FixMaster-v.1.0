@@ -26,10 +26,11 @@ This show's a list of all FixMaster Collaborators that worked on the clients ser
                     <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ ucfirst($item->user->account->first_name)}} {{  ucfirst($item->user->account->last_name)}}</h6>
 
                     <span class="d-block tx-11 text-muted">
+                            {{-- <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                        <span class="font-weight-bold ml-2">0.6km</span>
+                            <i class="icon ion-md-star lh-0 tx-orange"></i> --}}
+                            <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($service_request['client']['contact']['address_latitude'], $service_request['client']['contact']['address_longitude'], $item['user']['contact']['address_latitude'], $item['user']['contact']['address_longitude']) }}
+                                km</span>
                     </span>
                     </div>
                     <div class="col-md-6 col-sm-6">
@@ -63,10 +64,11 @@ This show's a list of all FixMaster Collaborators that worked on the clients ser
                     <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ ucfirst($item->user->account->first_name)}} {{  ucfirst($item->user->account->last_name)}}</h6>
                     
                     <span class="d-block tx-11 text-muted">
+                            {{-- <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                        <span class="font-weight-bold ml-2">0.6km</span>
+                            <i class="icon ion-md-star lh-0 tx-orange"></i> --}}
+                            <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($service_request['client']['contact']['address_latitude'], $service_request['client']['contact']['address_longitude'], $item['user']['contact']['address_latitude'], $item['user']['contact']['address_longitude']) }}
+                                km</span>
                     </span>
                     </div>
                     <div class="col-md-6 col-sm-6">
@@ -106,12 +108,12 @@ This show's a list of all FixMaster Collaborators that worked on the clients ser
                     
                     </h6>
                     
-                    <span class="d-block tx-11 text-muted">
+                    {{-- <span class="d-block tx-11 text-muted">
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                         <span class="font-weight-bold ml-2">0.6km</span>
-                    </span>
+                    </span> --}}
                     </div>
                     <div class="col-md-6 col-sm-6">
                     <div class="form-row">
@@ -143,10 +145,11 @@ This show's a list of all FixMaster Collaborators that worked on the clients ser
                     <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ ucfirst($item->user->account->first_name)}} {{  ucfirst($item->user->account->last_name)}}</h6>
 
                     <span class="d-block tx-11 text-muted">
+                            {{-- <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                            <i class="icon ion-md-star lh-0 tx-orange"></i>
-                        <span class="font-weight-bold ml-2">0.6km</span>
+                            <i class="icon ion-md-star lh-0 tx-orange"></i> --}}
+                            <span class="font-weight-bold ml-2">{{ \App\Traits\CalculateDistance::getDistanceBetweenPoints($service_request['client']['contact']['address_latitude'], $service_request['client']['contact']['address_longitude'], $item['user']['contact']['address_latitude'], $item['user']['contact']['address_longitude']) }}
+                                km</span>
                     </span>
                     </div>
                     <div class="col-md-6 col-sm-6">
@@ -179,12 +182,12 @@ This show's a list of all FixMaster Collaborators that worked on the clients ser
                     <div class="col-md-6 col-sm-6">
                     <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ ucfirst($item->warranty_claim_supplier->user->account->first_name)}} {{  ucfirst($item->warranty_claim_supplier->user->account->last_name)}}</h6>
                     
-                    <span class="d-block tx-11 text-muted">
+                    {{-- <span class="d-block tx-11 text-muted">
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                             <i class="icon ion-md-star lh-0 tx-orange"></i>
                         <span class="font-weight-bold ml-2">0.6km</span>
-                    </span>
+                    </span> --}}
                     </div>
                     <div class="col-md-6 col-sm-6">
                     <div class="form-row">

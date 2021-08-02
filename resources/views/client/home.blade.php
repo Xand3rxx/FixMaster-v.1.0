@@ -186,8 +186,17 @@
                     </div>
                 </div>
                 <div class="author">
-                <small class="text-light date"><i class="mdi mdi-calendar"></i> Requests: {{ rand(5,17) }}</small><br>
-                <small class="text-light date"><i class="mdi mdi-credit-card"></i> Basic Price: ₦{{ number_format(3500) }}</small>
+                <small class="text-light date"><i class="mdi mdi-calendar"></i> Requests: {{ rand(5,20) }}</small><br>
+                <small class="text-light date"><i class="mdi mdi-credit-card"></i> 
+                    @php
+                        // Declare an associative array of prices
+                        $arr = array( "a"=>"3500", "b"=>"2000", "c"=>"1500" );
+                        
+                        // Use array_rand function to returns random key
+                        $key = array_rand($arr);
+                    @endphp
+                    Basic Price: ₦{{ number_format($arr[$key]) }}
+                </small>
 
                 </div>
             </div>

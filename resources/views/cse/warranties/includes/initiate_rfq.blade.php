@@ -57,12 +57,12 @@
                                         <div class="col-md-6 col-sm-6">
                                         <h6 class="tx-13 tx-inverse tx-semibold mg-b-0">{{ ucfirst($item->warranty_claim_supplier->user->account->first_name)}} {{  ucfirst($item->warranty_claim_supplier->user->account->last_name)}}</h6>
                                         
-                                        <span class="d-block tx-11 text-muted">
+                                        {{-- <span class="d-block tx-11 text-muted">
                                                 <i class="icon ion-md-star lh-0 tx-orange"></i>
                                                 <i class="icon ion-md-star lh-0 tx-orange"></i>
                                                 <i class="icon ion-md-star lh-0 tx-orange"></i>
                                             <span class="font-weight-bold ml-2">0.6km</span>
-                                        </span>
+                                        </span> --}}
                                         </div>
                                         <div class="col-md-6 col-sm-6">
                                         <div class="form-row">
