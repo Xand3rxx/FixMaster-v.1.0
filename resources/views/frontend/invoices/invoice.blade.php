@@ -95,19 +95,27 @@
     <div class="container">
         <div class="row mt-5 pt-4 pt-sm-0 justify-content-center">
             <div class="col-lg-10">
-                @if($invoice->status == '1' && $invoice['phase'] == '2')
-                <div class="py-4">
-                    <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
-                    <input id="client-return" type="hidden" name="route" value="{{ route('client.return', app()->getLocale()) }}">
-                    <button id="return-btn" href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary mr-2">
-                        <i class="fa fa-arrow-left"></i> Go Back to Pay for {{$invoice['invoice_type'] === 'Diagnosis Invoice' ? 'Final' : 'Diagnosis'}} Invoice
-                    </button>
-                </div>
-                @else
+
+                @if(auth()->user()->type->url === 'admin')
                     <div class="py-4">
-                        <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Return to service request
+                        <a href="{{route('admin.invoices', app()->getLocale())}}" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Return to invoices
                         </a>
                     </div>
+                @else
+                    @if($invoice->status == '1' && $invoice['phase'] == '2')
+                        <div class="py-4">
+                            <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
+                            <input id="client-return" type="hidden" name="route" value="{{ route('client.return', app()->getLocale()) }}">
+                            <button id="return-btn" href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary mr-2">
+                                <i class="fa fa-arrow-left"></i> Go Back to Pay for {{$invoice['invoice_type'] === 'Diagnosis Invoice' ? 'Final' : 'Diagnosis'}} Invoice
+                            </button>
+                        </div>
+                    @else
+                        <div class="py-4">
+                            <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Return to service request
+                            </a>
+                        </div>
+                    @endif
                 @endif
                 <div class="card shadow rounded border-0">
                     <div class="card-body">
@@ -371,68 +379,74 @@
 
 
                     <div class="d-flex justify-content-center py-3">
-                        @if($invoice->status == '1' && $invoice['phase'] == '1')
-                        <div id="client-decision">
-                            <input id="decision-route" type="hidden" name="route" value="{{ route('client.decline', app()->getLocale()) }}">
-                            <input id="client-accept" type="hidden" name="route" value="{{ route('client.accept', app()->getLocale()) }}">
-                            <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
-{{--                            <button class="btn btn-outline-primary" id="client_accept" name="client_choice">Client Accept</button>--}}
-                            <a href="#" data-toggle="modal" data-target="#clientAccept" data-payment-ref="" data-url="" id="payment-details" class="btn btn-outline-primary ">Click to Pay for final invoice</a>
-                            <button class="btn btn-outline-primary" id="client_decline" name="client_choice">Click here to reject final invoice</button>
-                            <div id="msg"></div>
-                        </div>
-                        @elseif($invoice->status == '1' && $invoice['phase'] == '2')
-{{--                            @if($invoice['invoice_type'] === 'Diagnosis Invoice')--}}
-{{--                            @endif--}}
-                            <form method="POST" action="{{ route('client.invoice_payment', app()->getLocale()) }}">
-                                @csrf
-                                {{-- REQUIREMENTS FOR PAYMENT GATWAYS  --}}
-{{--                                <input type="hidden" class="d-none" value="paystack" id="payment_channel" name="payment_channel">--}}
-                                <input type="hidden" class="d-none" value="{{$totalAmount}}" name="booking_fee">
-                                <input type="hidden" class="d-none" value="{{$service_request_assigned['user_id']}}" name="cse_assigned">
-                                <input type="hidden" class="d-none" value="{{$technician_assigned['user_id']}}" name="technician_assigned">
-                                <input type="hidden" class="d-none" value="{{$invoice['rfqs']['rfqSupplier']['supplier_id'] ?? null}}" name="supplier_assigned">
-                                <input type="hidden" class="d-none" value="{{$qa_assigned['user_id'] ?? null}}" name="qa_assigned">
 
-                                <input type="hidden" class="d-none" value="{{$logistics}}" id="logistics_cost" name="logistics_cost">
-                                <input type="hidden" class="d-none" value="{{$retention_fee}}" id="retention_fee" name="retention_fee">
-                                <input type="hidden" class="d-none" value="{{$vat}}" id="tax" name="tax">
-                                <input type="hidden" class="d-none" value="{{$actual_labour_cost}}" id="actual_labour_cost" name="actual_labour_cost">
-                                <input type="hidden" class="d-none" value="{{$actual_material_cost}}" id="actual_material_cost" name="actual_material_cost">
-                                <input type="hidden" class="d-none" value="{{$labour_markup}}" id="labour_markup" name="labour_markup">
-                                <input type="hidden" class="d-none" value="{{$material_markup}}" id="material_markup" name="material_markup">
-                                <input type="hidden" class="d-none" value="{{$fixMasterRoyalty}}" id="fixMasterRoyalty" name="fixMasterRoyalty">
-                                <input type="hidden" class="d-none" value="{{ $warrantyCost }}" id="warrantyCost" name="warrantyCost">
+                        @if(auth()->user()->type->url === 'admin')
+                            <a href="{{route('admin.invoices', app()->getLocale())}}" class="btn btn-outline-primary">Return to invoices</a>
+                        @else
+                            @if($invoice->status == '1' && $invoice['phase'] == '1')
+                                <div id="client-decision">
+                                    <input id="decision-route" type="hidden" name="route" value="{{ route('client.decline', app()->getLocale()) }}">
+                                    <input id="client-accept" type="hidden" name="route" value="{{ route('client.accept', app()->getLocale()) }}">
+                                    <input id="invoice_uuid" type="hidden" name="invoiceUUID" value="{{ $invoice['uuid'] }}">
+                                    {{--                            <button class="btn btn-outline-primary" id="client_accept" name="client_choice">Client Accept</button>--}}
+                                    <a href="#" data-toggle="modal" data-target="#clientAccept" data-payment-ref="" data-url="" id="payment-details" class="btn btn-outline-primary ">Click to Pay for final invoice</a>
+                                    <button class="btn btn-outline-primary" id="client_decline" name="client_choice">Click here to reject final invoice</button>
+                                    <div id="msg"></div>
+                                </div>
+                            @elseif($invoice->status == '1' && $invoice['phase'] == '2')
+                                {{--                            @if($invoice['invoice_type'] === 'Diagnosis Invoice')--}}
+                                {{--                            @endif--}}
+                                <form method="POST" action="{{ route('client.invoice_payment', app()->getLocale()) }}">
+                                    @csrf
+                                    {{-- REQUIREMENTS FOR PAYMENT GATWAYS  --}}
+                                    {{--                                <input type="hidden" class="d-none" value="paystack" id="payment_channel" name="payment_channel">--}}
+                                    <input type="hidden" class="d-none" value="{{$totalAmount}}" name="booking_fee">
+                                    <input type="hidden" class="d-none" value="{{$service_request_assigned['user_id']}}" name="cse_assigned">
+                                    <input type="hidden" class="d-none" value="{{$technician_assigned['user_id']}}" name="technician_assigned">
+                                    <input type="hidden" class="d-none" value="{{$invoice['rfqs']['rfqSupplier']['supplier_id'] ?? null}}" name="supplier_assigned">
+                                    <input type="hidden" class="d-none" value="{{$qa_assigned['user_id'] ?? null}}" name="qa_assigned">
 
-                                <input type="hidden" class="d-none" value="invoice" id="payment_for" name="payment_for">
-                                <input type="hidden" class="d-none" value="{{ $invoice['unique_id'] }}" id="unique_id" name="unique_id">
-                                <input type="hidden" class="d-none" value="{{ $invoice['invoice_type'] }}" id="invoice_type" name="invoice_type">
-                                <input type="hidden" class="d-none" value="{{ $invoice['uuid'] }}" id="uuid" name="uuid">
-                                <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="paystack">
-                                    <div>
-                                        Click here to pay with
-                                    </div>
-                                    <div>
-                                        <label for="paystack" class="pplogo-container" style="cursor:pointer;">
-                                            <img class="img-fluid" alt="paystack" src="{{ asset('assets/images') }}/paystack.png" width="100" height="20">
-                                        </label>
-                                    </div>
-                                </button>
-                                <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="flutterwave">
-                                    <div>
-                                        Click Here to pay with
-                                    </div>
-                                    <div>
-                                        <label for="paystack" class="pplogo-container" style="cursor:pointer;">
-                                            <img class="img-fluid" alt="flutterwave" src="{{ asset('assets/images') }}/flutter.png" width="100" style="height:px">
-                                        </label>
-                                    </div>
-                                </button>
-                            </form>
+                                    <input type="hidden" class="d-none" value="{{$logistics}}" id="logistics_cost" name="logistics_cost">
+                                    <input type="hidden" class="d-none" value="{{$retention_fee}}" id="retention_fee" name="retention_fee">
+                                    <input type="hidden" class="d-none" value="{{$vat}}" id="tax" name="tax">
+                                    <input type="hidden" class="d-none" value="{{$actual_labour_cost}}" id="actual_labour_cost" name="actual_labour_cost">
+                                    <input type="hidden" class="d-none" value="{{$actual_material_cost}}" id="actual_material_cost" name="actual_material_cost">
+                                    <input type="hidden" class="d-none" value="{{$labour_markup}}" id="labour_markup" name="labour_markup">
+                                    <input type="hidden" class="d-none" value="{{$material_markup}}" id="material_markup" name="material_markup">
+                                    <input type="hidden" class="d-none" value="{{$fixMasterRoyalty}}" id="fixMasterRoyalty" name="fixMasterRoyalty">
+                                    <input type="hidden" class="d-none" value="{{ $warrantyCost }}" id="warrantyCost" name="warrantyCost">
+
+                                    <input type="hidden" class="d-none" value="invoice" id="payment_for" name="payment_for">
+                                    <input type="hidden" class="d-none" value="{{ $invoice['unique_id'] }}" id="unique_id" name="unique_id">
+                                    <input type="hidden" class="d-none" value="{{ $invoice['invoice_type'] }}" id="invoice_type" name="invoice_type">
+                                    <input type="hidden" class="d-none" value="{{ $invoice['uuid'] }}" id="uuid" name="uuid">
+                                    <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="paystack">
+                                        <div>
+                                            Click here to pay with
+                                        </div>
+                                        <div>
+                                            <label for="paystack" class="pplogo-container" style="cursor:pointer;">
+                                                <img class="img-fluid" alt="paystack" src="{{ asset('assets/images') }}/paystack.png" width="100" height="20">
+                                            </label>
+                                        </div>
+                                    </button>
+                                    <button type="submit" id="payment_channel"  class="btn btn-outline-primary" name="payment_channel" value="flutterwave">
+                                        <div>
+                                            Click Here to pay with
+                                        </div>
+                                        <div>
+                                            <label for="paystack" class="pplogo-container" style="cursor:pointer;">
+                                                <img class="img-fluid" alt="flutterwave" src="{{ asset('assets/images') }}/flutter.png" width="100" style="height:px">
+                                            </label>
+                                        </div>
+                                    </button>
+                                </form>
 
                             @elseif($invoice['status'] === '2' && $invoice['phase'] == '2')
-                            <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary">Return to Service Requests</a>
+                                <a href="{{route('client.service.all', app()->getLocale())}}" class="btn btn-outline-primary">Return to Service Requests</a>
+                            @endif
                         @endif
+
                     </div>
 
                     <div class="invoice-footer border-top py-3 px-3">

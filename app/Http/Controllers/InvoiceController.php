@@ -18,6 +18,7 @@ use App\PaymentProcessor\Concerns\PaymentHandler;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Traits\RegisterPaymentTransaction;
 use App\Traits\Utility;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 use App\Models\Income;
