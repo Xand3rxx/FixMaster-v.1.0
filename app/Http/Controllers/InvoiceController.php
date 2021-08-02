@@ -43,7 +43,6 @@ class InvoiceController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
