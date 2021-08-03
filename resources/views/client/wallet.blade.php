@@ -52,8 +52,6 @@
         margin-left: 30px;
     }
 
-    /* item list */
-
     .b{
         display: none;
         width: 100%;
@@ -102,21 +100,13 @@
     .lang-select{
         margin-top: -10px;
     }
-
-
-
-
-
-.avatar.avatar-ex-smm {
-    max-height: 75px;
-}
-
-
+    .avatar.avatar-ex-smm {
+        max-height: 75px;
+    }
 </style>
 
 
 <div class="col-lg-8 col-12">
-
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-12 mt-4 pt-2 text-center">
             <ul class="nav nav-pills nav-justified flex-column flex-sm-row rounded" id="pills-tab" role="tablist">
@@ -143,7 +133,7 @@
         <div class="tab-pane fade show active" id="fund-account" role="tabpanel" aria-labelledby="fund-account-tab">
           <!-- payment options starts here -->
         <div class="border-bottom pb-4 row">
-
+        <span class="ml-4">Click on either Flutterwave or Paystack to fund your wallet account.</span>
         @foreach($gateways as $val)
             <div class="col-md-6 mt-4">
                 <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
@@ -152,59 +142,56 @@
                 </a>
                     <a href="javascript:void(0)" class="text-primary">
                     <div class="media-body content ml-3">
-                    <a href="#" data-toggle="modal" data-target="#modal-form{{$val->id}}" >
-                        <h4 class="title mb-0">{{$val->name}}</h4>
-                        <!-- <p class="text-muted mb-0">₦30,000.00</p> -->
-                        <!-- <p class="text-muted mb-0"> @London, UK</p>  -->
-                        </a>
-
+                    <a href="#" style="color: #333 !important" data-toggle="modal" data-target="#modal-form{{$val->id}}">
+                        {{-- <h4 class="title mb-0">{{ ucfirst($val->name) }}</h4> --}}
+                    </a>
                     </div>
                     </a>
                 </div>
             </div>
 
-
-      <div class="modal fade" id="modal-form{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content tx-14">
-          <div class="card-header bg-transparent pb-5">
-          <div class="text-muted text-center mt-2 mb-3"><small>Deposit via</small></div>
-                <div class="btn-wrapper text-center">
-                <!-- <a href="javascript:void;" class="btn btn-neutral btn-icon"> -->
-                    <span class="btn-inner--icon"><img class="avatar avatar-ex-smm" src="{{ asset('assets/images') }}/{{$val->name}}.png"></span>
-                <!-- </a> -->
-                </div>
-            </div>
-          <div class="modal-body">
-        <div>
-        <form role="form" action="{{ route('client.wallet.submit', app()->getLocale()) }}" method="post">
-            @csrf
-            <div class="form-group mb-3">
-                <div class="input-group input-group-merge input-group-alternative">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">NGN</span>
+            <div class="modal fade" id="modal-form{{$val->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content tx-14">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="formModal">E-Wallet Account Funding</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <div class="card-header bg-transparent pb-5">
+                        <div class="text-muted text-center"><small>Deposit Via</small></div>
+                            <div class="btn-wrapper text-center">
+                                <span class="btn-inner--icon"><img class="avatar avatar-ex-smm" src="{{ asset('assets/images') }}/{{$val->name}}.png"></span>
+                            </div>
+                        </div>
+                    <div class="modal-body">
+                            <form role="form" action="{{ route('client.wallet.submit', app()->getLocale()) }}" method="POST">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">NGN</span>
+                                    </div>
+                                    <input type="number" step="any" class="form-control @error('amount') is-invalid @enderror" placeholder="" name="amount" required>
+                                    @error('amount')
+                                        <x-alert :message="$message" />
+                                    @enderror
+                                    <input type="hidden" name="gateway" value="{{ $val->id }}">
+                                    <input type="hidden" name="payment_channel" value="{{ strtolower($val->keyword) }}">
+                                    <input type="hidden" name="payment_for" value="e-wallet">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary my-4">Pay</button>
+                            </div>
+                            </form>
                     </div>
-                    <input type="number" step="any" class="form-control" placeholder="" name="amount" required>
-                    <input type="hidden" name="gateway" value="{{$val->id}}">
-                    <input type="hidden" name="payment_channel" value="{{$val->keyword}}">
-                    <input type="hidden" name="payment_for" value="e-wallet">
+                    </div>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary my-4">Preview</button>
-            </div>
-            </form>
-        </div>
-      </div>
-
-        </div>
-      </div>
+        @endforeach
     </div>
-
-   @endforeach
-
-
-</div>
 </div>
 
 <!-- payment options ends here -->
@@ -215,7 +202,7 @@
         <div class="tab-pane fade show" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
             <h5 class="mb-0">Transactions</h5>
             <div class="table-responsive mt-4 bg-white rounded shadow">
-                <div class="row mt-1 mb-1 ml-1 mr-1">
+                {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
                     <div class="col-md-4">
                         <div class="form-group position-relative">
                             <label>Sort Table</label>
@@ -283,7 +270,7 @@
                             <input name="name" id="name" type="date" class="form-control pl-5">
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <table class="table table-center table-padding mb-0" id="basicExample">
                     <thead>
@@ -305,10 +292,10 @@
                     @foreach($mytransactions as $k=>$val)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{$val->reference_id}}</td>
-                            <td>{{$val->transaction_id}}</td>
-                            <td class="font-weight-bold">{{$val->payment_for}}</td>
-                            <td>{{$val->amount}}</td>
+                            <td>{{ !empty($val->reference_id )? $val->reference_id : 'UNAVAILABLE' }}</td>
+                            <td>{{ !empty($val->transaction_id) ? $val->transaction_id : 'UNAVAILABLE' }}</td>
+                            <td class="font-weight-bold">{{ ucfirst($val->payment_for) }}</td>
+                            <td>{{ number_format($val->amount) }}</td>
 
                             @if($val->status=='success')
                             <td class="text-center text-success">Success</td>

@@ -69,6 +69,7 @@ use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminO
 use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 use App\Http\Controllers\Admin\Report\WarrantyReportController;
+use App\Http\Controllers\Client\Ewallet\FundWalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -434,6 +435,9 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
     Route::resource('service-request',  ClientRequestController::class);
     Route::get('initialize-service-request/{payment:reference_id}', [ClientRequestController::class, 'init'])->name('service_request.init');
     Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
+
+    Route::get('initialize-wallet-fundinf/{payment:reference_id}', [FundWalletController::class, 'init'])->name('wallet_funding.init');
+
 });
 
 Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {

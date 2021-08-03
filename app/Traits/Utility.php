@@ -14,6 +14,7 @@ use App\Mail\MailNotify;
 use App\Models\Referral;
 use App\Models\Warranty;
 use App\Traits\Loggable;
+use App\Traits\CsePayments;
 use Illuminate\Support\Str;
 use App\Mail\WarrantyNotify;
 use App\Models\ServiceRequest;
@@ -26,7 +27,7 @@ use App\Http\Controllers\Messaging\MessageController;
 
 trait Utility
 {
-  use Generator, Loggable;
+  use Generator, Loggable, CsePayments;
 
   public function entityArray()
   {
@@ -411,7 +412,7 @@ trait Utility
               if(collect($serviceRequest['service_request_assignees'])->isNotEmpty()){
                 foreach($serviceRequest['service_request_assignees'] as $item){
                   if($item['user']['roles'][0]['slug'] == 'cse-user'){
-                    csePayment($item['user']['id'], $serviceRequest['unique_id'], 'Regular');
+                    $this->csePayment($item['user']['id'], $serviceRequest['id'], 'Regular');
                   }
                 }
               }

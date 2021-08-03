@@ -115,7 +115,6 @@ class ServiceRequestController extends Controller
             if(!empty($payment['meta_data']['client_discount_id'])){
                 \App\Models\ClientDiscount::where('id', $payment['meta_data']['client_discount_id'])->update(['availability' =>  'used']);
             }
-
             //Create record for on `service_request_payments` table
             \App\Models\ServiceRequestPayment::create([
                 'user_id'               => request()->user()->id, 
@@ -160,6 +159,7 @@ class ServiceRequestController extends Controller
 
             // Use created service request to trigger notification to CSE's
             \App\Jobs\ServiceRequest\NotifyCse::dispatch($service_request);
+
             return redirect()->route('client.service.all', app()->getLocale())->with('success', 'Service request was successful');
         }
         return back()->with('error', 'Payment for Service Failed!!');
@@ -246,14 +246,15 @@ class ServiceRequestController extends Controller
             //Check if town ID exists on `serviced_areas` table
             $isServiced = \App\Models\ServicedAreas::where('town_id', $filter['town_id'])->exists();
 
-            $walletBalance = \App\Models\WalletTransaction::where('user_id', $request->user()->id)->orderBy('id', 'DESC')->first();
+            $closingBalance = !empty(request()->user()->clientWalletBalance->closing_balance) ? request()->user()->clientWalletBalance->closing_balance : 0;
+
             //Return to partial view with response
             return view(
                 'client.services.includes._service_quote_description_body',
                 [
                     'displayDescription'    => !empty($isServiced) ? 'serviced' : 'not-serviced',
                     'discounts'             => $this->clientDiscounts(),
-                    'canPayWithWallet'      => $walletBalance['closing_balance'] ?? 0 >= $filter['booking_fee'] ? 'can-pay' : 'cannot-pay',
+                    'canPayWithWallet'      => !empty($closingBalance >= $filter['booking_fee']) ? 'can-pay' : 'cannot-pay',
                 ]
             );
         }
