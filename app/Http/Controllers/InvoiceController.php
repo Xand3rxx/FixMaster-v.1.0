@@ -18,6 +18,7 @@ use App\PaymentProcessor\Concerns\PaymentHandler;
 use App\Traits\GenerateUniqueIdentity as Generator;
 use App\Traits\RegisterPaymentTransaction;
 use App\Traits\Utility;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 use App\Models\Income;
@@ -42,7 +43,6 @@ class InvoiceController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
