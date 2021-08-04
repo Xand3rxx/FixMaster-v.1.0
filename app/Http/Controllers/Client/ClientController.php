@@ -162,6 +162,29 @@ class ClientController extends Controller
         return view('client.wallet', compact('myWallet') + $data);
     }
 
+    /**
+     * @param  \App\Models\Payment  $payment
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     *
+     * This is an ajax call to view details of a wallet transaction.
+     * Present on click of transaction details button.
+     */
+    public function walletTransactionDetails($languauge, Request $request)
+    {
+        if($request->ajax()) 
+        {
+            //Validate Request
+            (array) $valid = $request->validate([
+                'reference_id'  => 'bail|required|string'
+            ]);
+
+            return view('client._wallet_details', [
+                'transaction'   =>  Payment::where('reference_id', $valid['reference_id'])->with('wallettransactions')->firstOrFail()
+            ]);
+        }
+    }
+
     public function walletSubmit($language, Request $request)
     {
         //  Validate Request

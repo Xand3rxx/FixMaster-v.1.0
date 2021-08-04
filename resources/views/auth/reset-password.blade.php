@@ -30,13 +30,14 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <input type="hidden" name="token" value="{{ $token }}">
 
                                 <div class="col-lg-12">
                                     <div class="form-group position-relative">
                                         <label>Password <span class="text-danger">*</span></label>
                                         <i data-feather="key" class="fea icon-sm icons"></i>
                                         <input type="password" name="password" class="form-control pl-5" placeholder="Password" required>
-                                        <small class="text-muted">Password must be minimum of 6 characters</small>
+                                        <small class="text-muted" style="font-size: 10px;">Password must be minimum of 6 characters</small>
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

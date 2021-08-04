@@ -1,20 +1,21 @@
 <?php
 
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\InvoiceController;
+use Illuminate\Auth\Notifications\ResetPassword;
 use App\Http\Controllers\Frontend\CSEFormController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Frontend\SupplierFormController;
 use App\Http\Controllers\Frontend\ClientRegistrationController;
 use App\Http\Controllers\ServiceRequest\ClientDecisionController;
 use App\Http\Controllers\Frontend\TechnicianArtisanFormController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Frontend Routes
@@ -123,14 +124,39 @@ Route::post('/forgot-password', function ($language, Request $request) {
 
     $valid = $request->validate(['email' => 'required|email']);
 
-    $status = Password::sendResetLink(
-        // $request->only('email')
-        $valid
-    );
+    // $status = Password::sendResetLink(
+    //     // $request->only('email')
+    //     $valid
+    // );
+    // return $status === Password::RESET_LINK_SENT
+    //             ? back()->with(['status' => __($status)])
+    //             : back()->withErrors(['email' => __($status)]);
 
-    return $status === Password::RESET_LINK_SENT
-                ? back()->with(['status' => __($status)])
-                : back()->withErrors(['email' => __($status)]);
+    //Get user instance
+    $user = \App\Models\User::where('email', $valid)->with('account')->first();
+
+    //If email doen't exist
+    if(empty($user)){ return back()->with('error', 'Sorry! No user with this record was found.'); }
+
+    //Generate custom token
+    $resetToken = ResetPassword::createUrlUsing(function ($user, string $token) { return $token; });
+
+    //Define client reset email data
+    (array) $clientEmailData = [
+        'recipient_email'   =>  $user['email'],
+        'template_feature'  =>  'PASSWORD_RESET_NOTIFICATION',
+        'first_name'        =>  $user['account']['first_name'],
+        'last_name'         =>  $user['account']['last_name'],
+        'url'               =>  url(app()->getLocale().'/reset-password/'.$resetToken)
+    ];
+
+    //Send mail notification for client password reset process
+    // \App\Traits\UserNotification::send($clientEmailData, 'PASSWORD_RESET_NOTIFICATION');
+    
+    $messenger = new \App\Http\Controllers\Messaging\MessageController();
+    $messenger->sendNewMessage('', 'info@fixmaster.com.ng', $clientEmailData['recipient_email'], $clientEmailData, $clientEmailData['template_feature']);
+
+    return view('auth.reset-password-confirmation', ['user' => $user]);
 })->middleware('guest')->name('password.email');
 
 Route::get('/reset-password/{token}', function ($token) {
