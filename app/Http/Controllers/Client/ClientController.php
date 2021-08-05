@@ -162,66 +162,49 @@ class ClientController extends Controller
         return view('client.wallet', compact('myWallet') + $data);
     }
 
-    public function walletSubmit(Request $request)
+    /**
+     * @param  \App\Models\Payment  $payment
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     *
+     * This is an ajax call to view details of a wallet transaction.
+     * Present on click of transaction details button.
+     */
+    public function walletTransactionDetails($languauge, Request $request)
     {
-        // get the last wallet transaction of the loggedIn client
-        $myWallet    = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
-        // validate Request
-        $valid = $this->validate($request, [
-            // List of things needed from the request
-            'amount'           => 'required',
-            'payment_channel'  => 'required',
-            'payment_for'      => 'required',
+        if($request->ajax()) 
+        {
+            //Validate Request
+            (array) $valid = $request->validate([
+                'reference_id'  => 'bail|required|string'
+            ]);
+
+            return view('client._wallet_details', [
+                'transaction'   =>  Payment::where('reference_id', $valid['reference_id'])->with('wallettransactions')->firstOrFail()
+            ]);
+        }
+    }
+
+    public function walletSubmit($language, Request $request)
+    {
+        //  Validate Request
+        (array) $valid = $request->validate([
+            'payment_for'       => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_FOR)],
+            'payment_channel'   => ['bail', 'required', 'string', \Illuminate\Validation\Rule::in(Payment::PAYMENT_CHANNEL)],
+            'amount'            => 'bail|required|numeric|min:1000|max:100000'
         ]);
 
-        // fetch the Client Table Record of loggedIn user
-        $client = Client::where('user_id', $request->user()->id)->with('user')->firstOrFail();
+        $payment = [
+            'amount'            => $valid['amount'],
+            'payment_channel'   => strtolower($valid['payment_channel']),
+            'payment_for'       => $valid['payment_for'],
+            'unique_id'         => auth()->user()->client->unique_id,
+            'return_route_name' => 'client.wallet_funding.init',
+            'meta_data'         => $valid
+        ];
 
-        // generate random string
-        $generatedVal = $this->generateReference();
-        $track  = Session::put('Track', $generatedVal);
-
-        // call the payment Trait and submit record on the payment table
-        $payment = $this->payment($valid['amount'], $valid['payment_channel'], $valid['payment_for'], $client['unique_id'], 'pending', $generatedVal);
-
-        // initiate the paystack controller to use its method
-        $paystack_controller = new PaystackController;
-        // initiate the flutterwave controller to use its method
-        $flutterwave_controller = new FlutterwaveController;
-
-        // if a payment record is saved to the payment table
-        if ($payment) {
-            // get the payment record saved in the DB using the generated Value as refId
-            $paymentRecord =  Payment::where('reference_id', $generatedVal)->orderBy('id', 'DESC')->first();
-            $payment_id = $payment->id;
-            // authenticated user
-            $user = User::find($paymentRecord->user_id);
-
-            // if there is no payment record saved
-            if (is_null($paymentRecord)) {
-                return redirect()->route('client.wallet', app()->getLocale())->with('error', 'Invalid Deposit Request');
-            }
-            // if the payment record have been saved and has a status of pending
-            if ($paymentRecord->status != 'pending') {
-                $return = redirect()->route('client.wallet', app()->getLocale())->with('error', 'Transaction already saved');
-            }
-            //check the payment method selected
-            switch ($paymentRecord->payment_channel) {
-
-                case 'paystack':
-                    $return = $paystack_controller->initiate($payment_id);
-                    break;
-                case 'flutterwave':
-                    $return = $flutterwave_controller->initiate($payment_id);
-
-                    break;
-
-                default:
-
-                    $return = redirect()->route('client.wallet', app()->getLocale())->with('error', 'Please select a payment method');
-            }
-            return (!$return) ? redirect()->route('client.wallet', app()->getLocale())->with('error', 'an error occured') : $return;
-        }
+        // Transfer to Concerns
+        return \App\PaymentProcessor\Concerns\PaymentHandler::redirectToGateway($payment);
     }
 
 
@@ -863,7 +846,7 @@ class ClientController extends Controller
 
             $this->log('request', 'Informational', Route::currentRouteAction(), $request->user()->account->first_name.' '.$request->user()->account->last_name. ' initiated a warranty for ' . $requestExists->unique_id . ' service request.');
 
-            return redirect()->route('client.service.all', app()->getLocale())->with('success', $requestExists->unique_id . ' warranty was successfully initiated.Please check your mail for notification');
+            return redirect()->route('client.service.all', app()->getLocale())->with('success', $requestExists->unique_id . ' warranty was successfully initiated. Please check your mail for notification.');
 
         } else {
 

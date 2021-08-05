@@ -4,8 +4,8 @@
     @include('layouts.partials._messages')
 
 
-    <div class="col-lg-8 col-12">
-        <div class="border-bottom pb-4 row">
+    <div class="col-lg-8 col-12 ">
+        {{-- <div class="border-bottom pb-4 row">
 
             <div class="col-md-4 mt-4">
                 <div class="media key-feature align-items-center p-3 rounded shadow mt-4">
@@ -13,7 +13,6 @@
                     <div class="media-body content ml-3">
                         <h4 class="title mb-0">Transactions</h4>
                         <p class="text-muted mb-0">3</p>
-                    <!-- {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}} -->
                     </div>
                 </div>
 
@@ -25,7 +24,6 @@
                     <div class="media-body content ml-3">
                         <h4 class="title mb-0">Amount Spent</h4>
                         <p class="text-muted mb-0">₦30,000.00</p>
-                    <!-- {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}} -->
                     </div>
                 </div>
             </div>
@@ -36,18 +34,17 @@
                     <div class="media-body content ml-3">
                         <h4 class="title mb-0">Amount Recieved</h4>
                         <p class="text-muted mb-0">₦84,560.00</p>
-                    <!-- {{-- <p class="text-muted mb-0"><a href="javascript:void(0)" class="text-primary">CircleCi</a> @London, UK</p>     --}} -->
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="tab-content mt-3" id="pills-tabContent">
             <!-- payment options ends here -->
             <div class="tab-pane fade show active" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
-                <h5 class="mb-0">All Payments Transactions</h5>
+                <h5 class="mb-0 mt-3">All Payments Transactions</h5>
                 <div class="table-responsive mt-4 bg-white rounded shadow">
-                    <div class="row mt-1 mb-1 ml-1 mr-1">
+                    {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
                         <div class="col-md-4">
                             <div class="form-group position-relative">
                                 <label>Sort Table</label>
@@ -115,7 +112,7 @@
                                 <input name="name" id="name" type="date" class="form-control pl-5">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <table class="table table-center table-padding mb-0" id="basicExample">
                         <thead>

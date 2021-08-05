@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request; 
 
-use App\Models\WalletTransaction;
-use App\Models\Payment;
-
 class EWalletController extends Controller
 {
      /**
@@ -20,24 +17,38 @@ class EWalletController extends Controller
 
     public function clients()
     {
-
-        // $myWallet    = WalletTransaction::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->get();
-        // return view('client.wallet', compact('myWallet')+$data);
-
-        return view('admin.ewallet.transactions')->with('i');
-
+        return view('admin.ewallet.clients', [
+            'transactions' => \App\Models\Client::with('user', 'walletTransactions')->has('walletTransactions')->get()
+        ]);
     }
 
-    public function transactions(){
+    public function transactions()
+    {
+        return view('admin.ewallet.transactions', [
+            'walletTransactions'    => \App\Models\WalletTransaction::with('user')->get()
+        ]);
+    }
+    
 
-        $walletTransactions = WalletTransaction::with('user')->get();
-        return view('admin.ewallet.transactions', compact('walletTransactions'));
-
-        // return view('admin.ewallet.transactions')->with('i');
+    public function clientHistory($language, $uuid)
+    {
+        return view('admin.ewallet.client_history', [
+            'transaction' => \App\Models\User::where('uuid', $uuid)->with('account', 'client.walletTransactions')->firstOrFail()
+        ]);
     }
 
-    public function clientHistory(){
-
-        return view('admin.ewallet.client_history')->with('i');
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * This is an ajax call to Wallet transaction
+     * present on click of action:details button
+     */
+    public function walletTransactionDetail($language, $id)
+    {
+        return view('admin.ewallet._client_history_detail', [
+            'transaction' => \App\Models\WalletTransaction::where('id', $id)->with('payment')->firstOrFail()
+        ]);
     }
+
 }

@@ -30,6 +30,7 @@ class PaymentHandler extends Controller
             // determine how to handle offline
         } elseif ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['wallet']) {
             // determine how to handle wallet payment
+            return \App\Http\Controllers\Client\Ewallet\FundWalletController::payForServiceRequest($payment);
         } elseif ($payment['payment_channel'] == Payment::PAYMENT_CHANNEL['loyalty']) {
             # determine how to hanlde loyalty payment
         } else {

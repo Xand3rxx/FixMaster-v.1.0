@@ -224,6 +224,10 @@
                             @error('full_address')
                             <x-alert :message="$message" />
                             @enderror
+
+                            <input type="hidden" value="{{ old('address_latitude') }}" name="address_latitude" id="user_latitude">
+                            <input type="hidden" value="{{ old('address_longitude') }}" name="address_longitude" id="user_longitude">
+
                         </div>
                     </div>
 

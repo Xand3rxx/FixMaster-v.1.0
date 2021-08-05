@@ -14,6 +14,7 @@ use App\Mail\MailNotify;
 use App\Models\Referral;
 use App\Models\Warranty;
 use App\Traits\Loggable;
+use App\Traits\CsePayments;
 use Illuminate\Support\Str;
 use App\Mail\WarrantyNotify;
 use App\Models\ServiceRequest;
@@ -26,7 +27,7 @@ use App\Http\Controllers\Messaging\MessageController;
 
 trait Utility
 {
-  use Generator, Loggable;
+  use Generator, Loggable, CsePayments;
 
   public function entityArray()
   {
@@ -407,6 +408,14 @@ trait Utility
               $this->log('Request', 'Informational', $actionUrl, $serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' marked '.$serviceRequest['unique_id'].' job request as completed.') 
             : 
               $this->log('Request', 'Informational', $actionUrl, auth()->user()->email.' marked '.$serviceRequest['client']['account']['first_name'].' '.$serviceRequest['client']['account']['last_name'].' '.$serviceRequest['unique_id'].' service request as completed.');
+
+              if(collect($serviceRequest['service_request_assignees'])->isNotEmpty()){
+                foreach($serviceRequest['service_request_assignees'] as $item){
+                  if($item['user']['roles'][0]['slug'] == 'cse-user'){
+                    $this->csePayment($item['user']['id'], $serviceRequest['id'], 'Regular');
+                  }
+                }
+              }
 
             $markAsCompleted = true;
 

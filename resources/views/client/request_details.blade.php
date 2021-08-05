@@ -15,10 +15,10 @@
             <a href="{{ route('client.edit_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ])}}" class="btn btn-sm btn-warning">Edit Request </a>
         @endif
         <a href="#cancelRequest" id="cancel-request" data-toggle="modal" data-url="{{ route('client.cancel_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ]) }}" data-job-reference="{{ $requestDetail->unique_id  }}" class="btn btn-sm btn-danger">Cancel Request </a>
-        @elseif($requestDetail->status_id == '4')
+        {{-- @elseif($requestDetail->status_id == '4')
         <a href="#" id="activate"
         data-url="{{ route('client.reinstate_request', [ 'request'=>$requestDetail->uuid, 'locale'=>app()->getLocale() ]) }}" 
-        class="btn btn-sm btn-warning" title="Reinstate">Reinstate Request </a>
+        class="btn btn-sm btn-warning" title="Reinstate">Reinstate Request </a> --}}
         @endif
     </div>
 

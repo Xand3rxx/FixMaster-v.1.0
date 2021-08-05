@@ -69,6 +69,7 @@ use App\Http\Controllers\Admin\ServiceRequest\OngoingRequestController as AdminO
 use App\Http\Controllers\Admin\ServiceRequest\PendingRequestController as AdminPendingRequestController;
 use App\Http\Controllers\Client\ServiceRequest\ServiceRequestController as ClientRequestController;
 use App\Http\Controllers\Admin\Report\WarrantyReportController;
+use App\Http\Controllers\Client\Ewallet\FundWalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -194,7 +195,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/location-request',                     [AdminLocationRequestController::class, 'index'])->name('location_request');
 
     //  serviced areas
-    Route::resource('seviced-areas',                     ServicedAreasController::class);
+    Route::resource('serviced-areas',                     ServicedAreasController::class);
 
     //Routes for Activity Log Management
     Route::post('/activity-log/sorting',                [ActivityLogController::class, 'sortActivityLog'])->name('activity-log.sorting_users');
@@ -261,8 +262,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     //Routes for E-Wallet Admin Management
     Route::get('/ewallet/clients',                      [EWalletController::class, 'clients'])->name('ewallet.clients');
-    Route::get('/ewallet/client/history',               [EWalletController::class, 'clientHistory'])->name('ewallet.client_history');
+    Route::get('/ewallet/client/history/{transaction:uuid}',               [EWalletController::class, 'clientHistory'])->name('ewallet.client_history');
+    Route::get('/ewallet/client/history/details/{history:id}',                 [EWalletController::class, 'walletTransactionDetail'])->name('ewallet.history.details');
     Route::get('/ewallet/transactions',                 [EWalletController::class, 'transactions'])->name('ewallet.transactions');
+
 
     //Routes for Price Management
     Route::resource('booking-fees',                     PriceController::class);
@@ -273,8 +276,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/statuses/delete/{status:uuid}',             [StatusController::class, 'destroy'])->name('statuses.delete');
     Route::resource('statuses',                         StatusController::class);
 
-    Route::get('/serviceCriteria/delete/{criteria}',              [ServiceRequestSettingController::class, 'destroy'])->name('serviceReq.delete');
-    Route::resource('serviceCriteria',                            ServiceRequestSettingController::class);
+    Route::get('/service-request-settings/delete/{criteria}',              [ServiceRequestSettingController::class, 'destroy'])->name('serviceReq.delete');
+    Route::resource('service-request-settings',                            ServiceRequestSettingController::class);
 
     //Tool Request Management
     Route::get('/tools-request',                        [ToolsRequestController::class, 'index'])->name('tools_request');
@@ -432,6 +435,10 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
     Route::resource('service-request',  ClientRequestController::class);
     Route::get('initialize-service-request/{payment:reference_id}', [ClientRequestController::class, 'init'])->name('service_request.init');
     Route::post('service-request/verify-service-area',  [ClientRequestController::class, 'verifyServiceArea'])->name('service-request.validate_service_area');
+
+    Route::get('initialize-wallet-fundinf/{payment:reference_id}', [FundWalletController::class, 'init'])->name('wallet_funding.init');
+
+    Route::post('wallet/details', [ClientController::class, 'walletTransactionDetails'])->name('wallet_details');
 });
 
 Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {

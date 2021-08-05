@@ -81,7 +81,7 @@
     <div class="col-md-12 form-group">
         <h5><span class="font-weight-bold">Payment Options</span></h5>
     </div>
-    {{-- @if($canPayWithWallet == 'can-pay')
+    @if($canPayWithWallet == 'can-pay')
     <div class="col-md-6 form-group">
         <div class="custom-control custom-radio form-group position-relative">
             <input type="radio" id="wallet_payment_option" name="payment_channel" class="custom-control-input input-check" onclick="displayPaymentGateways('1')" value="wallet" data-tabid="wallet"  @if($canPayWithWallet == 'cannot-pay') disabled readonly @endif />
@@ -91,7 +91,7 @@
             @endif
         </div>
     </div>
-    @endif --}}
+    @endif
 
     <div class="col-md-6 form-group">
         <div class="custom-control custom-radio form-group position-relative">
