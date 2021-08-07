@@ -65,7 +65,7 @@ class ClientController extends Controller
             // data
             'totalRequests'         => auth()->user()->clientRequests()->count(),
             'completedRequests'     => auth()->user()->clientRequests()->where('status_id', 4)->count(),
-            'cancelledRequests'     => auth()->user()->clientRequests()->where('status_id', 3)->count(),
+            'cancelledRequests'     => auth()->user()->clientRequests()->where('status_id', 1)->count(),
             'user'                  => User::where('id', Auth()->user()->id)->with('client', 'contact', 'account')->firstOrFail(),
             'popularRequests'       =>  ($totalServices->count() < 3) ? $totalServices->take(10)->random(1) : $totalServices->take(10)->random(3),
             'userServiceRequests'   =>  Client::where('user_id', auth()->user()->id)->with('service_requests')->first()

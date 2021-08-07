@@ -2,7 +2,11 @@
 @section('title', 'Join Us')
 @section('contents')
     @include('layouts.partials._messages')
-   
+   <style>
+       .btn.btn-light {
+            color: #222 !important;
+        }
+   </style>
     <section class="section bg-light">
         <div class="container" style="margin-top: 3rem;">
             <div class="row justify-content-center">
@@ -116,7 +120,7 @@
                                         <div class="form-group position-relative">
                                             <label>Phone Number <span class="text-danger">*</span></label>
                                             <i data-feather="phone" class="fea icon-sm icons"></i>
-                                            <input name="phone" id="phone" type="tel" class="form-control pl-5">
+                                            <input name="phone" maxlength="11" id="phone" type="tel" class="form-control pl-5">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -283,7 +287,7 @@
                                         <div class="form-group position-relative">
                                             <label>Phone Number <span class="text-danger">*</span></label>
                                             <i data-feather="phone" class="fea icon-sm icons"></i>
-                                            <input name="phone" id="phone" type="tel" class="form-control pl-5">
+                                            <input name="phone" id="phone" maxlength="11" type="tel" class="form-control pl-5">
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -306,8 +310,8 @@
                                         <div class="form-group position-relative">
                                             <label>Residential Address <span class="text-danger">*</span></label>
                                             <i data-feather="map-pin" class="fea icon-sm icons"></i>
-                                            <textarea name="residential_address" id="user_address" rows="3"
-                                                class="user_address form-control pl-5"
+                                            <textarea name="residential_address" id="user_address_4" rows="3"
+                                                class="user_address_4 form-control pl-5"
                                                 placeholder="Your residential address :"></textarea>
                                         </div>
                                     </div>
@@ -395,7 +399,7 @@
                                         <div class="form-group position-relative">
                                             <label>Phone Number <span class="text-danger">*</span></label>
                                             <i data-feather="phone" class="fea icon-sm icons"></i>
-                                            <input name="phone" id="phone" type="tel" class="form-control pl-5">
+                                            <input name="phone" id="phone" maxlength="11" type="tel" class="form-control pl-5">
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -436,7 +440,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group position-relative">
                                             <label>Service Category <span class="text-danger">*</span></label>
-                                            <select class="form-control selectpicker @error('supplier_category') is-invalid @enderror" id="supplier_category" name="supplier_category[]" multiple="multiple" data-live-search="true">
+                                            <select class="form-control selectpicker @error('supplier_category') is-invalid @enderror" id="supplier_category" name="supplier_category[]" multiple="multiple" data-live-search="true" style="color: #222 !important">
                                                 @foreach ($services as $service)
                                                 <optgroup label="{{ $service->name }}">
                                                     @foreach($service->services as $item)

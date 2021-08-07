@@ -38,7 +38,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group position-relative">
-                                    <label>Middle name <span class="text-danger">*</span></label>
+                                    <label>Middle name </label>
                                     <i data-feather="user" class="fea icon-sm icons"></i>
                                     <input type="text" class="form-control pl-5 @error('middle_name') is-invalid @enderror" placeholder="Middle Name" name="middle_name" id="middle_name" value="{{ old('middle_name') }}">
                                     @error('middle_name')
@@ -198,7 +198,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group position-relative">
-                                    <label>Residential Address <span class="text-danger">*</span></label>
+                                    <label>Correspondence Address <span class="text-danger">*</span></label>
                                     <i data-feather="map-pin" class="fea icon-sm icons"></i>
                                     <input type="text" class="form-control pl-5 user_address @error('full_address') is-invalid @enderror" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria." name="full_address" id="full_address" value="{{ old('full_address') }}" required>
 

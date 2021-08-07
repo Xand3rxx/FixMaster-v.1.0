@@ -42,12 +42,12 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
-                                    <th>Average Rating</th>
+                                    <th class="text-center">Average Rating</th>
                                     <th>CAC Number</th>
                                     <!-- <th>Requests</th> -->
                                     <th>Status</th>
                                     <th>Date Created</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,12 +58,12 @@
                                     <td class="tx-medium">{{ Str::title($supplier['user']['account']['last_name'] ." ". $supplier['user']['account']['first_name']) }}</td>
                                     <td class="tx-medium">{{ $supplier['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $supplier['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
-                                    <td class="tx-medium">{{ round($supplier->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
+                                    <td class="tx-medium text-center">{{ round($supplier->user->ratings->avg('star')) ?? '0' }}</td>
                                     <td class="tx-medium text-uppercase">{{$supplier['cac_number']}}</td>
 
                                     <td class="text-medium text-success">{{is_null($supplier['user']['deleted_at']) ? 'Active' : InActive}}</td>
                                     <td class="text-medium">{{ Carbon\Carbon::parse($supplier->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
-                                    <td class=" text-center">
+                                    {{-- <td class=" text-center">
                                         <div class="dropdown-file">
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -71,7 +71,7 @@
                                                 <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>

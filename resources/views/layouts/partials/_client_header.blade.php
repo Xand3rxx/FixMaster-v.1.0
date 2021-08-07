@@ -176,12 +176,12 @@
                                         <ul class="list-unstyled social-icon social mb-0 mt-4">
                                             <li class="list-inline-item"><a href="{{ route('client.wallet', app()->getLocale()) }}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="E-Wallet"><i data-feather="credit-card" class="fea icon-sm fea-social"></i></a></li>
                                             <li class="list-inline-item">
-                                                <a href="#" class="rounded" data-toggle="tooltip" title="You have 0 unread messages" data-placement="bottom">
+                                                <a href="{{ route('client.messages.index', app()->getLocale()) }}" class="rounded" data-toggle="tooltip" title="You have 0 unread messages" data-placement="bottom">
                                                     <i data-feather="message-circle" class="fea icon-sm fea-social" ></i>
                                                 </a>
                                             </li>
-                                            <li class="list-inline-item"><a href="#" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Book a Service"><i data-feather="calendar" class="fea icon-sm fea-social"></i></a></li>
-                                            <li class="list-inline-item"><a href="#" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Settings"><i data-feather="settings" class="fea icon-sm fea-social"></i></a></li>
+                                            <li class="list-inline-item"><a href="{{ route('client.services.list', app()->getLocale()) }}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Book a Service"><i data-feather="calendar" class="fea icon-sm fea-social"></i></a></li>
+                                            <li class="list-inline-item"><a href="{{ route('client.settings', app()->getLocale()) }}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Settings"><i data-feather="settings" class="fea icon-sm fea-social"></i></a></li>
                                         </ul><!--end icon-->
                                     </div><!--end col-->
                                 </div><!--end row-->

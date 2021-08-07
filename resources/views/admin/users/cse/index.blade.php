@@ -72,8 +72,8 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a href="{{ route('admin.users.cse.show', [app()->getLocale(),$cse['user']['uuid'] ]) }}" class="dropdown-item details text-primary"><i class="far fa-user"></i> Summary</a>
                                                 {{-- <a href="#" class="dropdown-item details"><i class="fas fa-address-card"></i> Activitiy Log</a> --}}
-                                                <a href="#" class="dropdown-item details text-warning"><i class="fas fa-ban"></i> Deactivate</a>
-                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                                {{-- <a href="#" class="dropdown-item details text-warning"><i class="fas fa-ban"></i> Deactivate</a>
+                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a> --}}
                                             </div>
                                         </div>
                                     </td>

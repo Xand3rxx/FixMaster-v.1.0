@@ -81,7 +81,7 @@
                             </div><!--end col-->
 
                             <div class="col-6 mt-4 pt-2">
-                            <a href="{{ route('client.settings', app()->getLocale()) }}"" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.settings') ? 'active' : '' }}">
+                            <a href="{{ route('client.settings', app()->getLocale()) }}" class="accounts rounded d-block shadow text-center py-3 {{ Route::currentRouteNamed('client.settings') ? 'active' : '' }}">
                                     <span class="pro-icons h3 text-muted"><i class="uil uil-setting"></i></span>
                                     <h6 class="title text-dark h6 my-0">Settings</h6>
                                 </a>
