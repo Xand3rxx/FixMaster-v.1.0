@@ -438,6 +438,7 @@ Route::prefix('client')->name('client.')->middleware('verified', 'monitor.client
 
     Route::get('initialize-wallet-fundinf/{payment:reference_id}', [FundWalletController::class, 'init'])->name('wallet_funding.init');
 
+    Route::post('wallet/details', [ClientController::class, 'walletTransactionDetails'])->name('wallet_details');
 });
 
 Route::prefix('/cse')->name('cse.')->middleware('monitor.cseservice.request.changes')->group(function () {
