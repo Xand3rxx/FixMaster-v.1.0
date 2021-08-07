@@ -71,7 +71,7 @@ trait StoreInDatabase
                             'manufacturer_name'     => $table['rfqs']['rfq_batches']['manufacturer_name'][$key],
                             'model_number'          => $table['rfqs']['rfq_batches']['model_number'][$key],
                             'quantity'              => $table['rfqs']['rfq_batches']['quantity'][$key],
-                            'image'                 => $table['rfqs']['rfq_batches']['image'][$key]->store('assets/rfq-images'),
+                            'image'                 => $table['rfqs']['rfq_batches']['image'][$key]->store('public/assets/rfq-images'),
                             // 'image'                 => \App\Traits\ImageUpload::imageUploader($table['rfqs']['rfq_batches']['image'][$key],'assets/rfq-images'),
                             'unit_of_measurement'   => $table['rfqs']['rfq_batches']['unit_of_measurement'][$key] ?? "",
                             'size'                  => $table['rfqs']['rfq_batches']['size'][$key]
