@@ -121,19 +121,11 @@ Route::get('/forgot-password', function () {
 })->middleware('guest')->name('password.request');
 
 Route::post('/forgot-password', function ($language, Request $request) {
-
-    $valid = $request->validate(['email' => 'required|email']);
-
-    // $status = Password::sendResetLink(
-    //     // $request->only('email')
-    //     $valid
-    // );
-    // return $status === Password::RESET_LINK_SENT
-    //             ? back()->with(['status' => __($status)])
-    //             : back()->withErrors(['email' => __($status)]);
+    //Validate email input
+    $email = $request->validate(['email' => 'required|email']);
 
     //Get user instance
-    $user = \App\Models\User::where('email', $valid)->with('account')->first();
+    $user = \App\Models\User::where('email', $email)->with('account')->first();
 
     //If email doen't exist
     if(empty($user)){ return back()->with('error', 'Sorry! We can\'t find a user with that email address.'); }

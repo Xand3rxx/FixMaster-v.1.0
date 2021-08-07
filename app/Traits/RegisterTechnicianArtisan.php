@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Messaging\MessageController;
 
 trait RegisterTechnicianArtisan
 {
@@ -59,9 +60,27 @@ trait RegisterTechnicianArtisan
             foreach ($valid['technician_category'] as $serviceID) {
                 \App\Models\UserService::storeUserService($user->id, $serviceID, $role->id);
             }
+            // Notify CSE User of Account Creation
+            $this->sendAccountCreationNotification($valid);
             // update registered to be true
             $registred = true;
         });
         return $registred;
+    }
+
+    protected function sendAccountCreationNotification($valid)
+    {
+        $template_feature = 'CSE_ACCOUNT_CREATION_NOTIFICATION';
+        if (!empty((string)$template_feature)) {
+            $messanger = new MessageController();
+            $mail_data = collect([
+                'lastname' => $valid['last_name'],
+                'firstname' => $valid['first_name'],
+                'email' => $valid['email'],
+                'password' => $valid['password'],
+                'url'   =>  route('cse.profile.edit', ['locale' => app()->getLocale()])
+            ]);
+            $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
+        }
     }
 }

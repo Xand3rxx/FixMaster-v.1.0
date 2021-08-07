@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'New Message')
+@section('title', 'Create New Message Template')
 @section('content')
     <link rel="stylesheet" href="{{ asset('assets/dashboard/assets/jlistbox/css/jquery.transfer.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dashboard/assets/jlistbox/icon_font/css/icon_font.css') }}">
@@ -7,6 +7,11 @@
 
 <!-- include summernote css/js -->
 <style>
+
+body {
+  font-family: 'IBM Plex Sans' !important;
+  font-style: normal;
+}
  .btn-placeholder{
    margin-bottom:5px;
  }
@@ -23,7 +28,7 @@
                         <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                             <li class="breadcrumb-item"><a href="{{ route('admin.index', app()->getLocale()) }}">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('admin.message_template', app()->getLocale()) }}">Message Templates</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">New Email</li>
+                            <li class="breadcrumb-item active" aria-current="page">New Email Template</li>
                         </ol>
                     </nav>
                 </div>
@@ -91,8 +96,8 @@
 
 @push('scripts')
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> --}}
+{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
 
 <!-- include summernote css/js -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js" defer></script>

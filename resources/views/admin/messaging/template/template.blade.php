@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Admin Dashboard')
+@section('title', 'Notification List')
 @include('layouts.partials._messages')
 @section('content')
 <style>
@@ -9,8 +9,8 @@
 </style>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 {{-- <script src="{{ asset('assets/dashboard/lib/jquery/jquery.min.js') }}"></script> --}}
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> --}}
+{{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
 
 <!-- include summernote css/js -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js" defer></script>
@@ -223,25 +223,11 @@ function insertTextArea(areaId,text) {
           <li class="breadcrumb-item active">Dashboard</li>
           </ol>
         </nav>
-        <h4 class="mg-b-0 tx-spacing--1">Notification Template<span style="color: #E97D1F;">  List</span> </h4>
+        <h4 class="mg-b-0 tx-spacing--1">Notification Template List</h4>
       </div>
       <div style=""> <a href="templates/new" class="btn btn-sm btn-primary" id="btnNewTemplate" ><i data-feather="plus"></i> New Template</a>
 </div>
     </div>
-
-    <!-- <div class="row row-xs">
-      <div class="col-lg-12 col-xl-12">
-         <div class="col-md-6 col-xl-8 mg-t-10 order-md-1 order-xl-0">
-        <div class="card ht-lg-100p">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <h6 class="mg-b-0">Messaging Templates</h6>
-            <div class="tx-13 d-flex align-items-right">
-                                <button class="btn btn-sm btn-secondary" id="btnSendTestEmail" ><i data-feather="plus"></i> Send Test Email</button>&nbsp;
-                                &nbsp;&nbsp;&nbsp;<a href="templates/new" class="btn btn-sm btn-primary" id="btnNewTemplate" ><i data-feather="plus"></i> New Template</a>
-            </div>
-          
-      </div>
-      </div> -->
 
       <div class="row row-xs">
             <div class="col-lg-12 col-xl-12 mg-t-10">
@@ -264,14 +250,19 @@ function insertTextArea(areaId,text) {
 
                             @foreach($templates as $template)
                             <tr>
-                                    <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
-                                    <td class="tx-medium">{{ucfirst($template->title) }}</td>
-                                    <td class="tx-medium">{{ $template->feature}}</td>
-                                    <td class="tx-medium text-center">
-                                        <span><a href="templates/new/?templateid={{$template->uuid}}" class="msgedit" style="float: left;margin-right:10px;">
-                                        <i data-feather="edit" style="font-size: 9px;"></i></a></span>
-                                        <span>  <a href="#" class="msgdelete" style="float: left; margin-right:10px;">
-                                        <img src="{{url('/assets/images/icon/trash.svg')}}" alt="Image"/></a></span>
+                                <td class="tx-color-03 tx-center">{{ $loop->iteration }}</td>
+                                <td class="tx-medium">{{ucfirst($template->title) }}</td>
+                                <td class="tx-medium">{{ $template->feature}}</td>
+                                <td class=" text-center">
+                                    <div class="dropdown-file">
+                                        <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                        
+                                        <a href="templates/new/?templateid={{$template->uuid}}" class="dropdown-item details text-primary"><i class="fas fa-edit"></i> Edit</a>
+                        
+                                        <a href="templates/new/?templateid={{$template->uuid}}" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                        </div>
+                                    </div>
                                     </td>
                             </tr>      
                             @endforeach
@@ -284,61 +275,61 @@ function insertTextArea(areaId,text) {
         </div><!-- row -->
    </div><!-- container -->
 
-   <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Message Template</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div>
-            <form id="frmMessaging">
-                <div class="form-group">
-                    <input name="msg-type" type="radio" id="rd-email" value="email" checked />  Email
-                    <input name="msg-type" type="radio" id="rd-sms" value="SMS" />  SMS
-                </div>
-                <div class="form-group">
-                    <select class="form-control" id="feature" aria-placeholder="Feature"></select>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="email-title" placeholder="Title">
-                </div>
-                <div class="form-group">
-                    <label for="message-text" class="col-form-label">Message:</label>
-                    <textarea class="form-control" id="email_editor"></textarea>
-                </div>
-            </form>
+   {{-- <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Message Template</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="firstname">Firstname</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="lastname">Lastname</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="address">Address</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="email">Email</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="password">Password</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="url">URL</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_name">Customer Name</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_email">Customer Email</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_phone">Customer Phone</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_address">Customer Address</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_whatsapp">Whatsapp</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="preferred_communication">Communication</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="booking_fee">Booking Fee</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="diagnosis_fee">Diagnosis Fee</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="service">Service</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="job_ref">Job Ref</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="invoice">Invoice</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="date">Date</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="time">Time</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="passport">Passport</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_id">Technician ID</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_name">Technician Name</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="completed_jobs">Completed Jobs</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_rating">Technician Rating</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="cse_name">CSE Name</button>
-            <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="discount">Discount</button>
+        <div class="modal-body">
+            <div>
+                <form id="frmMessaging">
+                    <div class="form-group">
+                        <input name="msg-type" type="radio" id="rd-email" value="email" checked />  Email
+                        <input name="msg-type" type="radio" id="rd-sms" value="SMS" />  SMS
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="feature" aria-placeholder="Feature"></select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="email-title" placeholder="Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="email_editor"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="firstname">Firstname</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="lastname">Lastname</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="address">Address</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="email">Email</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="password">Password</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="url">URL</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_name">Customer Name</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_email">Customer Email</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_phone">Customer Phone</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_address">Customer Address</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="customer_whatsapp">Whatsapp</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="preferred_communication">Communication</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="booking_fee">Booking Fee</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="diagnosis_fee">Diagnosis Fee</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="service">Service</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="job_ref">Job Ref</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="invoice">Invoice</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="date">Date</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="time">Time</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="passport">Passport</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_id">Technician ID</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_name">Technician Name</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="completed_jobs">Completed Jobs</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="technician_rating">Technician Rating</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="cse_name">CSE Name</button>
+                <button type="button" class="btn btn-xs btn-placeholder btn-secondary" data-val="discount">Discount</button>
 
 
 
@@ -346,18 +337,18 @@ function insertTextArea(areaId,text) {
 
 
 
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="btn-save">Save message</button>
+            <button type="button" class="btn btn-primary" id="btn-update">Update message</button>
 
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="btn-save">Save message</button>
-        <button type="button" class="btn btn-primary" id="btn-update">Update message</button>
-
-      </div>
+        </div>
     </div>
-  </div>
-</div>
+   </div> --}}
 </div>
 
 @endsection

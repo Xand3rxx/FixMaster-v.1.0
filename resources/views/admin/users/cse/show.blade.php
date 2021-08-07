@@ -19,9 +19,9 @@
       <div class="d-md-block">
         <a href="" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back</a>
         <a href="" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
-        @if($user->is_active == 0)
+        {{-- @if($user->is_active == 0)
           <a href="" class="btn btn-success"><i class="fas fa-undo"></i> Reinstate</a>
-        @endif
+        @endif --}}
         <a href="" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</a>
       </div>
     </div>
