@@ -220,7 +220,9 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="inputAddress2">Full Address</label>
-                            <textarea required id="user_address" class="user_address form-control @error('full_address') is-invalid @enderror" rows="3" name="full_address" id="full_address" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria.">{{ $applicant['form_data']['office_address'] ?? old('full_address') }}</textarea>
+                            <textarea required id="user_address" class="user_address form-control @error('full_address') is-invalid @enderror" rows="3" name="full_address" id="full_address" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria.">{{ old('full_address') }}</textarea>
+
+                            {{-- <textarea required id="user_address" class="user_address form-control @error('full_address') is-invalid @enderror" rows="3" name="full_address" id="full_address" placeholder="e.g. 284B, Ajose Adeogun Street, Victoria Island, Lagos, Nigeria.">{{ $applicant['form_data']['office_address'] ?? old('full_address') }}</textarea> --}}
                             @error('full_address')
                             <x-alert :message="$message" />
                             @enderror
@@ -238,6 +240,9 @@
     </div>
 </div>
 @push('scripts')
+<script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key={{ config('app.geolocation_api_key') }}&v=3.exp&libraries=places">
+        </script>
 <script src="{{ asset('assets/dashboard/assets/js/bootstrap-multiselect.js') }}"></script>
 <script src="{{ asset('assets/js/password-generator.js') }}"></script>
 <script src="{{ asset('assets/js/geolocation.js') }}"></script>

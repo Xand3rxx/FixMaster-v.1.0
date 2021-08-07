@@ -42,9 +42,9 @@
                                     <th>Full Name</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
-                                    <th>Average Rating</th>
+                                    <th class="text-center">Average Rating</th>
                                     <th>Gender</th>
-                                    <th>Requests</th>
+                                    <th class="text-center">Requests</th>
                                     <th>Status</th>
                                     <th>Date Created</th>
                                     <th>Action</th>
@@ -59,11 +59,11 @@
                                     <td class="tx-medium">{{ $cse['user']['email'] }}</td>
                                     <td class="tx-medium">{{ $cse['user']['contact']['phone_number'] ?? 'UNAVAILABLE' }}</td>
 
-                                    <td class="tx-medium">{{ round($cse->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
+                                    <td class="text-center tx-medium">{{ round($cse->user->ratings->avg('star')) ?? 'UNAVAILABLE' }}</td>
 
                                     <td class="tx-medium">{{ Str::title($cse['user']['account']['gender']) }}</td>
 
-                                    <td class="tx-medium text-info">{{ $cse['service_request_assgined_count'] ?? '0'  }}</td>
+                                    <td class="tx-medium text-center">{{ $cse['service_request_assgined_count'] ?? '0'  }}</td>
                                     <td class="text-medium text-success">{{is_null($cse['user']['deleted_at']) ? 'Active' : InActive}}</td>
                                     <td class="text-medium">{{ Carbon\Carbon::parse($cse->created_at, 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</td>
                                     <td class=" text-center">
@@ -71,9 +71,9 @@
                                             <a href="" class="dropdown-link" data-toggle="dropdown"><i data-feather="more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a href="{{ route('admin.users.cse.show', [app()->getLocale(),$cse['user']['uuid'] ]) }}" class="dropdown-item details text-primary"><i class="far fa-user"></i> Summary</a>
-                                                <a href="#" class="dropdown-item details"><i class="fas fa-address-card"></i> Activitiy Log</a>
-                                                <a href="#" class="dropdown-item details text-warning"><i class="fas fa-ban"></i> Deactivate</a>
-                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                                {{-- <a href="#" class="dropdown-item details"><i class="fas fa-address-card"></i> Activitiy Log</a> --}}
+                                                {{-- <a href="#" class="dropdown-item details text-warning"><i class="fas fa-ban"></i> Deactivate</a>
+                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a> --}}
                                             </div>
                                         </div>
                                     </td>

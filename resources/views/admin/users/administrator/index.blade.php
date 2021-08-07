@@ -66,8 +66,8 @@
                                                 <a href="{{ route('admin.users.administrator.edit', [app()->getLocale(),$administrator['user']['uuid'] ]) }}" class="dropdown-item details text-info"><i class="far fa-edit"></i> Edit</a>
                                                 <a href="#" class="dropdown-item details"><i class="fas fa-address-card"></i> Activitiy Log</a>
                                                 <a href="#" data-url="{{ route('admin.users.administrator.index', app()->getLocale()) }}" title="{{ Str::title($administrator['user']['account']['last_name'] ." ". $administrator['user']['account']['first_name']) }}" class="dropdown-item details text-warning"><i class="fas fa-ban"></i> Deactivate</a>
-                                                <a href="#" class="dropdown-item details text-success"><i class="fas fa-undo"></i> Reinstate</a>
-                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a>
+                                                {{-- <a href="#" class="dropdown-item details text-success"><i class="fas fa-undo"></i> Reinstate</a>
+                                                <a href="#" class="dropdown-item details text-danger"><i class="fas fa-trash"></i> Delete</a> --}}
                                             </div>
                                         </div>
                                     </td>

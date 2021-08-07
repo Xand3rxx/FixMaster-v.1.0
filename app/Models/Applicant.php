@@ -48,10 +48,10 @@ class Applicant extends Model
             (string) $template_feature = NULL;
             switch ($applicant->user_type) {
                 case Applicant::USER_TYPES[0]: // CSE...
-                    $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';
+                    $template_feature = 'CSE_APPLICATION_SUBMITTED';
                     break;
                 case Applicant::USER_TYPES[1]: // SUPPLIER...
-                    $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';
+                    $template_feature = 'TECHNICIAN_APPLICATION_SUBMITTED';
                     break;
                 case Applicant::USER_TYPES[2]: // TECHNICIAN...
                     $template_feature = 'SUPPLIER_APPLICATION_SUBMITTED';

@@ -223,7 +223,7 @@ function insertTextArea(areaId,text) {
           <li class="breadcrumb-item active">Dashboard</li>
           </ol>
         </nav>
-        <h4 class="mg-b-0 tx-spacing--1">Notification Template<span style="color: #E97D1F;">  List</span> </h4>
+        <h4 class="mg-b-0 tx-spacing--1">Notification Template List</h4>
       </div>
       <div style=""> <a href="templates/new" class="btn btn-sm btn-primary" id="btnNewTemplate" ><i data-feather="plus"></i> New Template</a>
 </div>

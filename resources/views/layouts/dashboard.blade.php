@@ -8,6 +8,7 @@
 
     <title>@yield('title') | FixMaster.ng - We Fix, You Relax!</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="app-alt-name" content="{{ config('app.geolocation_api_key') }}">
     <meta name="description" content="FixMaster is your best trusted one-call solution for a wide range of home maintenance, servicing and repair needs. Our well-trained & certified uniformed technicians are fully insured professionals with robust experience to provide home services to fully meet your needs with singular objective to make you totally relax while your repair requests are professionally handled." />
     <meta name="keywords" content="Home-fix, Home-improvement, Home-repairs, Cleaning-services, Modern" />
     <meta name="email" content="info@homefix.ng" />

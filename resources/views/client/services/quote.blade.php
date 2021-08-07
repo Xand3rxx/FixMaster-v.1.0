@@ -23,7 +23,8 @@
 
             <form class="rounded p-4" action="{{ route('client.service-request.store', app()->getLocale()) }}" method="POST" id="payment" enctype="multipart/form-data">
                 @csrf
-                <small class="text-danger text-small">A Booking Fee deposit is required to validate this order and enable our AI assign a Customer Service Executice(CSE) to your Job.</small>
+                {{-- <small class="text-danger text-small">A Booking Fee deposit is required to validate this order and enable our AI assign a Customer Service Executice(CSE) to your Job.</small><br> --}}
+                <p class="text-danger">Start by selecting a booking fee from the list of options below.</p>
 
                 <div class="row" id="pills-tab" role="tablist">
                     @include('client.services.includes._hidden_fields')
@@ -58,7 +59,7 @@
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between mt-4 col-lg-12">  
-                    <button type="button" name="add" id="add_new_contact" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-primary btn-sm"><i data-feather="plus" class="fea icon-sm"></i> Add New Contact</button>  
+                    <button type="button" name="add" id="add_new_contact" data-toggle="modal" data-target="#add_data_Modal" class="btn btn-primary btn-sm"><i data-feather="plus" class="fea icon-sm"></i> New Service Location</button>  
                 </div> 
 
                 <div class="display-request-body">
