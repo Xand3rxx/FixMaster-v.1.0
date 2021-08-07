@@ -83,7 +83,7 @@ trait RegisterCSE
 
     protected function sendAccountCreationNotification($valid)
     {
-        $template_feature = 'CSE_APPLICATION_SUCCESSFUL';
+        $template_feature = 'CSE_ACCOUNT_CREATION_NOTIFICATION';
         if (!empty((string)$template_feature)) {
             $messanger = new MessageController();
             $mail_data = collect([
@@ -91,6 +91,7 @@ trait RegisterCSE
                 'firstname' => $valid['first_name'],
                 'email' => $valid['email'],
                 'password' => $valid['password'],
+                'url'   =>  route('cse.profile.edit', ['locale' => app()->getLocale()])
             ]);
             $messanger->sendNewMessage('', 'info@fixmaster.com.ng', $mail_data['email'], $mail_data, $template_feature);
         }
