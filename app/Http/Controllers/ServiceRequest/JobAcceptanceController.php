@@ -87,6 +87,9 @@ class JobAcceptanceController extends Controller
             $this->service_request->loadMissing('client', 'address');
 
             $params = [
+                'firstname' => $this->user->account->first_name,
+                'lastname' => $this->user->account->last_name,
+                'recipient_email' => $this->user->email,
                 'recipient_email' => $this->user->email,
                 'email' => $this->user->email,
                 'cse_name' => $this->user->account->last_name . ' ' . $this->user->account->first_name,
