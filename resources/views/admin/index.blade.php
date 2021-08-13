@@ -26,7 +26,7 @@
     <div class="row row-xs">
       <div class="col-lg-12 col-xl-12">
         <div class="card">
-          <div class="row mt-1 mb-1 ml-1 mr-1">
+          {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Sort</label>
@@ -92,16 +92,16 @@
                     <input name="name" id="name" type="date" class="form-control pl-5">
                 </div>
             </div>
-          </div>
+          </div> --}}
           
-          <h5 class="ml-4" >Total Requests: 100</h5><br>
+          <h5 class="ml-4" >Total Requests: {{ !empty($serviceRequests['totalRequests']) ? number_format($serviceRequests['totalRequests']) : 0 }}</h5><br>
 
           <div class="row row-xs col-lg-12">
             <div class="col-sm-6 col-lg-3">
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Pending Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#"> 40</a></h5>
+                <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}"> {{ !empty($serviceRequests['pendingRequests']) ? number_format($serviceRequests['pendingRequests']) : 0 }}</a></h5>
                 </div>
                 
               </div>
@@ -110,7 +110,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Completed Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">30</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-completed', app()->getLocale()) }}">{{ !empty($serviceRequests['completedRequests']) ? number_format($serviceRequests['completedRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ongoing Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">10</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-ongoing.index', app()->getLocale()) }}">{{ !empty($serviceRequests['ongoingRequests']) ? number_format($serviceRequests['ongoingRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -126,7 +126,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Cancelled Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">20</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-cancelled', app()->getLocale()) }}">{{ !empty($serviceRequests['cancelledRequests']) ? number_format($serviceRequests['cancelledRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -157,53 +157,45 @@
                   <div class="col-sm-6 col-lg-12">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total Administrators</h6>
-                      {{-- <span class="tx-10 tx-color-04">65</span> --}}
                     </div>
                     <div class="d-flex align-items-end justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik lh-2 mg-b-0">12</h5>
-                      {{-- <h6 class="tx-normal tx-rubik tx-color-03 lh-2 mg-b-0">20,000</h6> --}}
+                      <h5 class="tx-normal tx-rubik lh-2 mg-b-0">{{ !empty($users['admins']) ? number_format($users['admins']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-teal wd-12p" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-teal wd-{{ $users['admins'] }}p" role="progressbar" aria-valuenow="{{ $users['admins'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30 mg-sm-t-0 mg-lg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total CSE's</h6>
-                      {{-- <span class="tx-10 tx-color-04">45% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">5</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>250,000</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['cses']) ? number_format($users['cses']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-orange wd-5p" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-orange wd-{{ $users['cses'] }}p" role="progressbar" aria-valuenow="{{ $users['cses'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total Technicians</h6>
-                      {{-- <span class="tx-10 tx-color-04">20% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">5</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>85,000</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['technicians']) ? number_format($users['technicians']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-pink wd-5p" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-pink wd-{{ $users['technicians'] }}p" role="progressbar" aria-valuenow="{{ $users['technicians'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Clients</h6>
-                      {{-- <span class="tx-10 tx-color-04">85% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">12</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>30.50%</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['clients']) ? number_format($users['clients']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-primary wd-12p" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-primary wd-{{ $users['clients'] }}p" role="progressbar" aria-valuenow="{{ $users['clients'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div><!-- row -->
@@ -368,38 +360,38 @@
 
       </div><!-- col -->
 
-      {{-- <div class="col-md-6 col-xl-6 mg-t-10">
+      <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">
           <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mg-b-0">Recent Payments</h6>
             
           </div>
-           @if($recentPayments->count() > 0)
-            @foreach($recentPayments as $pay)
-          <ul class="list-group list-group-flush tx-13">
-              <li class="list-group-item d-flex pd-sm-x-20">
-                <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
-                <div class="pd-sm-l-10">
-                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name']}} for {{$pay['service_request']['unique_id']}}</p>
-                  <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($pay['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
-                </div>
-                <div class="mg-l-auto text-right">
-                  <p class="tx-medium mg-b-0"> ₦{{$pay['amount']}}</p>
-                  <small class="tx-12 tx-success mg-b-0">Completed</small>
-                </div>
-              </li>
-          </ul>
+           @if(!empty($others['recentPayments']))
+            @foreach($others['recentPayments'] as $recentPayments)
+              <ul class="list-group list-group-flush tx-13">
+                  <li class="list-group-item d-flex pd-sm-x-20">
+                    <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
+                    <div class="pd-sm-l-10">
+                      <p class="tx-medium mg-b-0">Payment from {{ !empty($recentPayments['user']['account']['first_name']) ? Str::title($recentPayments['user']['account']['first_name'] .' '. $recentPayments['user']['account']['last_name']) : 'UNAVAILABLE' }} for {{ $recentPayments['unique_id'] }}</p>
+                      <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($recentPayments['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
+                    </div>
+                    <div class="mg-l-auto text-right">
+                      <p class="tx-medium mg-b-0"> ₦{{ $recentPayments['amount'] }}</p>
+                      <small class="tx-12 {{ (($recentPayments['status'] == 'pending') ? 'text-warning' : (($recentPayments['status'] == 'success') ? 'text-success' : ($recentPayments['status'] == 'failed' ? 'text-danger' : 'text-danger'))) }} mg-b-0">{{ ucfirst($recentPayments['success']) }}</small>
+                    </div>
+                  </li>
+              </ul>
             @endforeach
           <div class="card-footer text-center tx-13">
           <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
           </div>
           @else
-            <div>No Payment Currently</div>
+            <div>No recent payments yet</div>
           @endif 
         </div><!-- card -->
       </div>
         </div>
-      </div> --}}
+      </div>
 
 
       <div class="col-md-6 col-xl-6 mg-t-10">
@@ -412,21 +404,26 @@
             </div> --}}
           </div>
           <ul class="list-group list-group-flush tx-13">
-            <li class="list-group-item d-flex pd-x-20">
-              <div class="avatar">
-                <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="rounded-circle" alt="Default male avatar" />
-              </div>
-              <div class="pd-l-10">
-                <p class="tx-medium mg-b-0">Gabriel Badmus</p>
-                <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: 3</small>
-              </div>
-              <div class="mg-l-auto d-flex align-self-center">
-                <nav class="nav nav-icon-only">
-                  {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
-                  <a href="#" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
-                </nav>
-              </div>
-            </li>
+            @if (!empty($others['cses']))
+              <li class="list-group-item d-flex pd-x-20">
+                <div class="avatar">
+                  <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="rounded-circle" alt="Default male avatar" />
+                </div>
+                <div class="pd-l-10">
+                  <p class="tx-medium mg-b-0">{{ !empty($others['cses']['user']['account']['first_name']) ? Str::title($others['cses']['user']['account']['first_name'] .' '. $others['cses']['user']['account']['last_name']) : 'UNAVAILABLE' }}</p>
+                  <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: 0</small>
+                </div>
+                <div class="mg-l-auto d-flex align-self-center">
+                  <nav class="nav nav-icon-only">
+                    {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
+                    <a href="#" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
+                  </nav>
+                </div>
+              </li>
+            @else  
+              <div>No CSE's available</div>
+            @endif
+            
           </ul>
           <div class="card-footer text-center tx-13">
             <a href="#" class="link-03">View More <i class="icon ion-md-arrow-down mg-l-5"></i></a>
