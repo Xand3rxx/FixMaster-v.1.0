@@ -94,14 +94,14 @@
             </div>
           </div>
           
-          <h5 class="ml-4" >Total Requests: 100</h5><br>
+          <h5 class="ml-4" >Total Requests: {{ !empty($serviceRequests['totalRequests']) ? number_format($serviceRequests['totalRequests']) : 0 }}</h5><br>
 
           <div class="row row-xs col-lg-12">
             <div class="col-sm-6 col-lg-3">
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Pending Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#"> 40</a></h5>
+                <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-pending.index', app()->getLocale()) }}"> {{ !empty($serviceRequests['pendingRequests']) ? number_format($serviceRequests['pendingRequests']) : 0 }}</a></h5>
                 </div>
                 
               </div>
@@ -110,7 +110,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Completed Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">30</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-completed', app()->getLocale()) }}">{{ !empty($serviceRequests['completedRequests']) ? number_format($serviceRequests['completedRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Ongoing Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">10</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-ongoing.index', app()->getLocale()) }}">{{ !empty($serviceRequests['ongoingRequests']) ? number_format($serviceRequests['ongoingRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -126,7 +126,7 @@
               <div class="card card-body">
                 <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Cancelled Requests</h6>
                 <div class="d-flex d-lg-block d-xl-flex align-items-end">
-                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="#">20</a></h5>
+                  <h5 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1"><a href="{{ route('admin.requests-cancelled', app()->getLocale()) }}">{{ !empty($serviceRequests['cancelledRequests']) ? number_format($serviceRequests['cancelledRequests']) : 0 }}</a></h5>
                 </div>
               </div>
             </div>
@@ -157,53 +157,45 @@
                   <div class="col-sm-6 col-lg-12">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total Administrators</h6>
-                      {{-- <span class="tx-10 tx-color-04">65</span> --}}
                     </div>
                     <div class="d-flex align-items-end justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik lh-2 mg-b-0">12</h5>
-                      {{-- <h6 class="tx-normal tx-rubik tx-color-03 lh-2 mg-b-0">20,000</h6> --}}
+                      <h5 class="tx-normal tx-rubik lh-2 mg-b-0">{{ !empty($users['admins']) ? number_format($users['admins']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-teal wd-12p" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-teal wd-{{ $users['admins'] }}p" role="progressbar" aria-valuenow="{{ $users['admins'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30 mg-sm-t-0 mg-lg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total CSE's</h6>
-                      {{-- <span class="tx-10 tx-color-04">45% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">5</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>250,000</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['cses']) ? number_format($users['cses']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-orange wd-5p" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-orange wd-{{ $users['cses'] }}p" role="progressbar" aria-valuenow="{{ $users['cses'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Total Technicians</h6>
-                      {{-- <span class="tx-10 tx-color-04">20% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">5</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>85,000</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['technicians']) ? number_format($users['technicians']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-pink wd-5p" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-pink wd-{{ $users['technicians'] }}p" role="progressbar" aria-valuenow="{{ $users['technicians'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                   <div class="col-sm-6 col-lg-12 mg-t-30">
                     <div class="d-flex align-items-center justify-content-between mg-b-5">
                       <h6 class="tx-uppercase tx-10 tx-spacing-1 tx-color-02 tx-semibold mg-b-0">Clients</h6>
-                      {{-- <span class="tx-10 tx-color-04">85% goal reached</span> --}}
                     </div>
                     <div class="d-flex justify-content-between mg-b-5">
-                      <h5 class="tx-normal tx-rubik mg-b-0">12</h5>
-                      {{-- <h5 class="tx-normal tx-rubik tx-color-03 mg-b-0"><small>30.50%</small></h5> --}}
+                      <h5 class="tx-normal tx-rubik mg-b-0">{{ !empty($users['clients']) ? number_format($users['clients']) : 0 }}</h5>
                     </div>
                     <div class="progress ht-4 mg-b-0 op-5">
-                      <div class="progress-bar bg-primary wd-12p" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="25"></div>
+                      <div class="progress-bar bg-primary wd-{{ $users['clients'] }}p" role="progressbar" aria-valuenow="{{ $users['clients'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div><!-- row -->

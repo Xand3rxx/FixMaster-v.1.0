@@ -149,7 +149,7 @@
                             <!-- Full Address -->
                             <div class="form-group col-md-12">
                               <label for="business_description">Business Description</label>
-                              <textarea rows="3" class="user_address form-control @error('business_description') is-invalid @enderror" id="business_description" name="business_description">{{ old('business_description') ?? !empty($profile['supplier']['business_description']) ? $profile['supplier']['business_description'] : '' }}</textarea>
+                              <textarea rows="3" class="form-control @error('business_description') is-invalid @enderror" id="business_description" name="business_description">{{ old('business_description') ?? !empty($profile['supplier']['business_description']) ? $profile['supplier']['business_description'] : '' }}</textarea>
                               @error('business_description')
                                 <x-alert :message="$message" />
                               @enderror
