@@ -225,15 +225,15 @@
       </li>
 
       <li class="nav-label mg-t-25">Users</li>
-      <li class="nav-item with-sub">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.users.administrator.create', 'admin.users.administrator.index', 'admin.users.administrator.summary.show') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="user-check"></i> <span>Adminstrators</span></a>
         <ul>
-          <li class=""><a href="{{route('admin.users.administrator.create', app()->getLocale())}}">Add</a></li>
-          <li class=""><a href="{{route('admin.users.administrator.index', app()->getLocale())}}">List</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.administrator.create') ? 'active' : '' }}"><a href="{{route('admin.users.administrator.create', app()->getLocale())}}">Add</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.administrator.index', 'admin.users.administrator.summary.show') ? 'active' : '' }}"><a href="{{route('admin.users.administrator.index', app()->getLocale())}}">List</a></li>
         </ul>
       </li>
 
-      <li class="nav-item"><a href="{{route('admin.users.clients.index', app()->getLocale())}}" class="nav-link"><i data-feather="users"></i> <span>Clients</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.users.clients.index') ? 'active' : '' }}"><a href="{{route('admin.users.clients.index', app()->getLocale())}}" class="nav-link"><i data-feather="users"></i> <span>Clients</span></a></li>
 
       <li class="nav-item with-sub">
         <a href="" class="nav-link"><i data-feather="wind"></i> <span>CSE</span></a>
@@ -243,41 +243,41 @@
         </ul>
       </li>
 
-      <li class="nav-item with-sub">
+      {{-- <li class="nav-item with-sub">
         <a href="" class="nav-link"><i data-feather="home"></i> <span>Franchisee</span></a>
         <ul>
           <li class=""><a href="{{route('admin.users.franchisee.create', app()->getLocale())}}">Add</a></li>
           <li class=""><a href="{{route('admin.users.franchisee.index', app()->getLocale())}}">List</a></li>
         </ul>
-      </li>
+      </li> --}}
 
-      <li class="nav-item with-sub">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.users.supplier.index', 'admin.users.supplier.create') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="hard-drive"></i> <span>Suppliers</span></a>
         <ul>
-          <li class=""><a href="{{route('admin.users.supplier.create', app()->getLocale())}}">Add</a></li>
-          <li class=""><a href="{{route('admin.users.supplier.index', app()->getLocale())}}">List</a></li>
+          <li class=" {{ Route::currentRouteNamed('admin.users.supplier.create') ? 'active' : '' }}"><a href="{{route('admin.users.supplier.create', app()->getLocale())}}">Add</a></li>
+          <li class=" {{ Route::currentRouteNamed('admin.users.supplier.index') ? 'active' : '' }}"><a href="{{route('admin.users.supplier.index', app()->getLocale())}}">List</a></li>
         </ul>
       </li>
 
-      <li class="nav-item with-sub">
+      <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.users.technician-artisan.index', 'admin.users.technician-artisan.create') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="zap"></i> <span>Technicians & Artisan</span></a>
         <ul>
-          <li class=""><a href="{{route('admin.users.technician-artisan.create', app()->getLocale())}}">Add</a></li>
-          <li class=""><a href="{{route('admin.users.technician-artisan.index', app()->getLocale())}}">List</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.technician-artisan.create') ? 'active' : '' }}"><a href="{{route('admin.users.technician-artisan.create', app()->getLocale())}}">Add</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.technician-artisan.index') ? 'active' : '' }}"><a href="{{route('admin.users.technician-artisan.index', app()->getLocale())}}">List</a></li>
         </ul>
       </li>
-      <li class="nav-item with-sub">
+      {{-- <li class="nav-item with-sub {{ Route::currentRouteNamed('admin.users.quality-assurance.index', 'admin.users.quality-assurance.create') ? 'active show' : '' }}">
         <a href="" class="nav-link"><i data-feather="check-square"></i> <span>Quality Assurance</span></a>
         <ul>
-          <li class=""><a href="{{route('admin.users.quality-assurance.create', app()->getLocale())}}">Add</a></li>
-          <li class=""><a href="{{route('admin.users.quality-assurance.index', app()->getLocale())}}">List</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.quality-assurance.create') ? 'active' : '' }}"><a href="{{route('admin.users.quality-assurance.create', app()->getLocale())}}">Add</a></li>
+          <li class="{{ Route::currentRouteNamed('admin.users.quality-assurance.index') ? 'active' : '' }}"><a href="{{route('admin.users.quality-assurance.index', app()->getLocale())}}">List</a></li>
         </ul>
-      </li>
+      </li> --}}
 
       <li class="nav-label mg-t-25">Prospective FixMaster Users</li>
-      <li class="nav-item"><a href="{{route('admin.prospective.cse.index', app()->getLocale())}}" class="nav-link"><i data-feather="wind"></i> <span>CSE</span></a></li>
-      <li class="nav-item"><a href="{{route('admin.prospective.supplier.index', app()->getLocale())}}" class="nav-link"><i data-feather="hard-drive"></i> <span>Supplier</span></a></li>
-      <li class="nav-item"><a href="{{route('admin.prospective.technician-artisan.index', app()->getLocale())}}" class="nav-link"><i data-feather="zap"></i> <span>Technicians</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.prospective.cse.index') ? 'active' : '' }}"><a href="{{route('admin.prospective.cse.index', app()->getLocale())}}" class="nav-link"><i data-feather="wind"></i> <span>CSE</span></a></li>
+      <li class="nav-item {{ Route::currentRouteNamed('admin.prospective.supplier.index') ? 'active' : '' }}"><a href="{{route('admin.prospective.supplier.index', app()->getLocale())}}" class="nav-link"><i data-feather="hard-drive"></i> <span>Supplier</span></a></li>
+      {{-- <li class="nav-item {{ Route::currentRouteNamed('admin.prospective.technician-artisa.index') ? 'active' : '' }}"><a href="{{route('admin.prospective.technician-artisan.index', app()->getLocale())}}" class="nav-link"><i data-feather="zap"></i> <span>Technicians</span></a></li> --}}
 
 
     </ul>

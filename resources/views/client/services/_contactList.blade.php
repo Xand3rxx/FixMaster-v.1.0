@@ -2,7 +2,7 @@
     <table class="table mb-0 table-center scroll">
         <thead class="bg-light">
             <tr>
-                <th scope="col">Frequently Used Contacts</th>
+                <th scope="col">Service Location</th>
             </tr>
         </thead>
         <tbody>

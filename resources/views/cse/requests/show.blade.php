@@ -75,9 +75,11 @@
 
                     <div class="contact-content-header mt-4">
                         <nav class="nav">
+                            @if($service_request->status_id != 4)
                             <a href="#serviceRequestActions" class="nav-link active" data-toggle="tab">Service Request
                                 Actions</a>
-                            <a href="#description" class="nav-link" data-toggle="tab"><span>Job Description</a>
+                            @endif
+                            <a href="#description" class="nav-link @if($service_request->status_id == 4) active @endif" data-toggle="tab"><span>Job Description</a>
                             <a href="#serviceRequestSummary" class="nav-link" data-toggle="tab"><span>Service Request
                                     Summary</a>
                         </nav>
@@ -85,6 +87,7 @@
 
                     <div class="contact-content-body">
                         <div class="tab-content">
+                            @if($service_request->status_id != 4)
                             <div id="serviceRequestActions" class="tab-pane show active pd-20 pd-xl-25">
                                 {{-- Service Request Actions --}}
                                 <form id="service_request_form" class="form-data" enctype="multipart/form-data"
@@ -137,6 +140,7 @@
 
                                 </form>
                             </div>
+                            @endif
                             {{-- End of Service Request Actions --}}
 
                             {{-- Job Description --}}

@@ -12,20 +12,7 @@
         </div>
     </div>
     <!--end col-->
-    <div class="col-md-12">
-        <div class="form-group position-relative">
-            <label>Scheduled Date :</label>
-            <i data-feather="calendar" class="fea icon-sm icons"></i>
-            <input name="preferred_time" type="text" class="form-control pl-5 @error('preferred_time') is-invalid @enderror" placeholder="Click to select :" id="service-date-time" readonly value="{{ old('preferred_time') }}" />
-            @error('preferred_time')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-    </div>
-    <!--end col-->
-
+    
     <div class="row col-md-12 mb-4">
         <div class="col-md-9">
             <div class="attachments">
@@ -41,6 +28,20 @@
             <a class="btn btn-primary btn-sm" id="add-more-file" style="font-size: 14px; font-weight: bold;">+</a>
         </div> 
     </div><!--end col-->
+
+    <div class="col-md-12">
+        <div class="form-group position-relative">
+            <label>Scheduled Date :</label>
+            <i data-feather="calendar" class="fea icon-sm icons"></i>
+            <input name="preferred_time" type="text" class="form-control pl-5 @error('preferred_time') is-invalid @enderror" placeholder="Click to select :" id="service-date-time" readonly value="{{ old('preferred_time') }}" />
+            @error('preferred_time')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+    </div>
+    <!--end col-->
 
     @if(collect($discounts)->isNotEmpty())
         <div class="col-md-12 form-group">
@@ -66,7 +67,7 @@
 
     <div class="col-md-6 form-group">
         <div class="custom-control custom-radio form-group position-relative">
-            <input type="radio" id="yes_contact" name="contactme_status" class="custom-control-input input-check" value="1" />
+            <input type="radio" id="yes_contact" name="contactme_status" class="custom-control-input input-check" value="1" checked />
             <label class="custom-control-label" for="yes_contact">Your dedicated project manager will call you within the hour.</label>
         </div>
     </div>
@@ -128,7 +129,7 @@
         </div>
     @else
         <div class="col-md-12">
-            <h6>Select a booking fee and a contact to proceed.</h6>
+            <h6 class="text-danger">Make sure you select a Booking Fee above and a Service Location to proceed.</h6>
         </div>
     @endif
 </div><!--end row-->
