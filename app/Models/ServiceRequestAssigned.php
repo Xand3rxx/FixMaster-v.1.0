@@ -83,7 +83,7 @@ class ServiceRequestAssigned extends Model
 
     public function service_requests()
     {
-        return $this->belongsTo(ServiceRequest::class)->with('users', 'client');
+        return $this->hasMany(ServiceRequest::class, 'id', 'service_request_id')->with('users', 'client');
     }
 
     public function request_status()
@@ -104,6 +104,11 @@ class ServiceRequestAssigned extends Model
     public function service_request_warranty()
     {
         return $this->belongsTo(ServiceRequestWarranty::class, 'service_request_id', 'service_request_id');
+    }
+
+    public function completedCseServiceRequests()
+    {
+        return $this->hasMany(ServiceRequest::class, 'id', 'service_request_id')->where('status_id', ServiceRequest::SERVICE_REQUEST_STATUSES['Completed']);
     }
 
     /**
