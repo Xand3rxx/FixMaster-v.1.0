@@ -13,7 +13,10 @@ use App\Models\ServiceRequest;
 class AdminController extends Controller
 {
     public function index(){
-        return  \App\Models\Payment::with('user.account')->latest()->take(5)->get();
+
+        // \App\Models\Cse::with(['user.account', 'service_request_assgined' => function ($query) {
+        //     $query->withCount('completedCseServiceRequests');
+        // }])->limit(5)->get()->random(3)->dd();
         return view('admin.index', [
             'serviceRequests'   =>  [
                 "totalRequests"   => ServiceRequest::count(),
@@ -29,8 +32,10 @@ class AdminController extends Controller
                 'technicians'   =>  \App\Models\Technician::count(),
             ],
             'others'            => [
-                'recentPayments'=>  ServiceRequest::with('client')->limit(5)->get(),
-                'cses'          =>  \App\Models\Cse::with('user.account')->limit(5)->get()->random(3),
+                'recentPayments'=>  \App\Models\Payment::with('user.account')->latest()->take(5)->get(),
+                'cses'          =>  \App\Models\Cse::with(['user.account', 'service_request_assgined' => function ($query) {
+                    $query->withCount('completedCseServiceRequests');
+                }])->limit(5)->get()->random(3),
             ],
             'disbursedPayments' =>  CollaboratorsPayment::where('user_id', '!=', 1)->where('status', 'Paid')->get()->sum('amount_to_be_paid'),
             'adminPayments'     =>  CollaboratorsPayment::where('user_id', 1)->value(DB::raw("SUM(labour_markup_cost + material_markup_cost + logistics_cost + royalty_fee + tax_fee)")),

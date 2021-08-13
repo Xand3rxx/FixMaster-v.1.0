@@ -26,7 +26,7 @@
     <div class="row row-xs">
       <div class="col-lg-12 col-xl-12">
         <div class="card">
-          <div class="row mt-1 mb-1 ml-1 mr-1">
+          {{-- <div class="row mt-1 mb-1 ml-1 mr-1">
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Sort</label>
@@ -92,7 +92,7 @@
                     <input name="name" id="name" type="date" class="form-control pl-5">
                 </div>
             </div>
-          </div>
+          </div> --}}
           
           <h5 class="ml-4" >Total Requests: {{ !empty($serviceRequests['totalRequests']) ? number_format($serviceRequests['totalRequests']) : 0 }}</h5><br>
 
@@ -360,38 +360,38 @@
 
       </div><!-- col -->
 
-      {{-- <div class="col-md-6 col-xl-6 mg-t-10">
+      <div class="col-md-6 col-xl-6 mg-t-10">
         <div class="card ht-100p">
           <div class="card-header d-flex align-items-center justify-content-between">
             <h6 class="mg-b-0">Recent Payments</h6>
             
           </div>
-           @if($recentPayments->count() > 0)
-            @foreach($recentPayments as $pay)
-          <ul class="list-group list-group-flush tx-13">
-              <li class="list-group-item d-flex pd-sm-x-20">
-                <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
-                <div class="pd-sm-l-10">
-                  <p class="tx-medium mg-b-0">Payment from {{$pay['clients']['account']['first_name'].' '.$pay['clients']['account']['middle_name'].' '.$pay['users']['account']['last_name']}} for {{$pay['service_request']['unique_id']}}</p>
-                  <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($pay['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
-                </div>
-                <div class="mg-l-auto text-right">
-                  <p class="tx-medium mg-b-0"> ₦{{$pay['amount']}}</p>
-                  <small class="tx-12 tx-success mg-b-0">Completed</small>
-                </div>
-              </li>
-          </ul>
+           @if(!empty($others['recentPayments']))
+            @foreach($others['recentPayments'] as $recentPayments)
+              <ul class="list-group list-group-flush tx-13">
+                  <li class="list-group-item d-flex pd-sm-x-20">
+                    <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
+                    <div class="pd-sm-l-10">
+                      <p class="tx-medium mg-b-0">Payment from {{ !empty($recentPayments['user']['account']['first_name']) ? Str::title($recentPayments['user']['account']['first_name'] .' '. $recentPayments['user']['account']['last_name']) : 'UNAVAILABLE' }} for {{ $recentPayments['unique_id'] }}</p>
+                      <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($recentPayments['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
+                    </div>
+                    <div class="mg-l-auto text-right">
+                      <p class="tx-medium mg-b-0"> ₦{{ $recentPayments['amount'] }}</p>
+                      <small class="tx-12 {{ (($recentPayments['status'] == 'pending') ? 'text-warning' : (($recentPayments['status'] == 'success') ? 'text-success' : ($recentPayments['status'] == 'failed' ? 'text-danger' : 'text-danger'))) }} mg-b-0">{{ ucfirst($recentPayments['success']) }}</small>
+                    </div>
+                  </li>
+              </ul>
             @endforeach
           <div class="card-footer text-center tx-13">
           <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
           </div>
           @else
-            <div>No Payment Currently</div>
+            <div>No recent payments yet</div>
           @endif 
         </div><!-- card -->
       </div>
         </div>
-      </div> --}}
+      </div>
 
 
       <div class="col-md-6 col-xl-6 mg-t-10">
@@ -404,21 +404,28 @@
             </div> --}}
           </div>
           <ul class="list-group list-group-flush tx-13">
-            <li class="list-group-item d-flex pd-x-20">
-              <div class="avatar">
-                <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="rounded-circle" alt="Default male avatar" />
-              </div>
-              <div class="pd-l-10">
-                <p class="tx-medium mg-b-0">Gabriel Badmus</p>
-                <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: 3</small>
-              </div>
-              <div class="mg-l-auto d-flex align-self-center">
-                <nav class="nav nav-icon-only">
-                  {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
-                  <a href="#" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
-                </nav>
-              </div>
-            </li>
+            @if (!empty($others['cses']))
+            @foreach ($others['cses'] as $cse)
+              <li class="list-group-item d-flex pd-x-20">
+                <div class="avatar">
+                  <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="rounded-circle" alt="Default male avatar" />
+                </div>
+                <div class="pd-l-10">
+                  <p class="tx-medium mg-b-0">{{ !empty($cse['user']['account']['first_name']) ? Str::title($cse['user']['account']['first_name'] .' '. $cse['user']['account']['last_name']) : 'UNAVAILABLE' }}</p>
+                  <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: 0</small>
+                </div>
+                <div class="mg-l-auto d-flex align-self-center">
+                  <nav class="nav nav-icon-only">
+                    {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
+                    <a href="#" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
+                  </nav>
+                </div>
+              </li>
+              @endforeach
+            @else  
+              <div>No CSE's available</div>
+            @endif
+            
           </ul>
           <div class="card-footer text-center tx-13">
             <a href="#" class="link-03">View More <i class="icon ion-md-arrow-down mg-l-5"></i></a>
