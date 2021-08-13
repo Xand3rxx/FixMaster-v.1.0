@@ -67,7 +67,7 @@
 
     <div class="col-md-6 form-group">
         <div class="custom-control custom-radio form-group position-relative">
-            <input type="radio" id="yes_contact" name="contactme_status" class="custom-control-input input-check" value="1" selected />
+            <input type="radio" id="yes_contact" name="contactme_status" class="custom-control-input input-check" value="1" checked />
             <label class="custom-control-label" for="yes_contact">Your dedicated project manager will call you within the hour.</label>
         </div>
     </div>
