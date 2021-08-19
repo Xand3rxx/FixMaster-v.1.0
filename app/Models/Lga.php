@@ -42,4 +42,9 @@ class Lga extends Model
     {
         return $this->hasMany(Estate::class, 'state_id');
     }
+
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
 }

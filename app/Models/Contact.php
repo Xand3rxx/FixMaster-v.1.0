@@ -41,6 +41,10 @@ class Contact extends Model
         return $this->belongsTo(Town::class);
     }
 
+    public function service_requests()
+    {
+        return $this->hasMany(ServiceRequest::class, 'contact_id');
+    }
     /**
      * The "booted" method of the model.
      * To be used during production for integrity reasons

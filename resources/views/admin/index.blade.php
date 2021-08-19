@@ -15,12 +15,7 @@
         </nav>
         <h4 class="mg-b-0 tx-spacing--1">Welcome to Fix<span style="color: #E97D1F;">Master</span> {{ Auth::user()->type->role->name ?? 'Administrator' }} Dashboard</h4>
       </div>
-      {{-- <div class="d-none d-md-block">
-        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase"><i data-feather="save" class="wd-10 mg-r-5"></i> Save</button>
-        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5"><i data-feather="upload" class="wd-10 mg-r-5"></i> Export</button>
-        <button class="btn btn-sm pd-x-15 btn-white btn-uppercase mg-l-5"><i data-feather="share-2" class="wd-10 mg-r-5"></i> Share</button>
-        <button class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i data-feather="sliders" class="wd-10 mg-r-5"></i> Settings</button>
-      </div> --}}
+     
     </div>
 
     <div class="row row-xs">
@@ -237,35 +232,21 @@
                   <tr>
                     <th class="wd-40">L.G.A</th>
                     <th class="wd-25 text-right">Requests</th>
-                    <th class="wd-35 text-right">Total</th>
+                    {{-- <th class="wd-35 text-right">Total</th> --}}
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="tx-medium">Alimosho</td>
-                    <td class="text-right">73</td>
-                    <td class="text-right">₦150,200.80</td>
-                  </tr>
-                  <tr>
-                    <td class="tx-medium">Kosofe</td>
-                    <td class="text-right">64</td>
-                    <td class="text-right">₦138,910.20</td>
-                  </tr>
-                  <tr>
-                    <td class="tx-medium">Ibeju-Lekki</td>
-                    <td class="text-right">58</td>
-                    <td class="text-right">₦132,050.00</td>
-                  </tr>
-                  <tr>
-                    <td class="tx-medium">Mushin</td>
-                    <td class="text-right">31</td>
-                    <td class="text-right">₦127,762.10</td>
-                  </tr>
-                  <tr>
-                    <td class="tx-medium">Ojo</td>
-                    <td class="text-right">17</td>
-                    <td class="text-right">₦117,087.50</td>
-                  </tr>
+                @if(!empty($others['highestLgaRequests']))
+                  @foreach($others['highestLgaRequests'] as $highestLgaRequest)
+                    <tr>
+                      <td class="tx-medium">{{ !empty($highestLgaRequest['address']['lga']['name']) ? $highestLgaRequest['address']['lga']['name'] : 'UNAVAILABLE' }}</td>
+                      <td class="text-right">{{ $highestLgaRequest->count('contact_id') }}</td>
+                      {{-- <td class="text-right">₦150,200.80</td> --}}
+                    </tr>
+                  @endforeach
+                @else  
+                  <div>No data available</div>
+                @endif
                 </tbody>
               </table>
             </div><!-- table-responsive -->
@@ -278,14 +259,9 @@
         <div class="card mg-b-10">
           <div class="card-header pd-t-20 d-sm-flex align-items-start justify-content-between bd-b-0 pd-b-0">
             <div>
-              {{-- <h6 class="mg-b-5">Your earnings since inception</h6> --}}
-              <p class="tx-13 tx-color-03 mg-b-0">Your Payments gross total since inception</p>
+              <p class="tx-13 tx-color-03 mg-b-0">Your Service Requests Payments gross total since inception</p>
             </div>
             <div class="d-flex mg-t-20 mg-sm-t-0">
-              {{-- <div class="btn-group flex-fill">
-                <button class="btn btn-white btn-xs active">Range</button>
-                <button class="btn btn-white btn-xs">Period</button>
-              </div> --}}
             </div>
           </div><!-- card-header -->
           <div class="card-body pd-y-30">
@@ -296,7 +272,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold tx-nowrap mg-b-5 mg-md-b-8"> Recieved</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($receivedPayments,2)}}</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{!empty($payments['received']) ? number_format($payments['received']) : 0.00 }}</h4>
                 </div>
               </div>
               <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
@@ -305,7 +281,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8"> Cancelled</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦50,000</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{!empty($payments['cancelled']) ? number_format($payments['cancelled']) : 0.00 }}</h4>
                 </div>
               </div>
               <div class="media mg-t-20 mg-sm-t-0 mg-sm-l-15 mg-md-l-40">
@@ -314,7 +290,7 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8"> Disbursed</h6>
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{number_format($disbursedPayments,2)}}</h4>
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0">₦{{!empty($payments['disbursed']) ? number_format($payments['disbursed']) : 0.00 }}</h4>
                 </div>
               </div>
               
@@ -326,8 +302,10 @@
                 </div>
                 <div class="media-body">
                   <h6 class="tx-sans tx-uppercase tx-10 tx-spacing-1 tx-color-03 tx-semibold mg-b-5 mg-md-b-8">Profit/Loss</h6>
-                  {{-- <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 @if(1200000 > 150000) text-success @else text-danger @endif ">₦1,050,000</h4> --}}
-                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 text-success">₦{{$adminPayments ?? '0.00'}}</h4>
+                  @php
+                    $profitOrLoss = $payments['received'] - ($payments['disbursed'] + $payments['cancelled']);
+                  @endphp
+                  <h4 class="tx-20 tx-sm-18 tx-md-24 tx-normal tx-rubik mg-b-0 {{ ($profitOrLoss < $payments['received']) ? 'text-success' : 'text-danger' }} ">₦{{number_format($profitOrLoss) ?? '0.00'}}</h4>
                 </div>
               </div>
             </div>
@@ -346,13 +324,15 @@
                 </tr>
               </thead>
               <tbody>
+                @foreach ($others['highestReturningJobs'] as $highestReturningJob)
                 <tr>
-                  <td class="text-center">1</td>
-                  <td class="text-right">JOB-23637269</td>
-                  <td class="text-right">Femi George</td>
-                  <td class="tx-medium text-right">₦47,000</td>
-                  <td class="tx-color-03 tx-normal">{{ Carbon\Carbon::parse(Carbon\Carbon::now(), 'UTC')->isoFormat('MMMM Do YYYY') }}</td>
+                  <td class="text-center">{{ $loop->iteration }}</td>
+                  <td class="text-right">{{ $highestReturningJob['unique_id'] ?? UNAVAILABLE }}</td>
+                  <td class="text-right">{{ !empty($highestReturningJob['client']['account']['first_name']) ? Str::title($highestReturningJob['client']['account']['first_name'] .' '. $highestReturningJob['client']['account']['last_name']) : 'UNAVAILABLE' }}</td>
+                  <td class="tx-medium text-right">₦{{ ($highestReturningJob['total_amount']) ? number_format($highestReturningJob['total_amount']) : 0.00 }}</td>
+                  <td class="tx-color-03 tx-normal">{{ Carbon\Carbon::parse($highestReturningJob['created_at'], 'UTC')->isoFormat('MMMM Do YYYY') }}</td>
                 </tr> 
+                @endforeach
               </tbody>
             </table>
           </div><!-- table-responsive -->
@@ -360,224 +340,236 @@
 
       </div><!-- col -->
 
-      <div class="col-md-6 col-xl-6 mg-t-10">
-        <div class="card ht-100p">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <h6 class="mg-b-0">Recent Payments</h6>
-            
-          </div>
-           @if(!empty($others['recentPayments']))
-            @foreach($others['recentPayments'] as $recentPayments)
-              <ul class="list-group list-group-flush tx-13">
-                  <li class="list-group-item d-flex pd-sm-x-20">
-                    <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
-                    <div class="pd-sm-l-10">
-                      <p class="tx-medium mg-b-0">Payment from {{ !empty($recentPayments['user']['account']['first_name']) ? Str::title($recentPayments['user']['account']['first_name'] .' '. $recentPayments['user']['account']['last_name']) : 'UNAVAILABLE' }} for {{ $recentPayments['unique_id'] }}</p>
-                      <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($recentPayments['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
-                    </div>
-                    <div class="mg-l-auto text-right">
-                      <p class="tx-medium mg-b-0"> ₦{{ $recentPayments['amount'] }}</p>
-                      <small class="tx-12 {{ (($recentPayments['status'] == 'pending') ? 'text-warning' : (($recentPayments['status'] == 'success') ? 'text-success' : ($recentPayments['status'] == 'failed' ? 'text-danger' : 'text-danger'))) }} mg-b-0">{{ ucfirst($recentPayments['success']) }}</small>
-                    </div>
-                  </li>
-              </ul>
-            @endforeach
-          <div class="card-footer text-center tx-13">
-          <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
-          </div>
-          @else
-            <div>No recent payments yet</div>
-          @endif 
-        </div><!-- card -->
-      </div>
-        </div>
-      </div>
 
-
-      <div class="col-md-6 col-xl-6 mg-t-10">
-        <div class="card ht-100p">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <h6 class="mg-b-0">CSE's</h6>
-            {{-- <div class="d-flex align-items-center tx-18">
-              <a href="" class="link-03 lh-0"><i class="icon ion-md-refresh"></i></a>
-              <a href="" class="link-03 lh-0 mg-l-10"><i class="icon ion-md-more"></i></a>
-            </div> --}}
-          </div>
-          <ul class="list-group list-group-flush tx-13">
-            @if (!empty($others['cses']))
-              <li class="list-group-item d-flex pd-x-20">
-                <div class="avatar">
-                  <img src="{{ asset('assets/images/default-male-avatar.png') }}" class="rounded-circle" alt="Default male avatar" />
-                </div>
-                <div class="pd-l-10">
-                  <p class="tx-medium mg-b-0">{{ !empty($others['cses']['user']['account']['first_name']) ? Str::title($others['cses']['user']['account']['first_name'] .' '. $others['cses']['user']['account']['last_name']) : 'UNAVAILABLE' }}</p>
-                  <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: 0</small>
-                </div>
-                <div class="mg-l-auto d-flex align-self-center">
-                  <nav class="nav nav-icon-only">
-                    {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
-                    <a href="#" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
-                  </nav>
-                </div>
-              </li>
-            @else  
-              <div>No CSE's available</div>
-            @endif
-            
-          </ul>
-          <div class="card-footer text-center tx-13">
-            <a href="#" class="link-03">View More <i class="icon ion-md-arrow-down mg-l-5"></i></a>
-          </div><!-- card-footer -->
-        </div><!-- card -->
-      </div>
-      
-      <div class="col-lg-6 mg-t-10">
-        <div class="card">
-          <div class="card-header d-flex align-items-start justify-content-between">
-            <h6 class="lh-5 mg-b-0">Total Visits</h6>
-            {{-- <a href="" class="tx-13 link-03">Mar 01 - Mar 20, 2019 <i class="icon ion-ios-arrow-down"></i></a> --}}
-          </div><!-- card-header -->
-          <div class="card-body pd-y-15 pd-x-10">
-            <div class="table-responsive">
-              <table class="table table-borderless table-sm tx-13 tx-nowrap mg-b-0">
-                <thead>
-                  <tr class="tx-10 tx-spacing-1 tx-color-03 tx-uppercase">
-                    <th class="wd-5p">Link</th>
-                    <th>Page Title</th>
-                    <th class="text-right">Percentage (%)</th>
-                    <th class="text-right">Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
-                    <td class="align-middle tx-medium">Home</td>
-                    <td class="align-middle text-right">
-                      <div class="wd-150 d-inline-block">
-                        <div class="progress ht-4 mg-b-0">
-                          <div class="progress-bar bg-teal wd-65p" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="align-middle text-right"><span class="tx-medium">65.35%</span></td>
-                  </tr>
-                  <tr>
-                    <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
-                    <td class="align-middle tx-medium">Services</td>
-                    <td class="align-middle text-right">
-                      <div class="wd-150 d-inline-block">
-                        <div class="progress ht-4 mg-b-0">
-                          <div class="progress-bar bg-primary wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right"><span class="tx-medium">84.97%</span></td>
-                  </tr>
-                  <tr>
-                    <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
-                    <td class="align-middle tx-medium">Service Details</td>
-                    <td class="align-middle text-right">
-                      <div class="wd-150 d-inline-block">
-                        <div class="progress ht-4 mg-b-0">
-                          <div class="progress-bar bg-warning wd-45p" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right"><span class="tx-medium">38.66%</span></td>
-                  </tr>
-                  <tr>
-                    <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
-                    <td class="align-middle tx-medium">Contact Us</td>
-                    <td class="align-middle text-right">
-                      <div class="wd-150 d-inline-block">
-                        <div class="progress ht-4 mg-b-0">
-                          <div class="progress-bar bg-pink wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right"><span class="tx-medium">16.11%</span></td>
-                  </tr>
-                  <tr>
-                    <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
-                    <td class="align-middle tx-medium">How It Works</td>
-                    <td class="align-middle text-right">
-                      <div class="wd-150 d-inline-block">
-                        <div class="progress ht-4 mg-b-0">
-                          <div class="progress-bar bg-teal wd-60p" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right"><span class="tx-medium">59.34%</span></td>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="col-lg-6 mg-t-10">
+          <div class="card ht-100p">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h6 class="mg-b-0">Recent Payments</h6>
+              
             </div>
-          </div><!-- card-body -->
-        </div><!-- card -->
-      </div><!-- col -->
-      
-      <div class="col-lg-6 mg-t-10">
-        <div class="card">
-          <div class="card-header d-sm-flex align-items-start justify-content-between">
-            <h6 class="lh-5 mg-b-0">Browser Used By Users</h6>
-            {{-- <a href="" class="tx-13 link-03">Mar 01 - Mar 20, 2019 <i class="icon ion-ios-arrow-down"></i></a> --}}
-          </div><!-- card-header -->
-          <div class="card-body pd-y-15 pd-x-10">
-            <div class="table-responsive">
-              <table class="table table-borderless table-sm tx-13 tx-nowrap mg-b-0">
-                <thead>
-                  <tr class="tx-10 tx-spacing-1 tx-color-03 tx-uppercase">
-                    <th class="wd-5p">&nbsp;</th>
-                    <th>Browser</th>
-                    <th class="text-right">Sessions</th>
-                    <th class="text-right">Bounce Rate</th>
-                    <th class="text-right">Conversion Rate</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><i class="fab fa-chrome tx-primary op-6"></i></td>
-                    <td class="tx-medium">Google Chrome</td>
-                    <td class="text-right">13,410</td>
-                    <td class="text-right">40.95%</td>
-                    <td class="text-right">19.45%</td>
-                  </tr>
-                  <tr>
-                    <td><i class="fab fa-firefox tx-orange"></i></td>
-                    <td class="tx-medium">Mozilla Firefox</td>
-                    <td class="text-right">1,710</td>
-                    <td class="text-right">47.58%</td>
-                    <td class="text-right">19.99%</td>
-                  </tr>
-                  <tr>
-                    <td><i class="fab fa-safari tx-primary"></i></td>
-                    <td class="tx-medium">Apple Safari</td>
-                    <td class="text-right">1,340</td>
-                    <td class="text-right">56.50%</td>
-                    <td class="text-right">11.00%</td>
-                  </tr>
-                  <tr>
-                    <td><i class="fab fa-edge tx-primary"></i></td>
-                    <td class="tx-medium">Microsoft Edge</td>
-                    <td class="text-right">713</td>
-                    <td class="text-right">59.62%</td>
-                    <td class="text-right">4.69%</td>
-                  </tr>
-                  <tr>
-                    <td><i class="fab fa-opera tx-danger"></i></td>
-                    <td class="tx-medium">Opera</td>
-                    <td class="text-right">380</td>
-                    <td class="text-right">52.50%</td>
-                    <td class="text-right">8.75%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div><!-- table-responsive -->
-          </div><!-- card-body -->
-        </div><!-- card -->
-      </div><!-- col -->
+            @if(!empty($others['recentPayments']))
+              @foreach($others['recentPayments'] as $recentPayments)
+                <ul class="list-group list-group-flush tx-13">
+                    <li class="list-group-item d-flex pd-sm-x-20">
+                      <div class="avatar d-none d-sm-block"><span class="avatar-initial rounded-circle bg-teal"><i class="icon ion-md-checkmark"></i></span></div>
+                      <div class="pd-sm-l-10">
+                        <p class="tx-medium mg-b-0">Payment from {{ !empty($recentPayments['user']['account']['first_name']) ? Str::title($recentPayments['user']['account']['first_name'] .' '. $recentPayments['user']['account']['last_name']) : 'UNAVAILABLE' }} for {{ $recentPayments['unique_id'] }}</p>
+                        <small class="tx-12 tx-color-03 mg-b-0">{{ Carbon\Carbon::parse($recentPayments['created_at'], 'UTC')->isoFormat('MMMM Do YYYY, h:mm:ssa') }}</small>
+                      </div>
+                      <div class="mg-l-auto text-right">
+                        <p class="tx-medium mg-b-0"> ₦{{ $recentPayments['amount'] }}</p>
+                        <small class="tx-12 {{ (($recentPayments['status'] == 'pending') ? 'text-warning' : (($recentPayments['status'] == 'success') ? 'text-success' : ($recentPayments['status'] == 'failed' ? 'text-danger' : 'text-danger'))) }} mg-b-0">{{ ucfirst($recentPayments['success']) }}</small>
+                      </div>
+                    </li>
+                </ul>
+              @endforeach
+            <div class="card-footer text-center tx-13">
+            <a href="{{ route('admin.payments.received',  app()->getLocale()) }}" class="link-03">View Received Payments <i class="icon ion-md-arrow-down mg-l-5"></i></a>
+            </div>
+            @else
+              <div>No recent payments yet</div>
+            @endif 
+          </div><!-- card -->
+        </div>
 
-    </div><!-- row -->
+        <div class="col-md-6 col-lg-6 mg-t-10">
+          <div class="card ht-100p">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h6 class="mg-b-0">CSE's</h6>
+              
+            </div>
+            <ul class="list-group list-group-flush tx-13">
+              @if (!empty($others['cses']))
+              @foreach ($others['cses'] as $cse)
+                <li class="list-group-item d-flex pd-x-20">
+                  <div class="avatar">
+
+                    @php
+                      if($cse['user']['account']['gender'] == 'male' || $cse['user']['account']['gender'] == 'others'){
+                            $genderAvatar = 'default-male-avatar.png';
+                        }else{
+                            $genderAvatar = 'default-female-avatar.png';
+                        }
+                    @endphp
+
+                    @if(empty($cse['user']['account']['avatar']))
+                        <img src="{{ asset('assets/images/'.$genderAvatar) }}" class="rounded-circle" alt="Default avatar">
+                    @elseif(!file_exists(public_path('assets/user-avatars/'.$cse['user']['account']['avatar'])))
+                        <img src="{{ asset('assets/images/'.$genderAvatar) }}" class="rounded-circle" alt="Profile avatar">
+                    @else
+                        <img src="{{ asset('assets/user-avatars/'.$cse['user']['account']['avatar']) }}" class="rounded-circle" alt="Profile avatar">
+                    @endif
+                  </div>
+                  <div class="pd-l-10">
+                    <p class="tx-medium mg-b-0">{{ !empty($cse['user']['account']['first_name']) ? Str::title($cse['user']['account']['first_name'] .' '. $cse['user']['account']['last_name']) : 'UNAVAILABLE' }}</p>
+                    <small class="tx-12 tx-color-03 mg-b-0">Completed Jobs: {{ $cse['service_request_assgined']->first()->completed_cse_service_requests_count
+                    ?? 0 }}</small>
+                  </div>
+                  <div class="mg-l-auto d-flex align-self-center">
+                    <nav class="nav nav-icon-only">
+                      {{-- <a href="" class="nav-link d-none d-sm-block" title="Revoke login access"><i data-feather="slash"></i></a> --}}
+                      <a href="{{ route('admin.users.cse.show', [app()->getLocale(),$cse['user']['uuid'] ]) }}" class="nav-link d-none d-sm-block" title="View Profile"><i data-feather="user"></i></a>
+                    </nav>
+                  </div>
+                </li>
+                @endforeach
+              @else  
+                <div>No CSE's available</div>
+              @endif
+              
+            </ul>
+            <div class="card-footer text-center tx-13">
+              <a href="#" class="link-03">View More <i class="icon ion-md-arrow-down mg-l-5"></i></a>
+            </div><!-- card-footer -->
+          </div><!-- card -->
+        </div>
+     
+        <div class="col-lg-6 mg-t-10">
+          <div class="card">
+            <div class="card-header d-flex align-items-start justify-content-between">
+              <h6 class="lh-5 mg-b-0">Total Visits</h6>
+              {{-- <a href="" class="tx-13 link-03">Mar 01 - Mar 20, 2019 <i class="icon ion-ios-arrow-down"></i></a> --}}
+            </div><!-- card-header -->
+            <div class="card-body pd-y-15 pd-x-10">
+              <div class="table-responsive">
+                <table class="table table-borderless table-sm tx-13 tx-nowrap mg-b-0">
+                  <thead>
+                    <tr class="tx-10 tx-spacing-1 tx-color-03 tx-uppercase">
+                      <th class="wd-5p">Link</th>
+                      <th>Page Title</th>
+                      <th class="text-right">Percentage (%)</th>
+                      <th class="text-right">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
+                      <td class="align-middle tx-medium">Home</td>
+                      <td class="align-middle text-right">
+                        <div class="wd-150 d-inline-block">
+                          <div class="progress ht-4 mg-b-0">
+                            <div class="progress-bar bg-teal wd-65p" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-right"><span class="tx-medium">65.35%</span></td>
+                    </tr>
+                    <tr>
+                      <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
+                      <td class="align-middle tx-medium">Services</td>
+                      <td class="align-middle text-right">
+                        <div class="wd-150 d-inline-block">
+                          <div class="progress ht-4 mg-b-0">
+                            <div class="progress-bar bg-primary wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-right"><span class="tx-medium">84.97%</span></td>
+                    </tr>
+                    <tr>
+                      <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
+                      <td class="align-middle tx-medium">Service Details</td>
+                      <td class="align-middle text-right">
+                        <div class="wd-150 d-inline-block">
+                          <div class="progress ht-4 mg-b-0">
+                            <div class="progress-bar bg-warning wd-45p" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-right"><span class="tx-medium">38.66%</span></td>
+                    </tr>
+                    <tr>
+                      <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
+                      <td class="align-middle tx-medium">Contact Us</td>
+                      <td class="align-middle text-right">
+                        <div class="wd-150 d-inline-block">
+                          <div class="progress ht-4 mg-b-0">
+                            <div class="progress-bar bg-pink wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-right"><span class="tx-medium">16.11%</span></td>
+                    </tr>
+                    <tr>
+                      <td class="align-middle text-center"><a href=""><i data-feather="external-link" class="wd-12 ht-12 stroke-wd-3"></i></a></td>
+                      <td class="align-middle tx-medium">How It Works</td>
+                      <td class="align-middle text-right">
+                        <div class="wd-150 d-inline-block">
+                          <div class="progress ht-4 mg-b-0">
+                            <div class="progress-bar bg-teal wd-60p" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-right"><span class="tx-medium">59.34%</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div><!-- card-body -->
+          </div><!-- card -->
+        </div><!-- col -->
+        
+        <div class="col-lg-6 mg-t-10">
+          <div class="card">
+            <div class="card-header d-sm-flex align-items-start justify-content-between">
+              <h6 class="lh-5 mg-b-0">Browser Used By Users</h6>
+              
+            </div><!-- card-header -->
+            <div class="card-body pd-y-15 pd-x-10">
+              <div class="table-responsive">
+                <table class="table table-borderless table-sm tx-13 tx-nowrap mg-b-0">
+                  <thead>
+                    <tr class="tx-10 tx-spacing-1 tx-color-03 tx-uppercase">
+                      <th class="wd-5p">&nbsp;</th>
+                      <th>Browser</th>
+                      <th class="text-right">Sessions</th>
+                      <th class="text-right">Bounce Rate</th>
+                      <th class="text-right">Conversion Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><i class="fab fa-chrome tx-primary op-6"></i></td>
+                      <td class="tx-medium">Google Chrome</td>
+                      <td class="text-right">13,410</td>
+                      <td class="text-right">40.95%</td>
+                      <td class="text-right">19.45%</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fab fa-firefox tx-orange"></i></td>
+                      <td class="tx-medium">Mozilla Firefox</td>
+                      <td class="text-right">1,710</td>
+                      <td class="text-right">47.58%</td>
+                      <td class="text-right">19.99%</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fab fa-safari tx-primary"></i></td>
+                      <td class="tx-medium">Apple Safari</td>
+                      <td class="text-right">1,340</td>
+                      <td class="text-right">56.50%</td>
+                      <td class="text-right">11.00%</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fab fa-edge tx-primary"></i></td>
+                      <td class="tx-medium">Microsoft Edge</td>
+                      <td class="text-right">713</td>
+                      <td class="text-right">59.62%</td>
+                      <td class="text-right">4.69%</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fab fa-opera tx-danger"></i></td>
+                      <td class="tx-medium">Opera</td>
+                      <td class="text-right">380</td>
+                      <td class="text-right">52.50%</td>
+                      <td class="text-right">8.75%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div><!-- table-responsive -->
+            </div><!-- card-body -->
+          </div><!-- card -->
+        </div><!-- col -->
+  </div><!-- row -->
   </div><!-- container -->
 </div>
 

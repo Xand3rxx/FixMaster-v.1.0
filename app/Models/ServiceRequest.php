@@ -33,8 +33,10 @@ class ServiceRequest extends Model
     protected $casts = [
         'sub_services' => 'array',
         'preferred_time' => 'date',
+        'total_amount' => 'float',
     ];
 
+    
     /**
      * The attributes that should be hidden for arrays.
      *
